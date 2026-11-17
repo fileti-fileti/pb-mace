@@ -13,13 +13,14 @@ storage:
   store_parent: /scratch/acmes/eudes.fileti3/projects   # owner-reported area; unknown purge accepted (ADR-0012)
   purge: unknown                                    # TODO(owner): /scratch purge rule (LNCC)
   notes: "$HOME=/prj/acmes/eudes.fileti3 (NFS, 250G); /scratch Lustre; login ulimit -t 1800"
-partitions:           # account acmes on all eight (sacctmgr, 2026-11-17)
+partitions:           # account acmes on all eight (sacctmgr, 2026-11-17); max wall per job (assoc):
+                      # *_dev 00:20:00, sequana_cpu/_gpu/_cpu_bigmem 4-00:00:00, *_long 31-00:00:00
   - sequana_cpu
   - sequana_cpu_long
   - sequana_cpu_dev
   - sequana_cpu_bigmem
   - sequana_cpu_bigmem_long
-  - sequana_gpu       # training (owner, 2026-11-17): 4x V100/node (sinfo); 1 GPU, -c 12 as in legacy pb_t2A2
+  - sequana_gpu       # training (owner, 2026-11-17): 4x V100/node (sinfo), V100-SXM2-32GB (nvidia-smi in job 11745195); 1 GPU, -c 12 as in legacy pb_t2A2
   - sequana_gpu_long
   - sequana_gpu_dev   # short GPU checks (legacy eval_configs, 20 min)
 # GPU jobs: --exclude=sdumont8042 (owner, 2026-11-17: node failed the owner's runs; retest later)
