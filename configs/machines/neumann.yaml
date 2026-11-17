@@ -1,5 +1,6 @@
 # neumann (UNIFESP) — owner's own cluster. Facts verified on 2026-11-13 unless noted.
 # `unknown` = not verified yet; scripts treat it as unavailable. Never guess a value.
+# Access from the Mac: `ssh eudes@172.20.22.62` (UNIFESP VPN; owner, 2026-11-17).
 name: neumann
 hostnames:            # fnmatch on `hostname` and its short form
   - headnode          # headnode.cluster.neumann.unifesp.br
