@@ -14,6 +14,81 @@ Title: `## YYYY-MM-DD — <machine> — <short title>`.
 ```
 
 <!-- NEW ENTRIES BELOW -->
+## 2026-11-17 — sdumont — Setup, smoke run, MACE training submitted
+- Goal: set up the SDumont clone (status Now), fix the MACE training design and start the
+  training of `pb_mace_v1`.
+- Two agent sessions on SDumont today. The first (clone 09:42, `5936029` 10:22, smoke run
+  dir 10:23) ended without `/end-session` (cause unknown); its items below come from git,
+  the reflog, file times and the docs it wrote. What those do not record is unknown.
+- Done (first session):
+  - Clone from GitHub over the alias `github-pb-mace` into
+    `/scratch/acmes/eudes.fileti3/projects/pb-mace` (ADR-0014); deploy key fingerprint
+    unknown (not recorded); `core.hooksPath .githooks`; store
+    `/scratch/acmes/eudes.fileti3/projects/pb-mace-store/{data,runs,logs}` + symlinks.
+  - `data/consolidado/` from the owner's Mac; `data/consolidado.sha256` = the sha256 list
+    of the 2026-11-17 neumann entry. `data/foundation/mace_mp_small.model` copied from
+    `zncl2/mace_sr/training/` (`SOURCE.txt`, `SHA256SUMS`).
+  - Legacy training setup used as the starting point: `pb_t2A2` in
+    `/scratch/acmes/eudes.fileti3/projects/pb/treino_v1/` (read-only, ADR-0008;
+    `docs/mace-training.md`).
+  - `5936029` MACE training setup: `docs/mace-training.md` (design and reading rule fixed
+    with the owner), `configs/mace/pb_mace_v1.yaml`, `scripts/prep_mace_train.py` + tests,
+    claim ID-1 pending, `sdumont.yaml` (`conda_sh`, LAMMPS+MACE build, GPU partitions,
+    `sdumont8042` exclusion).
+  - `runs/pb_mace_v1-smoke/` prepared at `5936029` (30 min on `sequana_gpu_dev`).
+- Done (this session):
+  - Start checks: `consolidado/` sha256 6/6 OK, foundation OK; `detect` → sdumont;
+    Python 3.10.20; 68 tests OK.
+  - `54cba16` the first session's uncommitted doc edit (E0s composition check, time estimate).
+  - `00ba18b` `envs/sdumont.environment.yml`: record of `mace_env` (Python 3.10.20,
+    mace-torch 0.3.15, torch 2.2.0+cu121).
+  - Smoke: job 11745176 (`runs/pb_mace_v1-smoke/`) cancelled while pending (Problems);
+    `7ca6665` doc step 3 at 20 min; job 11745195 (`runs/pb_mace_v1-smoke2/`, prepared at
+    `7ca6665`) on sdumont8093, 902 s.
+  - `5812181` ledger: 2 rows (11745176, 11745195), cost unknown (unit unknown).
+  - Training: `runs/pb_mace_v1/` prepared at `5812181` (`sequana_gpu`, 1 GPU, `-c 12`,
+    24 h, max chain 2, `--exclude=sdumont8042`); job 11745412 running on sdumont8019 since
+    2026-11-17T11:49:25.
+  - `22cd989` `sdumont.yaml`: max wall time per job per partition (sacctmgr), GPU model.
+- Results (smoke run, toy; no claim):
+  - `conda_sh` and `mace_env` work on a compute node; the config with Na runs (atomic
+    numbers [1, 6, 7, 8, 11, 26]); `E0s: average` gives E0(C) = E0(N) and
+    E0(H) = 2·E0(O), as the doc predicted from the composition rank.
+  - Times (log timestamps, job 11745195): setup 4 min 42 s (start 10:50:07, training
+    10:54:49); epoch 0 224 s, epoch 1 212 s (each with its validation); post-training
+    metrics on train and valid about 2 min. 200 epochs ≈ 12 h (200 × 218 s; the doc
+    estimated 10 h): fits one 24 h job.
+  - GPU Tesla V100-SXM2-32GB; peak 14004 of 32768 MiB (`gpu_usage.log`, one sample per minute).
+- Decisions:
+  - Smoke run on `sequana_gpu_dev` replaces the toy job on `sequana_cpu_dev` (agent: it
+    checks compute-node mounts, `conda_sh`, the env and the ledger in one job). Owner: "Ok
+    pra tudo, mete ficha" (also for: commit the pending doc edit, env record, smoke run,
+    training).
+  - Smoke at 20 min, the account's limit on `*_dev` (agent, under that ok). Cancelling
+    11745176, a never-runnable job of the agent, was done under the same ok, without a
+    separate ask.
+- Problems:
+  - The first session ended without `/end-session`: no journal, status or push until this
+    session (cause unknown; the login node's `ulimit -t 1800` is a hypothesis, not checked).
+  - 11745176 pending with `AssocMaxWallDurationPerJobLimit`: the smoke asked 30 min; the
+    association `acmes` caps `*_dev` at 00:20:00 (sacctmgr). Root cause: the limit was not
+    checked when the doc was written. Fixed in `7ca6665`.
+  - 11745195 FAILED (`mace_run_train rc=124`, the job's own `timeout`): training ended and
+    the models were saved at 11:02:34; `timeout` stopped MACE at 11:05:07 during the
+    post-training plot inference (`plot=True`, MACE default; last log line
+    `Running inference on train_Default dataset`). A limit of the 20 min smoke, not a
+    training error.
+  - Chain caveat (MACE source, `mace/tools/train.py`): with `save_all_checkpoints: False`
+    a checkpoint is written only when the validation loss improves, so a job resubmitted
+    with `restart_latest` resumes from the best epoch and restarts its patience count.
+    Not expected to matter (about 12 h in a 24 h job).
+  - Smoke log: `Skipping evaluation for heads: ['pt_head']` with
+    `multiheads_finetuning: False`; the final model's heads are to be checked before MLMD.
+  - Commit author on SDumont is `fileti-fileti` (git config); on neumann `Eudes Fileti`.
+- Next: next SDumont session: job 11745412 (DONE or FAIL, chain jobs, ledger). Then the
+  metrics script in `src/` (+ tests) before the test evaluation; `eval_configs` on
+  `test.xyz` (ask first; `*_dev` max 20 min); register the result; apply the ID-1 rule.
+
 ## 2026-11-17 — neumann — Project start
 - Goal: start pb-mace from lab-template (`docs/new-project.md` steps 1–5) and leave the first
   SDumont session ready. Added during the session: locate the training dataset; compute the

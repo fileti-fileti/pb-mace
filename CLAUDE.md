@@ -135,30 +135,25 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
 
 ## Status
 <!-- BEGIN STATUS -->
-- Updated: 2026-11-17 — neumann
-- State: project started on neumann and on GitHub (ADR-0013, ADR-0014); dataset located
-  (`consolidado/`); AIMD reference RDFs registered (`results/aimd-rdf-reference/`, doc
-  `docs/rdf-mlmd-vs-aimd.md`). Not on SDumont yet. No model, MLMD or claims.
+- Updated: 2026-11-17 — sdumont
+- State: on neumann, SDumont (clone in `/scratch`, ADR-0014) and GitHub; dataset
+  `consolidado/` on SDumont (sha256 OK); AIMD reference RDFs registered
+  (`results/aimd-rdf-reference/`); MACE training `pb_mace_v1` running (job 11745412,
+  `runs/pb_mace_v1/`, about 12 h from the smoke run); claim ID-1 pending. No model, MLMD
+  or final claims yet.
 - Now (SDumont):
-  - Ask the owner for the path of the training files on SDumont, before anything else.
-  - Deploy key `pb-mace@sdumont` (owner types `ssh-keygen`), alias `github-pb-mace`, `ssh -T`.
-  - `git clone` from GitHub into `/scratch/acmes/eudes.fileti3/projects/pb-mace` (ADR-0014); `core.hooksPath`.
-  - Store `/scratch/acmes/eudes.fileti3/projects/pb-mace-store` + symlinks (step 3).
-  - Checks (step 5): tests, `machine_config.py detect` prints `sdumont`, `python3 --version`.
-  - Env record of `mace_env` into `envs/sdumont.environment.yml`, read-only (ADR-0007).
-  - Dataset `consolidado/` from the owner's Mac into `data/`; `sha256sum -c` with the journal list.
-  - Training partition, chosen with the owner from `sinfo` and GPU facts; into `sdumont.yaml`.
-  - First toy job on `sequana_cpu_dev` from `runs/` (ask first; checks compute-node mounts,
-    ADR-0014), then `cost_ledger.py add`.
+  - Job 11745412: DONE or FAIL in `runs/pb_mace_v1/`, chain jobs, `cost_ledger.py add`.
+  - Metrics script in `src/` (+ tests) for claim ID-1, before the test evaluation (`docs/mace-training.md`).
+  - Test: `eval_configs` on `test.xyz` (ask first; `*_dev` max 20 min), metrics, register, apply the ID-1 rule.
 - Later:
-  - Experiment doc + pending claim: MACE training and test (split as in `consolidado/`,
-    hyperparameters, metrics, threshold: the owner's choices).
   - `docs/rdf-mlmd-vs-aimd.md`: MLMD protocol, agreement criterion, pending claim; before any MLMD.
+  - Final model: its heads (smoke log skips `pt_head`) and a run with the LAMMPS+MACE build of `sdumont.yaml`.
   - Check that the MD code used with MACE accepts cells smaller than twice its cutoff.
   - `template` remote on SDumont once lab-template is on GitHub (ADR-0012).
 - Waiting on owner:
   - MLMD cells: same as the AIMD (doc, agent's proposal) or replicated / cubo222 only.
-  - SDumont: cost unit (ADR-0005), `/scratch` purge rule, `conda_sh`.
+  - SDumont: cost unit (ADR-0005), `/scratch` purge rule.
+  - Git author name on SDumont (`fileti-fileti`) vs neumann (`Eudes Fileti`): keep or align.
 - Last sync — neumann: 2026-11-17, end-of-session commit on top of `3f65ae6`
-- Last sync — sdumont: never (not cloned)
+- Last sync — sdumont: 2026-11-17, end-of-session commit on top of `22cd989`
 <!-- END STATUS -->
