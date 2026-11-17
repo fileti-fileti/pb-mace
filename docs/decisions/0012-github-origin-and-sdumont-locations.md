@@ -1,6 +1,7 @@
 # 0012. GitHub as origin; SDumont locations
 - Status: Accepted. Supersedes [0003](0003-sync-mac-hub.md), and the bare-repo clause and
-  SDumont part of [0004](0004-locations-and-storage.md).
+  SDumont part of [0004](0004-locations-and-storage.md). SDumont clone location superseded
+  by [0014](0014-sdumont-clone-in-scratch.md) (pb-mace).
 - Date: 2026-11-13. Decided by: owner (Eudes Fileti). Process: infrastructure (approval).
 
 ## Context

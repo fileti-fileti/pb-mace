@@ -9,12 +9,14 @@ rules and conventions only. Keep it under ~160 lines; history goes to `docs/jour
   labelled Prussian-blue dataset; test and validate it; run MLMD with it and compare its
   RDFs with the AIMD RDFs (owner, 2026-11-17). Out of scope now: dataset generation, CP2K
   runs, active learning.
-- Dataset: energies and forces, no stress/virial (owner: "everything except strain", not
-  needed; TODO(owner): strain = stress/virial?). The owner copies it from the Mac to
-  SDumont; other training files are on SDumont (TODO(owner): path, at the first session there).
-- Machines: training and MLMD on SDumont, store
-  `/scratch/acmes/eudes.fileti3/projects/pb-mace-store` (purge rule unknown: keep anything
-  irreplaceable elsewhere too); neumann: setup only so far.
+- Dataset: energies and forces; no stress/virial exists for Prussian blue (owner). The
+  owner copies it from the Mac to SDumont; other training files are on SDumont
+  (TODO(owner): path, at the first session there).
+- Validation plan (owner, 2026-11-17): short MLMD runs of interface-1, cubo222 and
+  cubo-puro; their RDFs compared with AIMD RDFs of the same systems, computed on neumann.
+- Machines: training and MLMD on SDumont, clone and store in
+  `/scratch/acmes/eudes.fileti3/projects/` (ADR-0014; purge rule unknown: keep anything
+  irreplaceable elsewhere too); neumann: setup and the AIMD RDFs.
 - Legacy (read-only, ADR-0008): neumann `~/prussian-blue` (owner's CP2K/AIMD work).
 - Unpublished work: private repo; data and results stay on the owner's machines.
 - Started from lab-template `24a7f02` (2026-11-17, `docs/new-project.md`); remote
@@ -139,23 +141,24 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
 - Now (SDumont):
   - Ask the owner for the path of the training files on SDumont, before anything else.
   - Deploy key `pb-mace@sdumont` (owner types `ssh-keygen`), alias `github-pb-mace`, `ssh -T`.
-  - `git clone` from GitHub into `/prj/acmes/eudes.fileti3/pb-mace`; `core.hooksPath` (step 6).
+  - `git clone` from GitHub into `/scratch/acmes/eudes.fileti3/projects/pb-mace` (ADR-0014); `core.hooksPath`.
   - Store `/scratch/acmes/eudes.fileti3/projects/pb-mace-store` + symlinks (step 3).
   - Checks (step 5): tests, `machine_config.py detect` prints `sdumont`, `python3 --version`.
   - Env record of `mace_env` into `envs/sdumont.environment.yml`, read-only (ADR-0007).
   - Dataset from the owner's Mac into `data/`; its sha256 in the journal.
-  - First toy job on `sequana_cpu_dev` from `runs/` (ask first), then `cost_ledger.py add`.
+  - Training partition, chosen with the owner from `sinfo` and GPU facts; into `sdumont.yaml`.
+  - First toy job on `sequana_cpu_dev` from `runs/` (ask first; checks compute-node mounts,
+    ADR-0014), then `cost_ledger.py add`.
 - Later:
   - Experiment doc + pending claim: MACE training and test (dataset, split,
     hyperparameters, metrics, threshold: the owner's choices).
-  - Experiment doc + pending claim: MLMD vs AIMD RDFs (systems, protocol, RDF parameters,
-    agreement criterion).
+  - Experiment doc + pending claim: MLMD vs AIMD RDFs of the three systems (MLMD protocol,
+    RDF parameters, agreement criterion), before the AIMD RDFs are computed.
+  - neumann: AIMD RDFs of the three systems with the doc's parameters; copy to SDumont.
   - `template` remote on SDumont once lab-template is on GitHub (ADR-0012).
 - Waiting on owner:
-  - Clone on SDumont in `$HOME` (ADR-0012, default) or in `/scratch` (owner said "scratch"; needs an ADR).
-  - Strain = stress/virial (absent from the labels)?
-  - SDumont: training partition, cost unit (ADR-0005), `/scratch` purge rule, `conda_sh`.
-  - AIMD reference for the RDFs: which trajectories, and where.
+  - SDumont: cost unit (ADR-0005), `/scratch` purge rule, `conda_sh`.
+  - AIMD trajectories of interface-1, cubo222 and cubo-puro: paths under `~/prussian-blue`.
 - Last sync — neumann: 2026-11-17, first push (project start)
 - Last sync — sdumont: never (not cloned)
 <!-- END STATUS -->

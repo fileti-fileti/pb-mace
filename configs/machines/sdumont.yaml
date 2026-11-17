@@ -9,7 +9,7 @@ cost:
   unit: unknown       # TODO(owner): allocation unit and conversion from sacct (ADR-0005)
   source: sacct
 storage:
-  repo_parent: /prj/acmes/eudes.fileti3            # $HOME (checked 2026-11-13); owner, ADR-0012
+  repo_parent: /scratch/acmes/eudes.fileti3/projects    # clone in /scratch (ADR-0014); $HOME=/prj/acmes/eudes.fileti3
   store_parent: /scratch/acmes/eudes.fileti3/projects   # owner-reported area; unknown purge accepted (ADR-0012)
   purge: unknown                                    # TODO(owner): /scratch purge rule (LNCC)
   notes: "$HOME=/prj/acmes/eudes.fileti3 (NFS, 250G); /scratch Lustre; login ulimit -t 1800"

@@ -18,8 +18,9 @@ teach-back (ADR-0013, superseding that part of ADR-0001).
 | [0009](0009-cost-ledger-per-machine.md) | One cost ledger file per machine | Accepted |
 | [0010](0010-ledger-attribution-and-shared-extension-list.md) | Ledger attribution by WorkDir; shared blocked-extension list | Accepted |
 | [0011](0011-workflow-and-tasks.md) | Session and task workflow; tasks live in the status block | Accepted |
-| [0012](0012-github-origin-and-sdumont-locations.md) | GitHub as origin; SDumont locations | Accepted |
+| [0012](0012-github-origin-and-sdumont-locations.md) | GitHub as origin; SDumont locations | Accepted; SDumont clone location superseded by 0014 |
 | [0013](0013-lighter-decision-process.md) | Lighter decision process: the owner's ok replaces the teach-back | Accepted |
+| [0014](0014-sdumont-clone-in-scratch.md) | SDumont clone in /scratch | Accepted |
 
 ## Template
 
