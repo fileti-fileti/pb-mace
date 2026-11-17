@@ -1,6 +1,6 @@
 # 0001. Repo conventions and decision process
-- Status: **Proposed** — infrastructure parts approved by the owner; teach-back pending on
-  the research rules (section "Research rules").
+- Status: Accepted (2026-11-17). Decision process and research rule 1 superseded by
+  [0013](0013-lighter-decision-process.md).
 - Date: 2026-11-13. Decided by: owner (Eudes Fileti), proposed by the agent.
 
 ## Context
@@ -50,8 +50,10 @@ every design decision):
 - Infrastructure parts and decision process: approved by the owner, 2026-11-13 (setup F0).
   Agent's justification: keeps the guide's audit trail while not slowing infra work with
   teach-back on choices that carry no scientific risk.
-- Research rules: TODO(owner): teach-back.
+- Research rules: accepted by the owner under ADR-0013 (2026-11-17), without teach-back;
+  rule 1 read there for model tests and MLMD vs AIMD comparisons.
 
 ## Consequences
 - Every later ADR states which process it went through.
-- Until the research-rules teach-back, no experiment doc or claim is written.
+- Until the research-rules teach-back, no experiment doc or claim is written (lifted by
+  ADR-0013, 2026-11-17).

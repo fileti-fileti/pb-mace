@@ -14,4 +14,4 @@ result and never changed afterwards; a changed rule makes a new claim.
 - Method: link to the doc section. Jobs: IDs. Cost: from the ledger
 ```
 
-(Template repo: no claims.)
+(No claims yet.)

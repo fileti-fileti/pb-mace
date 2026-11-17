@@ -1,31 +1,40 @@
-# CLAUDE.md — lab-template
+# CLAUDE.md — pb-mace
 
 Instructions for the agent working in this repo. Personal preferences (tone, name, execution
 habits) live in `~/.claude/CLAUDE.md` on each machine, not here. This file holds project
 rules and conventions only. Keep it under ~160 lines; history goes to `docs/journal.md`.
 
 ## Project
-- `lab-template` is the template for MLFF research repos (MACE/DeePMD, CP2K, LAMMPS, GROMACS)
-  across two machines: **neumann** (UNIFESP, own cluster) and **sdumont** (LNCC).
-- Projects are created from it by `docs/new-project.md`; each project replaces this
-  section with its research question and data locations.
-- Experiment parts (`docs/<experiment>.md`, `docs/claims.md`) exist here as skeletons only
-  (ADR-0001).
+- **pb-mace**: train a MACE machine-learned force field (MLFF) on an existing, already
+  labelled Prussian-blue dataset; test and validate it; run MLMD with it and compare its
+  RDFs with the AIMD RDFs (owner, 2026-11-17). Out of scope now: dataset generation, CP2K
+  runs, active learning.
+- Dataset: energies and forces, no stress/virial (owner: "everything except strain", not
+  needed; TODO(owner): strain = stress/virial?). The owner copies it from the Mac to
+  SDumont; other training files are on SDumont (TODO(owner): path, at the first session there).
+- Machines: training and MLMD on SDumont, store
+  `/scratch/acmes/eudes.fileti3/projects/pb-mace-store` (purge rule unknown: keep anything
+  irreplaceable elsewhere too); neumann: setup only so far.
+- Legacy (read-only, ADR-0008): neumann `~/prussian-blue` (owner's CP2K/AIMD work).
+- Unpublished work: private repo; data and results stay on the owner's machines.
+- Started from lab-template `24a7f02` (2026-11-17, `docs/new-project.md`); remote
+  `template` = `~/git/lab-template.git` on neumann.
 
 ## Hard rules
 - **Never fabricate** numbers, paths, versions, hyperparameters, job IDs, hashes or
   references. Unknown → `TODO(owner): <question>`, and list it in the report.
-- **Fix the reading rule first.** Before any run whose result will support a claim or a
-  comparison, the experiment doc states the question, the metric, the threshold and what
-  counts as yes or no, and `docs/claims.md` gets a *pending* claim with that rule. The rule
-  is never changed after the results are seen; a changed rule makes a new claim.
+- **Fix the reading rule first** (ADR-0013). Before the output of a run whose result will
+  support a claim or a comparison is analysed, the experiment doc fixes the question, the
+  metric, the threshold and what counts as yes, no or inconclusive, and `docs/claims.md`
+  gets a *pending* claim with that rule. A model's dataset version, split and
+  hyperparameters are fixed before it is trained. The rule is never changed after the
+  results are seen; a changed rule makes a new claim.
   Benchmarks, dataset generation/labelling, tests and toy jobs are exempt (still ask-first).
-- **Teach-back** for research/methodology decisions (reading rules, claims, comparisons,
-  metrics): a proposal until the owner explains it in their own words and the agent checks
-  it is right and complete (say exactly what is missing). Paste the owner's words in the ADR.
-- **Infrastructure decisions** (layout, sync, ledger, naming, tooling): the agent explains
-  in ~2 lines, the owner answers "approved"; the ADR records the approval and the agent's
-  justification (ADR-0001).
+- **Decisions** (ADR-0013, no teach-back): the agent proposes in 2–3 lines (what and why);
+  the owner answers "ok" or "approved"; the record keeps that answer and the agent's
+  justification. An ADR only for general choices (physics, training or simulation
+  protocol, analysis method, infrastructure); experiment choices go in the experiment doc,
+  small ones in the journal entry (Decisions).
 - **Ask first before:** submitting or cancelling **any** job (until per-machine limits are
   set, ADR-0005); deleting or overwriting files the agent did not create; force-push;
   `sudo` or any system-wide change; anything outside the repo. Existing work directories
@@ -50,8 +59,8 @@ results, commit, push). Skills in `.claude/skills/`; their facts come from
 A finished task leaves the block and goes to the journal entry (Done or Problems).
 
 **Task loop** — every step has a check; run it and report its output:
-1. Decision involved? Research/methodology → teach-back; infrastructure → owner's
-   "approved". Either way an ADR before it is applied.
+1. Decision involved? Propose it in 2–3 lines; apply only after the owner's "ok"
+   (ADR-0013); a general choice gets its ADR before it is applied.
 2. Run that will support a claim or comparison? Copy `docs/experiment-template.md`, fix
    the reading rule and add the *pending* claim before anything runs.
 3. Job? Ask first; submit from a dir under `runs/`, clean tree, commit recorded.
@@ -123,19 +132,30 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
 
 ## Status
 <!-- BEGIN STATUS -->
-- Updated: 2026-11-13 — neumann
-- State: template skeleton on neumann (layout, hook, scripts with tests, machine YAMLs,
-  repo settings, skills, docs, ADRs 0001-0011; 0001 Proposed). Not set up on SDumont.
-- Now:
-  - Teach-back on the research rules of ADR-0001 (blocks any experiment doc or claim).
-  - Check the session loop: `/end-session` → new session → `/start-session` (guide step 5).
+- Updated: 2026-11-17 — neumann
+- State: project started from lab-template `24a7f02` on neumann (new-project steps 1-5):
+  GitHub origin, `template` remote, store symlinks, checks pass; ADR-0013 and ADR-0001
+  accepted. Not on SDumont yet. No data, runs, results or experiment docs.
+- Now (SDumont):
+  - Ask the owner for the path of the training files on SDumont, before anything else.
+  - Deploy key `pb-mace@sdumont` (owner types `ssh-keygen`), alias `github-pb-mace`, `ssh -T`.
+  - `git clone` from GitHub into `/prj/acmes/eudes.fileti3/pb-mace`; `core.hooksPath` (step 6).
+  - Store `/scratch/acmes/eudes.fileti3/projects/pb-mace-store` + symlinks (step 3).
+  - Checks (step 5): tests, `machine_config.py detect` prints `sdumont`, `python3 --version`.
+  - Env record of `mace_env` into `envs/sdumont.environment.yml`, read-only (ADR-0007).
+  - Dataset from the owner's Mac into `data/`; its sha256 in the journal.
+  - First toy job on `sequana_cpu_dev` from `runs/` (ask first), then `cost_ledger.py add`.
 - Later:
-  - SDumont: setup F3/F4, first project from the bootstrap kit (ADR-0012), ledger merge check.
-  - lab-template on GitHub, so every machine has a `template` remote (ADR-0012).
-  - Toy job on neumann to exercise `cost_ledger.py add` on a real job (needs the owner's ok).
-  - Bring template changes into `~/sandbox` through its `template` remote (ADR-0002 path).
-  - Env records for the Mac and SDumont (ADR-0007).
-- Waiting on owner: SDumont facts for ADR-0004/0005 (TODO(owner)).
-- Last sync — neumann: 2026-11-13, pushed to origin on top of `ac82332`
+  - Experiment doc + pending claim: MACE training and test (dataset, split,
+    hyperparameters, metrics, threshold: the owner's choices).
+  - Experiment doc + pending claim: MLMD vs AIMD RDFs (systems, protocol, RDF parameters,
+    agreement criterion).
+  - `template` remote on SDumont once lab-template is on GitHub (ADR-0012).
+- Waiting on owner:
+  - Clone on SDumont in `$HOME` (ADR-0012, default) or in `/scratch` (owner said "scratch"; needs an ADR).
+  - Strain = stress/virial (absent from the labels)?
+  - SDumont: training partition, cost unit (ADR-0005), `/scratch` purge rule, `conda_sh`.
+  - AIMD reference for the RDFs: which trajectories, and where.
+- Last sync — neumann: 2026-11-17, first push (project start)
 - Last sync — sdumont: never (not cloned)
 <!-- END STATUS -->
