@@ -136,24 +136,25 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
 ## Status
 <!-- BEGIN STATUS -->
 - Updated: 2026-11-17 — sdumont
-- State: on neumann, SDumont (clone in `/scratch`, ADR-0014) and GitHub; dataset
-  `consolidado/` on SDumont (sha256 OK); AIMD reference RDFs registered
-  (`results/aimd-rdf-reference/`); MACE training `pb_mace_v1` running (job 11745412,
-  `runs/pb_mace_v1/`, about 12 h from the smoke run); claim ID-1 pending. No model, MLMD
-  or final claims yet.
+- State: on neumann, SDumont (clone in `/scratch`, ADR-0014) and GitHub; `consolidado/` on
+  SDumont (sha256 OK); AIMD reference RDFs registered; training `pb_mace_v1` running (job
+  11745412, ~12.4 h); claim ID-1 pending; manuscript V7 in `pb-mace-store/manuscript/`
+  (outside git). No model, MLMD or final claims yet.
 - Now (SDumont):
   - Job 11745412: DONE or FAIL in `runs/pb_mace_v1/`, chain jobs, `cost_ledger.py add`.
   - Metrics script in `src/` (+ tests) for claim ID-1, before the test evaluation (`docs/mace-training.md`).
-  - Test: `eval_configs` on `test.xyz` (ask first; `*_dev` max 20 min), metrics, register, apply the ID-1 rule.
+  - Test: `eval_configs` on `test.xyz` (ask first; `*_dev` max 20 min), metrics, register, ID-1 rule, V7 `[PENDING]`s.
 - Later:
   - `docs/rdf-mlmd-vs-aimd.md`: MLMD protocol, agreement criterion, pending claim; before any MLMD.
-  - Final model: its heads (smoke log skips `pt_head`) and a run with the LAMMPS+MACE build of `sdumont.yaml`.
-  - Check that the MD code used with MACE accepts cells smaller than twice its cutoff.
+  - Final model in the LAMMPS+MACE build of `sdumont.yaml` (`create_lammps_model`, V7 §6.2); cells < 2× cutoff.
+  - Next model: early-stopping patience (40) < scheduler patience (50) keeps the learning rate constant.
   - `template` remote on SDumont once lab-template is on GitHub (ADR-0012).
 - Waiting on owner:
   - MLMD cells: same as the AIMD (doc, agent's proposal) or replicated / cubo222 only.
   - SDumont: cost unit (ADR-0005), `/scratch` purge rule.
   - Git author name on SDumont (`fileti-fileti`) vs neumann (`Eudes Fileti`): keep or align.
+  - Manuscript V7 `[CONFIRM]`s: b/TS/TSr variants, interface_aimd/longa, gate, AIMD block length, per-system std.
+  - Independent test set (no test frames of cubo222 or the interface-1 AIMD): dataset generation is out of scope now.
 - Last sync — neumann: 2026-11-17, end-of-session commit on top of `3f65ae6`
-- Last sync — sdumont: 2026-11-17, end-of-session commit on top of `22cd989`
+- Last sync — sdumont: 2026-11-17, end-of-session commit on top of `d0a93db`
 <!-- END STATUS -->

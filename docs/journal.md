@@ -14,6 +14,68 @@ Title: `## YYYY-MM-DD — <machine> — <short title>`.
 ```
 
 <!-- NEW ENTRIES BELOW -->
+## 2026-11-17 — sdumont — Training monitoring, manuscript V7
+- Goal: follow the training of `pb_mace_v1` (job 11745412) and document the training in
+  the owner's manuscript (Methodology and SI), version 7, before the chat is lost.
+- Done:
+  - Job 11745412 running on sdumont8019 (22 epochs at 13:15, 224 s per epoch); no job
+    submitted or ended since `d530e0d`; ledger: 0 rows added.
+  - `d0a93db` claim ID-1 Limits: test split coverage per config_type (below), added
+    before any test evaluation.
+  - Manuscript V7: the owner copied `manuscript-v6.docx` from the Mac (scp) to
+    `/scratch/acmes/eudes.fileti3/projects/pb-mace-store/manuscript/` (outside git, like
+    the V7). V7 built there by editing `word/document.xml` of V6 (stdlib script in the
+    session scratchpad, not kept): header; Section 3.6 (new Table 6: frames per
+    config_type and split, groups); Section 4 with 4.1–4.5 (training data; architecture
+    from the log; E0s; new Table 7; compute and duration; convergence control; results
+    `[PENDING]`); Section 5, 5.1, 8 and Table 10 corrected. sha256:
+    ```
+    b88e04ee54d576c10bfa8a037fbc7035c4db2be3febfeeb42c04c833de7ede75  manuscript-v6.docx
+    da743462b4bd0ebd1cf85b931b06cf1dfa68b4f46a524a9a324e9f32f09c648d  manuscript-v7.docx
+    ```
+    Checked: every part well-formed XML, same parts as V6. Not rendered nor
+    schema-validated (no LibreOffice, pandoc, lxml or defusedxml on SDumont): the owner
+    opens it in Word.
+- Results (monitoring, not a claim):
+  - Training log: `Using heads: ['Default']`; architecture from the foundation model:
+    hidden irreps 128x0e, 2 layers, correlation 3, l ≤ 3, r_max 6.0 Å; 255 400 optimizer
+    steps for 200 epochs; first 7 epochs 223 s each → about 12.4 h for 200 epochs.
+  - Convergence speed of the validation force RMSE over the same window of optimizer steps
+    (about 1.2k–6.5k), against the legacy pb_t2A2 log (A2): −1.35 % per 1000 steps vs
+    −0.72 % (−4.6 % vs −2.1 % per 10 min). Different validation sets and frame sizes:
+    describes the training runs, not the quality of the models.
+  - `consolidado/` split (`frames.tsv`): 208 groups (173 train, 23 valid, 12 test). The
+    test split has one group (11–20 frames) for 12 of the 20 config_types and none for
+    cubo222, interface_aimd, interface_longa, vacancia_P1 and the interface TS windows.
+- Decisions (owner: "OK"):
+  - Manuscript V7 scope: training sections 4.1–4.5 plus the corrections of V6 that
+    contradict the training (E0s, test independence, 300 → 200 epochs, per-atom energy
+    metric, stress labels); other sections untouched.
+  - Not in V7: early-epoch RMSE (monitoring) and the comparison with A2 (V6 reports no A2
+    numbers; different validation sets). Computational numbers only.
+  - Manuscript files in `pb-mace-store/manuscript/`, outside git; the owner keeps the copy
+    on the Mac (`/scratch` purge rule unknown).
+  - ID-1 Limits extended with the test coverage (owner: "OK"), before the result.
+- Problems:
+  - The `pt_head` concern of the previous entry was wrong: `skip_evaluate_heads='pt_head'`
+    is a default option; the model has one head (`Default`).
+  - Learning rate: MACE's `ReduceLROnPlateau` (factor 0.8, patience 50, relative threshold
+    1e-4) has a longer patience than early stopping (40), so the learning rate stays at
+    2e-4 for most or all of the run; the agent had told the owner it "starts falling after
+    50 epochs". Same settings as pb_t2A2 (its log not checked). The training log does not
+    record the learning rate. Not changed for this model.
+  - The previous entry's split rule "20 consecutive AIMD frames" does not fit
+    `interface_aimd` (29 frames in one group); the AIMD block length is unknown (V7
+    `[CONFIRM]`). Event groups match the windows of V6 Table 5 (W1 12, W2v 12, P1 8).
+  - Owner's shell: `cp` is `cp -i` (a background command waited on a prompt and was
+    stopped); `rm -rf` is denied by the project settings.
+  - V7 sections outside the agreed scope are now stale (Table 5 still "planned" for W4a/b
+    and N3, which are in the dataset; 3.1 and 3.5 status lines).
+- Next: next SDumont session: job 11745412 (DONE or FAIL, ledger), then the ID-1 metrics
+  script and the test evaluation. Owner: open V7 in Word and answer its new `[CONFIRM]`s
+  (b/TS/TSr variants and interface_aimd/longa; gate of all frames; AIMD block length;
+  per-system energy std as a separate analysis).
+
 ## 2026-11-17 — sdumont — Setup, smoke run, MACE training submitted
 - Goal: set up the SDumont clone (status Now), fix the MACE training design and start the
   training of `pb_mace_v1`.

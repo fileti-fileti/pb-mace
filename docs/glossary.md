@@ -20,6 +20,7 @@ One line per term.
 - **qz**: the owner's CP2K labelling protocol: UKS PBE-D3(BJ), U 6 eV on Fe(III) only, cutoff 700/70, EPS 1e-6.
 - **Reading rule**: question, metric, threshold and what counts as yes/no, fixed before a run.
 - **Registered result**: verbatim copy under `results/<name>/` with `PROVENANCE.json` checksums.
+- **Split group**: the unit of the train/valid/test split of `consolidado/` (`grupo` in `frames.tsv`): a block of consecutive frames of an AIMD pool or one rare-event window.
 - **Smoke run**: a short toy job that checks a run's setup end to end (data, env, GPU memory, time per epoch) before the real job; exempt from the reading rule.
 - **Stitching**: joining the pieces of a restarted CP2K trajectory; the last branch through a step wins (`src/rdf.py`).
 - **Status block**: the part of `CLAUDE.md` between the STATUS markers; current state only.
