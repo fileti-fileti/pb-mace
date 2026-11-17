@@ -1,0 +1,206 @@
+{
+ "description": "AIMD reference RDFs, docs/rdf-mlmd-vs-aimd.md. The MLMD analysis uses the same pairs, dr, nblocks and discard_fs.",
+ "dr": 0.02,
+ "nblocks": 5,
+ "block_check": [
+  2,
+  4,
+  5,
+  8,
+  10
+ ],
+ "systems": {
+  "cubo-puro": {
+   "trajectory": [
+    "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/cubo-puro-new-pos-1.xyz"
+   ],
+   "kinds": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/COORD.inc",
+   "cell": [
+    10.17,
+    10.17,
+    10.17
+   ],
+   "discard_fs": 1000.0,
+   "pairs": [
+    [
+     "Fe2",
+     "C"
+    ],
+    [
+     "Fe3",
+     "N"
+    ],
+    [
+     "C",
+     "N"
+    ],
+    [
+     "Na",
+     "N"
+    ],
+    [
+     "Na",
+     "C"
+    ]
+   ]
+  },
+  "cubo222": {
+   "trajectory": [
+    "/home/eudes/prussian-blue/cubo/dataset/cubo222-new/cubo222-new-pos-1.xyz"
+   ],
+   "kinds": "/home/eudes/prussian-blue/cubo/dataset/cubo222-new/COORD.inc",
+   "cell": [
+    20.34,
+    20.34,
+    20.34
+   ],
+   "discard_fs": 500.0,
+   "pairs": [
+    [
+     "Fe2",
+     "C"
+    ],
+    [
+     "Fe3",
+     "N"
+    ],
+    [
+     "C",
+     "N"
+    ],
+    [
+     "Na",
+     "N"
+    ],
+    [
+     "Na",
+     "C"
+    ],
+    [
+     "Fe3",
+     "O"
+    ],
+    [
+     "Na",
+     "O"
+    ],
+    [
+     "O",
+     "O"
+    ],
+    [
+     "O",
+     "H"
+    ],
+    [
+     "N",
+     "H"
+    ],
+    [
+     "Fe2",
+     "Fe3"
+    ]
+   ]
+  },
+  "interface-1": {
+   "trajectory": [
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_6/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_7/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_8/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_10/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_12/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_17/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_19/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_20/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_22/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_24/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_26/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_27/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_28/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_31/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_32/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_34/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_35/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_36/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_38/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_39/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_41/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_42/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_44/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_45/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_47/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_48/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_52/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_55/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_57/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_62/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_64/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_66/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_67/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_69/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_70/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_71/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_72/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_73/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_74/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_75/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_77/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_78/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_79/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_83/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_84/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/parte_85/if1np-pos-1.xyz",
+    "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/longa/if1np-pos-1.xyz"
+   ],
+   "kinds": "/home/eudes/prussian-blue/cubo/dataset/interface-1np-new/COORD.inc",
+   "cell": [
+    10.087,
+    10.087,
+    36.002
+   ],
+   "discard_fs": 500.0,
+   "pairs": [
+    [
+     "Fe2",
+     "C"
+    ],
+    [
+     "Fe3",
+     "N"
+    ],
+    [
+     "C",
+     "N"
+    ],
+    [
+     "Na",
+     "N"
+    ],
+    [
+     "Na",
+     "C"
+    ],
+    [
+     "Fe3",
+     "O"
+    ],
+    [
+     "Na",
+     "O"
+    ],
+    [
+     "O",
+     "O"
+    ],
+    [
+     "O",
+     "H"
+    ],
+    [
+     "N",
+     "H"
+    ]
+   ]
+  }
+ }
+}
