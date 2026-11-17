@@ -23,5 +23,10 @@ result and never changed afterwards; a changed rule makes a new claim.
 - Reading: pending
 - Limits: one seed; test frames come from the same AIMD runs as the training frames
   (split by groups), so the test measures interpolation within these runs, not transfer.
+  `test.xyz` has one group (11–20 frames) per config_type for 12 of the 20 types and no
+  frame of cubo222, interface_aimd, interface_longa, vacancia_P1 or the TS windows
+  (interface_W4aTS, _W4aTSr, _W4bTS, _W4bTSr) (`data/consolidado/frames.tsv`, checked
+  2026-11-17, before the test evaluation): per-type errors are single-window estimates,
+  and there is no test error for cubo222 or the interface-1 AIMD.
 - Evidence: pending
 - Method: `docs/mace-training.md`. Jobs: pending. Cost: pending
