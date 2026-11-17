@@ -1,0 +1,3 @@
+machine,job_id,job_name,partition,state,exit_code,start,end,elapsed_s,alloc_cpus,nodelist,workdir,cost,cost_unit,recorded_at
+sdumont,11745176,pb_mace_v1-smoke,sequana_gpu_dev,CANCELLED by 64031,0:0,None,2026-11-17T10:45:33,0,0,None assigned,/scratch/acmes/eudes.fileti3/projects/pb-mace-store/runs/pb_mace_v1-smoke,unknown,unknown,2026-11-17T14:06:26+00:00
+sdumont,11745195,pb_mace_v1-smoke2,sequana_gpu_dev,FAILED,1:0,2026-11-17T10:50:07,2026-11-17T11:05:09,902,12,sdumont8093,/scratch/acmes/eudes.fileti3/projects/pb-mace-store/runs/pb_mace_v1-smoke2,unknown,unknown,2026-11-17T14:06:26+00:00
