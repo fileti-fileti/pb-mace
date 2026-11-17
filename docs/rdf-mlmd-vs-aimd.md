@@ -35,8 +35,8 @@ cutoff 400/60, H mass 2.0141. Paths under `~/prussian-blue/cubo/dataset/` on neu
   g_AB(r) normalised with the cell volume (ordered pairs, N_A(N_A − 1) when A = B);
   n_AB(r) = mean number of B within r of an A, counted directly.
 - **Error**: the kept frames are split into 5 contiguous blocks; per-bin standard error of
-  the block means. Correlation check: the error at each pair's first peak is also reported
-  for 2, 4, 8 and 10 blocks; an error that still grows with the block length means the
+  the block means. Correlation check: the error at the maximum of each g(r) is also
+  reported for 2, 4, 8 and 10 blocks; an error that still grows with the block length means the
   blocks are not independent and the 5-block error is a lower bound.
 - **MLMD** (fixed before any MLMD run): same cell, composition and starting structure as
   the AIMD of each system; NVT at 350 K; the same code (`src/rdf.py`), pairs, parameters
@@ -54,6 +54,9 @@ cutoff 400/60, H mass 2.0141. Paths under `~/prussian-blue/cubo/dataset/` on neu
   3. Short AIMD runs (5–12 ps) with correlated frames: large error bars on the reference,
      so "inconclusive" is a possible outcome.
   4. r_max ≈ 5 Å in cubo-puro and interface-1.
+  5. interface-1 is a slab: g(r) is normalised with the whole cell volume, so it does not
+     tend to 1 at large r and its heights are not comparable with the bulk systems; the
+     MLMD uses the same normalisation, so the comparison is unaffected.
 
 ## How to run
 - AIMD reference: `src/rdf.py configs/rdf/aimd_reference.json <run dir>` with the
@@ -61,4 +64,10 @@ cutoff 400/60, H mass 2.0141. Paths under `~/prussian-blue/cubo/dataset/` on neu
   run dir under `runs/`, clean tree; the commit is written to `run_info.json`.
 
 ## Results
-- AIMD reference: `results/aimd-rdf-reference/` (when registered).
+- AIMD reference: `results/aimd-rdf-reference/` (`.dat` per pair and `run_info.json`,
+  with the commit). Plots `rdf_<system>.png` stay in the run dir
+  (`runs/aimd-rdf-reference/`, neumann) and on the owner's Mac: binary files are not
+  registered; they are redrawn from the `.dat` files.
+- Block check (`run_info.json`, `gmax_err_by_nblocks`): for several pairs the error grows
+  with the block length, so the 5-block error is a lower bound there (owner's concern,
+  2026-11-17: few frames, highly correlated).

@@ -165,11 +165,11 @@ def run_system(name, cfg, dr, nblocks, block_check, outdir):
         if len(ia) == 0 or len(ib) == 0:
             sys.exit("{}: no atoms of kind {} or {}".format(name, a, b))
         r, g, err, n, counts, ideal = partial_rdf(frames, ia, ib, cfg["cell"], edges, nblocks)
-        peak = int(np.argmax(g))
-        check = {str(k): float(block_error(counts, ideal, k)[peak]) for k in block_check}
+        top = int(np.argmax(g))   # maximum of g(r), not always the first shell
+        check = {str(k): float(block_error(counts, ideal, k)[top]) for k in block_check}
         info["pairs"]["{}-{}".format(a, b)] = {
-            "nA": int(len(ia)), "nB": int(len(ib)), "first_peak_r": float(r[peak]),
-            "first_peak_g": float(g[peak]), "peak_err_by_nblocks": check}
+            "nA": int(len(ia)), "nB": int(len(ib)), "gmax_r": float(r[top]),
+            "gmax": float(g[top]), "gmax_err_by_nblocks": check}
         path = os.path.join(outdir, "rdf_{}_{}-{}.dat".format(name, a, b))
         head = ("system {} pair {}-{} | frames {} (steps {}-{}, t >= {} fs) | dr {} r_max {} "
                 "| err: {} contiguous blocks\nr_A g g_err n_within_r_upper").format(
@@ -221,9 +221,9 @@ def main(argv):
         print("{}: {} frames, steps {}-{}, strides {}, r_max {}".format(
             name, s["frames"], s["first_step"], s["last_step"], s["step_strides"], s["r_max"]))
         for pair, p in s["pairs"].items():
-            print("  {:7s} peak r {:.3f} g {:.3f} err(nblocks) {}".format(
-                pair, p["first_peak_r"], p["first_peak_g"],
-                " ".join("{}:{:.3f}".format(k, v) for k, v in p["peak_err_by_nblocks"].items())))
+            print("  {:7s} gmax at r {:.3f}: g {:.3f} err(nblocks) {}".format(
+                pair, p["gmax_r"], p["gmax"],
+                " ".join("{}:{:.3f}".format(k, v) for k, v in p["gmax_err_by_nblocks"].items())))
     with open(os.path.join(outdir, "run_info.json"), "w") as f:
         json.dump(info, f, indent=1)
 
