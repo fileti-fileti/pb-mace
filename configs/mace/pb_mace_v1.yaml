@@ -1,0 +1,35 @@
+# MACE fine-tuning config, fixed 2026-11-17 (docs/mace-training.md).
+# Paths under data/ are relative to the repo root; scripts/prep_mace_train.py writes a copy
+# with absolute paths into runs/<name>/config.yaml. Do not run mace_run_train on this file.
+model: "MACE"
+name: "pb_mace_v1"
+foundation_model: data/foundation/mace_mp_small.model
+train_file: data/consolidado/train.xyz
+valid_file: data/consolidado/valid.xyz
+energy_key: "REF_energy"
+forces_key: "REF_forces"
+E0s: "average"
+loss: "weighted"
+energy_weight: 1.0
+forces_weight: 100.0
+stress_weight: 0.0
+lr: 0.0002
+batch_size: 2
+valid_batch_size: 2
+max_num_epochs: 200
+patience: 40
+seed: 1
+r_max: 6.0
+ema: true
+ema_decay: 0.99
+amsgrad: true
+default_dtype: float64
+device: cuda
+multiheads_finetuning: False
+enable_cueq: False
+model_dir: MACE_models
+log_dir: MACE_models
+results_dir: MACE_models
+checkpoints_dir: MACE_models
+save_all_checkpoints: False
+restart_latest: true

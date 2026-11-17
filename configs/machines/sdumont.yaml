@@ -13,21 +13,23 @@ storage:
   store_parent: /scratch/acmes/eudes.fileti3/projects   # owner-reported area; unknown purge accepted (ADR-0012)
   purge: unknown                                    # TODO(owner): /scratch purge rule (LNCC)
   notes: "$HOME=/prj/acmes/eudes.fileti3 (NFS, 250G); /scratch Lustre; login ulimit -t 1800"
-partitions:           # owner-reported
+partitions:           # account acmes on all eight (sacctmgr, 2026-11-17)
   - sequana_cpu
   - sequana_cpu_long
   - sequana_cpu_dev
   - sequana_cpu_bigmem
   - sequana_cpu_bigmem_long
-  - sequana_gpu
+  - sequana_gpu       # training (owner, 2026-11-17): 4x V100/node (sinfo); 1 GPU, -c 12 as in legacy pb_t2A2
   - sequana_gpu_long
-  - sequana_gpu_dev
+  - sequana_gpu_dev   # short GPU checks (legacy eval_configs, 20 min)
+# GPU jobs: --exclude=sdumont8042 (owner, 2026-11-17: node failed the owner's runs; retest later)
 toy_job_partition: sequana_cpu_dev
 modules:
   cp2k: unknown       # TODO(owner)
   gromacs: unknown
-  lammps: unknown     # TODO(owner): LAMMPS+MACE build
+  lammps: /scratch/acmes/eudes.fileti3/projects/shared/software/lammps_mace/bin/lmp   # own build, not a module;
+                      # needs mace_env/lib and shared/software/libtorch-gpu/lib in LD_LIBRARY_PATH (legacy run14_A2/params.sh)
 python:
-  conda_sh: unknown   # TODO(owner)
+  conda_sh: /scratch/acmes/eudes.fileti3/miniconda3/etc/profile.d/conda.sh   # used by legacy pb/eval_A2/eval_A2.sbatch
   envs:
     - /scratch/acmes/eudes.fileti3/projects/shared/envs/mace_env   # owner-reported; untouchable

@@ -14,4 +14,14 @@ result and never changed afterwards; a changed rule makes a new claim.
 - Method: link to the doc section. Jobs: IDs. Cost: from the ledger
 ```
 
-(No claims yet.)
+### ID-1. Test errors of the MACE model `pb_mace_v1` on the `consolidado/` test split (pending)
+- Rule, fixed before the result (2026-11-17, `docs/mace-training.md`): RMSE and MAE of
+  forces (meV/Å) and energy (meV/atom) on `test.xyz`, overall, per `config_type` and per
+  element; descriptive, no yes/no threshold (owner's option (b)); fitness for the MLMD is
+  decided by the RDF claim of `docs/rdf-mlmd-vs-aimd.md`.
+- Numbers: pending
+- Reading: pending
+- Limits: one seed; test frames come from the same AIMD runs as the training frames
+  (split by groups), so the test measures interpolation within these runs, not transfer.
+- Evidence: pending
+- Method: `docs/mace-training.md`. Jobs: pending. Cost: pending
