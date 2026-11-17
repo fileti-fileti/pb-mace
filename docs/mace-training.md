@@ -48,8 +48,11 @@ systems; only its setup is reused.
 C:N (cyanide) and O:H (water) counts were in fixed ratios, so the fit could not separate
 them: the pb_t2A2 log gives E0(C) = E0(N) and E0(H) = 2·E0(O). Any least-squares solution
 then gives each training frame the same total E0, so training is unaffected, but the
-individual E0s carry no physical meaning. To check on `consolidado/` (Na included) when it
-reaches SDumont.
+individual E0s carry no physical meaning. Checked on `consolidado/` (2026-11-17, train,
+valid and test): 5 distinct compositions (water, cubo-puro, cubo222, interface, vacancy)
+for 6 elements, composition rank 3; in every frame C = N, H = 2·O and 7·C = 18·Fe + 6·Na.
+Forces never depend on E0s, and fixed-composition MD is unaffected; total energies of a
+composition outside this span (e.g. another Fe:Na:CN ratio) carry an arbitrary offset.
 
 **Filtering**: none. No frame is removed using a model's residuals (pb_t2A2 removed frames,
 validation included, by the residual of the previous model, which makes its validation
@@ -59,9 +62,8 @@ error optimistic).
 the owner's runs). Jobs of 24 h; a job cut by the wall time resubmits itself and continues
 with `restart_latest`, at most 2 resubmissions. Expected length: pb_t2A2 took about 115 s
 per epoch for 316 908 training + 33 626 validation atoms (9 h 40 min for 300 epochs);
-if `consolidado/` frames have a similar mean size (2.3× the frames), 200 epochs take about
-15 h. Recomputed from the atom count when the data are on SDumont, and measured by the
-smoke run.
+`consolidado/` has 491 772 + 66 729 atoms (1.6×), so about 180 s per epoch and 10 h for
+200 epochs if the cost scales with the atom count; measured by the smoke run.
 
 **Fair comparison**: `valid.xyz` (training side) is the only set used for early stopping
 and checkpoint choice; `test.xyz` is evaluated once, with `mace.cli.eval_configs`, after
