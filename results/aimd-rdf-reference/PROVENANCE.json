@@ -1,0 +1,203 @@
+{
+  "name": "aimd-rdf-reference",
+  "registered_at": "2026-11-17T11:59:57+00:00",
+  "machine": "neumann",
+  "hostname": "headnode.cluster.neumann.unifesp.br",
+  "repo_commit": "c2757f0f3ee1aaabd0317aa24a77d76df4e56c12",
+  "source_dir": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference",
+  "patterns": [
+    "*.dat",
+    "run_info.json"
+  ],
+  "files": [
+    {
+      "path": "rdf_cubo-puro_C-N.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo-puro_C-N.dat",
+      "sha256": "508d3fef5fa469282f4225189e6707c04a2e61b7c590c8a0939a91f061180d0f",
+      "bytes": 9311,
+      "source_mtime": "2026-11-17T11:59:37+00:00"
+    },
+    {
+      "path": "rdf_cubo-puro_Fe2-C.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo-puro_Fe2-C.dat",
+      "sha256": "d1071c3c63673a1bb702ea75b570e420d5c5467d96c25b394f75556002339e76",
+      "bytes": 9308,
+      "source_mtime": "2026-11-17T11:59:36+00:00"
+    },
+    {
+      "path": "rdf_cubo-puro_Fe3-N.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo-puro_Fe3-N.dat",
+      "sha256": "cd9e5ee5bcad152c258b428245a84c4f67076ca5823799c0b29eb5e4d8c9af4e",
+      "bytes": 9310,
+      "source_mtime": "2026-11-17T11:59:36+00:00"
+    },
+    {
+      "path": "rdf_cubo-puro_Na-C.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo-puro_Na-C.dat",
+      "sha256": "c19c8711411466ec266c1b7003386ba3d23c3bbbee9dd51acdea6c9707434e16",
+      "bytes": 9326,
+      "source_mtime": "2026-11-17T11:59:37+00:00"
+    },
+    {
+      "path": "rdf_cubo-puro_Na-N.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo-puro_Na-N.dat",
+      "sha256": "fe055b63242ca80a9a4cf7fa88e9f29956c9a741a41803f51ccf781e4e7650f3",
+      "bytes": 9326,
+      "source_mtime": "2026-11-17T11:59:37+00:00"
+    },
+    {
+      "path": "rdf_cubo222_C-N.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo222_C-N.dat",
+      "sha256": "0258be32992b274a7a3dca9e86dcb9e98379eaa899d10cc70c4d33821300d04f",
+      "bytes": 18713,
+      "source_mtime": "2026-11-17T11:59:44+00:00"
+    },
+    {
+      "path": "rdf_cubo222_Fe2-C.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo222_Fe2-C.dat",
+      "sha256": "ae6cea5d7bc8f2cb97339d88ff2ee188bc25750fdac610f34667a29fc4a1365f",
+      "bytes": 18671,
+      "source_mtime": "2026-11-17T11:59:40+00:00"
+    },
+    {
+      "path": "rdf_cubo222_Fe2-Fe3.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo222_Fe2-Fe3.dat",
+      "sha256": "6185f54db8f8adaa90d3d787c0a46c7a59f0e146cf85504565805d75301327c3",
+      "bytes": 18530,
+      "source_mtime": "2026-11-17T11:59:46+00:00"
+    },
+    {
+      "path": "rdf_cubo222_Fe3-N.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo222_Fe3-N.dat",
+      "sha256": "53e3ea5d8a021042ac1c1d5eb0b1b2741862944b3d4cf1fba49cac8fc6a04bd3",
+      "bytes": 18680,
+      "source_mtime": "2026-11-17T11:59:41+00:00"
+    },
+    {
+      "path": "rdf_cubo222_Fe3-O.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo222_Fe3-O.dat",
+      "sha256": "330c4888cc0e045cf9c9fd47d4494b3af912c30f79abde2b3ff0b324b77a6679",
+      "bytes": 18520,
+      "source_mtime": "2026-11-17T11:59:44+00:00"
+    },
+    {
+      "path": "rdf_cubo222_N-H.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo222_N-H.dat",
+      "sha256": "7e4754b63cab7d2c23515f00225c06ae524aabddc499f5d1861ab50f34aa541a",
+      "bytes": 18586,
+      "source_mtime": "2026-11-17T11:59:46+00:00"
+    },
+    {
+      "path": "rdf_cubo222_Na-C.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo222_Na-C.dat",
+      "sha256": "94821907776d3d121bffe83a65c7dbd4f6c815c27ce30c63da4ec039496960a2",
+      "bytes": 18728,
+      "source_mtime": "2026-11-17T11:59:44+00:00"
+    },
+    {
+      "path": "rdf_cubo222_Na-N.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo222_Na-N.dat",
+      "sha256": "fc5806b8fd3846cbe32d4ee17c27f9247490c26fe064bc649b864b8141c920c7",
+      "bytes": 18729,
+      "source_mtime": "2026-11-17T11:59:44+00:00"
+    },
+    {
+      "path": "rdf_cubo222_Na-O.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo222_Na-O.dat",
+      "sha256": "2fc053df8a88408ac86bde07cc924499f2345fcc9897cc150b4010b7b39b1660",
+      "bytes": 18500,
+      "source_mtime": "2026-11-17T11:59:45+00:00"
+    },
+    {
+      "path": "rdf_cubo222_O-H.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo222_O-H.dat",
+      "sha256": "ccb3d38e173939c241f8249530d33c21eb7bb19af017c6868235b62a7efff51b",
+      "bytes": 18774,
+      "source_mtime": "2026-11-17T11:59:45+00:00"
+    },
+    {
+      "path": "rdf_cubo222_O-O.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_cubo222_O-O.dat",
+      "sha256": "924d35fcc147a8c1daf2e174e25d89bafbeb75189a64af0b361c9879534e78bd",
+      "bytes": 18679,
+      "source_mtime": "2026-11-17T11:59:45+00:00"
+    },
+    {
+      "path": "rdf_interface-1_C-N.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_interface-1_C-N.dat",
+      "sha256": "7421838a13a7dfc4505abcfe1bd3645a542997c44810986f9e9d7ac53fd50bc7",
+      "bytes": 9235,
+      "source_mtime": "2026-11-17T11:59:49+00:00"
+    },
+    {
+      "path": "rdf_interface-1_Fe2-C.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_interface-1_Fe2-C.dat",
+      "sha256": "40712c99645af27fe2b93c9ba4e7b4569406a038912e653e2c087ae010acf6e1",
+      "bytes": 9238,
+      "source_mtime": "2026-11-17T11:59:49+00:00"
+    },
+    {
+      "path": "rdf_interface-1_Fe3-N.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_interface-1_Fe3-N.dat",
+      "sha256": "cd39b08a304be5d0c57c744d5aac7921adc19dd9b862b1dc28b6b8e635de1ae5",
+      "bytes": 9241,
+      "source_mtime": "2026-11-17T11:59:49+00:00"
+    },
+    {
+      "path": "rdf_interface-1_Fe3-O.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_interface-1_Fe3-O.dat",
+      "sha256": "dda2c21dd9a0d84e8c1b69940a2c4c6d4795e2bd2e8be579439fccde1b4a9452",
+      "bytes": 9228,
+      "source_mtime": "2026-11-17T11:59:49+00:00"
+    },
+    {
+      "path": "rdf_interface-1_N-H.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_interface-1_N-H.dat",
+      "sha256": "553545429769401c8fe10f22ab838ac92ae49e92d4e5fe2fab13e79f0f0ee021",
+      "bytes": 9226,
+      "source_mtime": "2026-11-17T11:59:50+00:00"
+    },
+    {
+      "path": "rdf_interface-1_Na-C.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_interface-1_Na-C.dat",
+      "sha256": "b00675e95c721ca6b88ca429bc80bd3b932b21867fe58d1038f72a7d41b96443",
+      "bytes": 9254,
+      "source_mtime": "2026-11-17T11:59:49+00:00"
+    },
+    {
+      "path": "rdf_interface-1_Na-N.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_interface-1_Na-N.dat",
+      "sha256": "d378df5ea7721bfb6ec7f7cfe9b2055b8098045a536a3387bcfa9c2ce5032fc3",
+      "bytes": 9252,
+      "source_mtime": "2026-11-17T11:59:49+00:00"
+    },
+    {
+      "path": "rdf_interface-1_Na-O.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_interface-1_Na-O.dat",
+      "sha256": "05663ddfd36ed0d0b0ca81d49983382e11bd2e88588cf20857d0c85fbf814bf2",
+      "bytes": 9227,
+      "source_mtime": "2026-11-17T11:59:49+00:00"
+    },
+    {
+      "path": "rdf_interface-1_O-H.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_interface-1_O-H.dat",
+      "sha256": "c8b66cc1721731141caa5d6b00b345e04dfc21e1d0d8cefe13cdf6cdb58b3ede",
+      "bytes": 9310,
+      "source_mtime": "2026-11-17T11:59:50+00:00"
+    },
+    {
+      "path": "rdf_interface-1_O-O.dat",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/rdf_interface-1_O-O.dat",
+      "sha256": "0fdb81fc392742dfc5a40eb64488c93b34b530a68eea863e029004ceef750b6f",
+      "bytes": 9247,
+      "source_mtime": "2026-11-17T11:59:50+00:00"
+    },
+    {
+      "path": "run_info.json",
+      "source": "/home/eudes/pb-mace-store/runs/aimd-rdf-reference/run_info.json",
+      "sha256": "6e8dde9c00bfbb78c9c4fbb72478ec4349d295a9941abb4e959892399dbc6c21",
+      "bytes": 8688,
+      "source_mtime": "2026-11-17T11:59:52+00:00"
+    }
+  ]
+}
