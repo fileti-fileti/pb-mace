@@ -87,7 +87,8 @@ the model is fixed, and never informs a choice.
    `runs/<name>/` with `config.yaml` (absolute data paths), `job.sbatch` (env from
    `configs/machines/sdumont.yaml`) and `run_info.json` (commit, checksums).
 3. Smoke run (toy, exempt from the reading rule; ask first): the same config with
-   `--epochs 2 --max-chain 0 --partition sequana_gpu_dev --time 00:30:00 --name <smoke name>`:
+   `--epochs 2 --max-chain 0 --partition sequana_gpu_dev --time 00:20:00 --name <smoke name>`
+   (20 min is the account's maximum wall time on `*_dev`; sacctmgr, 2026-11-17):
    checks the config with Na, GPU memory and seconds per epoch.
 4. Training (ask first): `cd runs/<name> && sbatch job.sbatch`.
 5. Test (after the model is fixed): `eval_configs` on `test.xyz`, then the metrics script.
