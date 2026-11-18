@@ -30,3 +30,15 @@ result and never changed afterwards; a changed rule makes a new claim.
   and there is no test error for cubo222 or the interface-1 AIMD.
 - Evidence: pending
 - Method: `docs/mace-training.md`. Jobs: pending. Cost: pending
+
+### ID-2. Test errors of the MACE model `pb_mace_v2` on the `consolidado/` test split (pending)
+- Rule, fixed before the result (2026-11-18, `docs/mace-training.md`, pb_mace_v2): as
+  ID-1: RMSE and MAE of forces (meV/Å) and energy (meV/atom) on `test.xyz`, overall, per
+  `config_type` and per element; descriptive, no yes/no threshold.
+- Numbers: pending
+- Reading: pending
+- Limits: as ID-1. v2 continues v1 (same seed and data), so v1 and v2 are not independent
+  models. Which of the two goes to the MLMD is fixed by the validation loss, not by the
+  test (`docs/mace-training.md`, pb_mace_v2).
+- Evidence: pending
+- Method: `docs/mace-training.md` (pb_mace_v2). Jobs: pending. Cost: pending

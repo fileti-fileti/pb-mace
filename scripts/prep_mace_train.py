@@ -4,6 +4,7 @@
 Usage (login node, clean work tree; nothing is submitted, the command is printed):
   prep_mace_train.py CONFIG --partition P [--exclude NODES] [--name NAME] [--time T]
                      [--gpus 1] [--cpus 12] [--max-chain 2] [--epochs N] [--env mace_env]
+                     [--init-checkpoint PATH]
 
 CONFIG is a flat `mace_run_train` YAML in the repo (docs/mace-training.md). Checks:
 - the machine is detected from configs/machines/ and the work tree is clean (commit recorded);
@@ -14,6 +15,9 @@ CONFIG is a flat `mace_run_train` YAML in the repo (docs/mace-training.md). Chec
 The copy in the run dir gets absolute data paths (and --epochs, if given). The job activates
 the env explicitly, runs mace_run_train under `timeout` (wall time minus a margin) and, when
 cut, resubmits itself (restart_latest) at most --max-chain times; it writes DONE or FAIL.
+--init-checkpoint continues another run: its `*_epoch-N.pt` is copied into the run dir under
+this config's name and seed, where MACE's restart_latest loads it (model, optimizer and
+LR-scheduler state) and trains epochs N .. max_num_epochs-1; its sha256 goes to run_info.json.
 Standard library only; runs on Python >= 3.6.
 """
 import argparse
@@ -22,6 +26,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import socket
 import subprocess
 import sys
@@ -34,6 +39,7 @@ DEFAULT_REPO = mc.DEFAULT_REPO
 PATH_KEYS = ("foundation_model", "train_file", "valid_file", "test_file")
 NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 SUMS_RE = re.compile(r"^([0-9a-f]{64}) [ *](.+)$")
+CKPT_RE = re.compile(r"_epoch-(\d+)\.pt$")
 
 
 class PrepError(Exception):
@@ -138,6 +144,33 @@ def verify_sums(sf, base):
     return ok
 
 
+def init_checkpoint_plan(entries, src):
+    """--init-checkpoint -> {source, sha256, path (in the run dir), epoch}.
+
+    MACE's restart_latest loads the highest `<name>_run-<seed>_epoch-N.pt` in checkpoints_dir
+    and starts at epoch N, so the copy must carry this config's name and seed.
+    """
+    src = Path(src).resolve()
+    if not src.is_file():
+        raise PrepError("--init-checkpoint {}: no such file".format(src))
+    m = CKPT_RE.search(src.name)
+    if not m:
+        raise PrepError("--init-checkpoint {}: expected a MACE '*_epoch-N.pt'".format(src.name))
+    if (get(entries, "restart_latest") or "").lower() != "true":
+        raise PrepError("--init-checkpoint needs 'restart_latest: true' in the config")
+    ckdir, seed, maxep = (get(entries, k) for k in ("checkpoints_dir", "seed", "max_num_epochs"))
+    if not ckdir or not seed or not maxep:
+        raise PrepError("--init-checkpoint needs 'checkpoints_dir', 'seed' and 'max_num_epochs'")
+    if Path(ckdir).is_absolute() or ".." in Path(ckdir).parts:
+        raise PrepError("checkpoints_dir {!r}: must be inside the run dir".format(ckdir))
+    epoch = int(m.group(1))
+    if not seed.isdigit() or not maxep.isdigit() or int(maxep) <= epoch:
+        raise PrepError("--init-checkpoint epoch {}: needs integer seed and max_num_epochs > {}"
+                        .format(epoch, epoch))
+    path = "{}/{}_run-{}_epoch-{}.pt".format(ckdir.rstrip("/"), get(entries, "name"), seed, epoch)
+    return {"source": str(src), "sha256": sha256(src), "path": path, "epoch": epoch}
+
+
 def git(repo, *args):
     p = subprocess.run(["git"] + list(args), cwd=str(repo), stdout=subprocess.PIPE,
                        stderr=subprocess.PIPE, universal_newlines=True)
@@ -225,6 +258,7 @@ def prepare(repo, machine, mcfg, a, now=None):
         if a.epochs < 1:
             raise PrepError("--epochs must be >= 1")
         put(entries, "max_num_epochs", str(a.epochs))
+    init = init_checkpoint_plan(entries, a.init_checkpoint) if a.init_checkpoint else None
 
     data, checked = {}, {}
     for key in PATH_KEYS:
@@ -271,8 +305,15 @@ def prepare(repo, machine, mcfg, a, now=None):
         "slurm": {"partition": a.partition, "exclude": a.exclude, "gpus": a.gpus,
                   "cpus": a.cpus, "time": a.time, "max_chain": a.max_chain},
         "conda_sh": conda_sh, "env": env, "final_model": final_model,
+        "init_checkpoint": init,
     }
     run.mkdir()
+    if init:   # before job.sbatch: a failed copy leaves no job to submit
+        dest = run / init["path"]
+        dest.parent.mkdir(parents=True)
+        shutil.copyfile(init["source"], str(dest))
+        if sha256(dest) != init["sha256"]:
+            raise PrepError("{}: copy does not match {}".format(dest, init["source"]))
     (run / "config.yaml").write_text(header + "\n".join(e[2] for e in entries) + "\n")
     (run / "job.sbatch").write_text(sbatch)
     (run / "run_info.json").write_text(json.dumps(info, indent=2) + "\n")
@@ -292,6 +333,7 @@ def main(argv=None):
     ap.add_argument("--max-chain", type=int, default=2)
     ap.add_argument("--epochs", type=int)
     ap.add_argument("--env", default="mace_env")
+    ap.add_argument("--init-checkpoint")
     a = ap.parse_args(argv)
     try:
         machine = mc.detect(a.repo)

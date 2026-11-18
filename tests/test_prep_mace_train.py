@@ -19,7 +19,8 @@ def sha(text):
 
 def args(**kw):
     d = dict(config="configs/mace/m.yaml", partition="gpu", exclude="", name=None,
-             time="24:00:00", gpus=1, cpus=12, max_chain=2, epochs=None, env="mace_env")
+             time="24:00:00", gpus=1, cpus=12, max_chain=2, epochs=None, env="mace_env",
+             init_checkpoint=None)
     d.update(kw)
     return argparse.Namespace(**d)
 
@@ -53,6 +54,12 @@ class PrepareTest(unittest.TestCase):
         (r / "configs" / "mace" / "m.yaml").write_text(CFG)
         (r / "configs" / "mace" / "no_restart.yaml").write_text(
             CFG.replace("restart_latest: true\n", ""))
+        cont = CFG.replace('"m1"', '"m2"') + "seed: 1\ncheckpoints_dir: MACE_models\n"
+        (r / "configs" / "mace" / "cont.yaml").write_text(cont)
+        (r / "configs" / "mace" / "cont_norestart.yaml").write_text(
+            cont.replace("restart_latest: true\n", ""))
+        (r / "configs" / "mace" / "cont_nodir.yaml").write_text(
+            cont.replace("checkpoints_dir: MACE_models\n", ""))
         run(["git", "add", "-A"], r)
         run(["git", "commit", "-qm", "init"], r)
         self.store = self.t.ext / "store"
@@ -140,6 +147,34 @@ class PrepareTest(unittest.TestCase):
     def test_chain_needs_restart_latest(self):
         self.refused(config="configs/mace/no_restart.yaml", name="b")
         self.prep(config="configs/mace/no_restart.yaml", name="c", max_chain=0)
+
+    def ckpt(self, name="m1_run-1_epoch-7.pt", text="ck"):
+        p = self.t.ext / name
+        p.write_text(text)
+        return str(p)
+
+    def test_init_checkpoint_copied_under_new_name(self):
+        rd = self.prep(config="configs/mace/cont.yaml", init_checkpoint=self.ckpt())
+        dest = rd / "MACE_models" / "m2_run-1_epoch-7.pt"
+        self.assertEqual(dest.read_text(), "ck")
+        info = json.loads((rd / "run_info.json").read_text())
+        self.assertEqual(info["init_checkpoint"], {
+            "source": str((self.t.ext / "m1_run-1_epoch-7.pt").resolve()),
+            "sha256": sha("ck"), "path": "MACE_models/m2_run-1_epoch-7.pt", "epoch": 7})
+        self.assertIsNone(json.loads((self.prep(name="plain") / "run_info.json")
+                                     .read_text())["init_checkpoint"])
+
+    def test_init_checkpoint_refusals(self):
+        c = "configs/mace/cont.yaml"
+        self.refused(config=c, init_checkpoint=str(self.t.ext / "missing_epoch-7.pt"))
+        self.refused(config=c, init_checkpoint=self.ckpt("m1.model"))
+        self.refused(config=c, init_checkpoint=self.ckpt("m1_run-1_epoch-7_swa.pt"))
+        self.refused(config=c, init_checkpoint=self.ckpt("m1_run-1_epoch-200.pt"))  # >= max
+        self.refused(config=c, epochs=7, init_checkpoint=self.ckpt())
+        self.refused(config="configs/mace/cont_norestart.yaml", max_chain=0,
+                     init_checkpoint=self.ckpt())
+        self.refused(config="configs/mace/cont_nodir.yaml", init_checkpoint=self.ckpt())
+        self.assertFalse((self.store / "runs" / "m2").exists())   # nothing written
 
 
 if __name__ == "__main__":

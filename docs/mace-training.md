@@ -93,5 +93,41 @@ the model is fixed, and never informs a choice.
 4. Training (ask first): `cd runs/<name> && sbatch job.sbatch`.
 5. Test (after the model is fixed): `eval_configs` on `test.xyz`, then the metrics script.
 
+## pb_mace_v2: pb_mace_v1 continued for 200 epochs (fixed 2026-11-18, before its job)
+Owner's answers (2026-11-18): "Faz 200 epocas a mais" (a v2 continuing v1), "Patiance, OK"
+(scheduler kept as is, below) and "teste do v1, OK" (ID-1 is evaluated as planned).
+
+**Why**: v1 (job 11745412) ended at the epoch cap, not by early stopping: its saved
+checkpoint is the last epoch (199), the longest run of epochs without a validation-loss
+improvement was 4 (patience 40), and the validation loss was still falling
+(`runs/pb_mace_v1/MACE_models/pb_mace_v1_run-1.log`; monitoring, not a claim). The choice
+uses the validation curve only; no test frame has been evaluated.
+
+**Design**: `configs/mace/pb_mace_v2.yaml` is the v1 config with `name: "pb_mace_v2"` and
+`max_num_epochs: 399`; data, split, foundation, loss, weights, lr, batch, seed and
+patience are unchanged. `prep_mace_train.py --init-checkpoint` copies
+`runs/pb_mace_v1/MACE_models/pb_mace_v1_run-1_epoch-199.pt` into the v2 run as
+`MACE_models/pb_mace_v2_run-1_epoch-199.pt` (sha256 in its `run_info.json`). MACE 0.3.15
+(`mace/cli/run_train.py`, `mace/tools/train.py`, `mace/tools/checkpoint.py`):
+`restart_latest` loads the model (EMA weights), the Adam state and the ReduceLROnPlateau
+state, and the loop starts at epoch 199, so `max_num_epochs: 399` trains epochs 199–398:
+200 epochs.
+- Scheduler: its state (patience 50, factor 0.8) comes from the checkpoint, so a new
+  `scheduler_patience` would have no effect; kept as is (owner). Early stopping restarts
+  at 0 with patience 40.
+- MACE resets the best validation loss on restart, so the first v2 epoch is always saved
+  and the v2 model is the best of epochs 199–398.
+- Compute: as v1 (`sequana_gpu`, 1 GPU, `-c 12`, `--exclude=sdumont8042`, 24 h jobs, at
+  most 2 resubmissions); about 12.4 h at v1's 223 s per epoch.
+
+**Model for the MLMD** (fixed before v2 is trained): of v1 and v2, the one with the lower
+validation loss (the `loss=` of the log line of its saved epoch: same `valid.xyz`, loss
+and weights); never the test errors. Both test errors are reported (ID-1, ID-2).
+
+**Run**: `python3 scripts/prep_mace_train.py configs/mace/pb_mace_v2.yaml --partition
+sequana_gpu --exclude sdumont8042 --init-checkpoint
+runs/pb_mace_v1/MACE_models/pb_mace_v1_run-1_epoch-199.pt`, then (ask first)
+`cd runs/pb_mace_v2 && sbatch job.sbatch`.
+
 ## Results
 - None yet.
