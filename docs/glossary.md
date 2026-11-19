@@ -9,19 +9,24 @@ One line per term.
 - **Claim**: a statement in `docs/claims.md` with a reading rule fixed before the result.
 - **Continuation**: a new model trained from another run's checkpoint (weights, optimizer and LR-scheduler state) with `prep_mace_train.py --init-checkpoint`; e.g. `pb_mace_v2` from epoch 199 of `pb_mace_v1`.
 - **Deploy key**: an ssh key with access to one GitHub repo only; one per (repo, machine) (ADR-0012).
+- **Egg-box error**: in grid-based DFT (CP2K GPW) the energy of an atom oscillates as it moves between real-space grid points (period = grid spacing), so its forces get a spurious term that does not sum to zero; large on Na in the qz labels (`docs/rdf-mlmd-vs-aimd.md`, limit 7).
 - **E0s**: per-element isolated-atom energies that MACE subtracts from the total energy; here fitted by least squares (`E0s: average`), so only their sums over the training compositions are meaningful.
 - **EMA**: exponential moving average of the model weights during training (decay 0.99); MACE validates and saves the averaged weights.
+- **Fe2 / Fe3**: CP2K kind labels of the two iron sites, C-bound (Fe2) and N-bound (Fe3, with U in qz); MACE has one Fe element, so the MLMD assigns them from geometry (Fe with a C within 2.4 Å = Fe2; `scripts/prep_mlmd.py`).
 - **Fine-tuning**: training a model starting from the weights of a foundation model.
+- **First-shell quantities**: r1 (position of the first peak of g(r)), g1 (its height) and n1 (coordination number at the AIMD's first minimum); the RDF reading rule judges r1 and n1 (`src/rdf_compare.py`).
 - **Foundation model**: a MACE model pre-trained on a broad dataset; here MACE-MP-0 small (`data/foundation/`).
 - **Job chain**: a training job cut by its wall time that resubmits itself and continues from the latest checkpoint (`restart_latest`; `scripts/prep_mace_train.py`).
 - **Ledger**: `results/cost_ledger_<machine>.csv`, one row per ended job.
 - **MACE**: the equivariant message-passing MLFF architecture trained in this project.
 - **MLFF**: machine-learned force field; maps a structure to its energy and forces.
 - **MLMD**: molecular dynamics driven by an MLFF.
+- **Parity plot**: model prediction against reference label, per frame (energy) or per force component; `src/plot_parity.py`.
 - **Patience**: epochs without a validation-loss improvement before MACE stops training (`patience`, 40) or lowers the learning rate (`scheduler_patience`, 50).
 - **RDF**: radial distribution function g(r) of an atom pair.
 - **qz**: the owner's CP2K labelling protocol: UKS PBE-D3(BJ), U 6 eV on Fe(III) only, cutoff 700/70, EPS 1e-6.
 - **Reading rule**: question, metric, threshold and what counts as yes/no, fixed before a run.
+- **Replica**: an independent MLMD run of the same system and length with new velocities (seed); the spread over replicas is the uncertainty of the RDF comparison (`scripts/prep_mlmd.py`).
 - **Registered result**: verbatim copy under `results/<name>/` with `PROVENANCE.json` checksums.
 - **Split group**: the unit of the train/valid/test split of `consolidado/` (`grupo` in `frames.tsv`): a block of consecutive frames of an AIMD pool or one rare-event window.
 - **Smoke run**: a short toy job that checks a run's setup end to end (data, env, GPU memory, time per epoch) before the real job; exempt from the reading rule.

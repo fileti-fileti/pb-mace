@@ -14,6 +14,77 @@ Title: `## YYYY-MM-DD — <machine> — <short title>`.
 ```
 
 <!-- NEW ENTRIES BELOW -->
+## 2026-11-19 — sdumont — v2 chosen, Na label grid error, MLMD vs AIMD RDF set up
+- Goal: close the 2026-11-18 gap, read the convergence and the validation parity of the
+  models, decide whether the MLMD can start, and set up the MLMD vs AIMD RDF test.
+- Done:
+  - 2026-11-18 (no end-of-session that day; rebuilt from git, sacct and run dirs):
+    `f6f2e85` pb_mace_v2 continuation of v1 and claim ID-2 pending; `7efbb64` ID-1 metrics
+    script (`src/mace_errors.py`) and eval prep. Jobs 11745412 `pb_mace_v1` COMPLETED
+    (44 945 s), 11747460 `pb_mace_v2` COMPLETED (45 528 s), 11747493 `pb_mace_v1-test`
+    COMPLETED (164 s; `runs/pb_mace_v1-test/errors/` written, not registered).
+  - `bb775db` glossary terms of 2026-11-18; `c654e6f` `src/plot_training.py` and
+    `src/plot_parity.py` (+ tests; parity checked on a synthetic set).
+  - Jobs 11750727 `pb_mace_v2-valid` (194 s) and 11750733 `pb_mace_v2-test` (23 s),
+    COMPLETED, in turn (`sequana_gpu_dev`: MaxSubmitJobs 1 per user). Validation errors and
+    parity in `runs/pb_mace_v2-valid/{errors,parity}/`; the v2 test output is not analysed.
+  - `mace_create_lammps_model runs/pb_mace_v2/MACE_models/pb_mace_v2.model --dtype float64
+    --head Default` (login node, 12 s): `pb_mace_v2.model-lammps.pt`, sha256 `1bec5180…`
+    (full in claim ID-3).
+  - `3f1007c` `scripts/prep_mlmd.py`, `src/compare_lammps_eval.py`, `src/rdf_compare.py`,
+    `src/rdf.py` (LAMMPS xyz, per-block curves), configs `configs/mlmd/pb_mace_v2_rdf.json`
+    and `configs/rdf/mlmd_pb_mace_v2.json` (+ tests). `e44ecab` MLMD protocol and reading
+    rule in `docs/rdf-mlmd-vs-aimd.md`, claim ID-3 pending.
+  - Job 11750830 `mlmd-v2-check` (`runs/mlmd-v2-check`, commit `e44ecab`), COMPLETED in
+    299 s: LAMMPS vs `mace_eval_configs` on the 3 start frames and a 200-step benchmark.
+  - Ledger: 6 rows added (11745412, 11747460, 11747493, 11750727, 11750733, 11750830); 0
+    jobs outside the project skipped.
+- Results (monitoring, not claims):
+  - Convergence (`src/plot_training.py` on the v1 and v2 `_train.txt`): v1 saved its last
+    epoch (199, validation loss 0.3002); v2 saved epoch 390 of 199–398 (0.2171), so v2 is
+    the MLMD model by the rule of `docs/mace-training.md`. Validation force RMSE 85.3, 79.1,
+    76.5, 74.4, 73.5 meV/Å at 200, 250, 300, 350, 392 epochs trained. Learning rate 2e-4
+    throughout (scheduler state in the checkpoints of epochs 199 and 390).
+  - v2 on `valid.xyz` (`runs/pb_mace_v2-valid/errors/errors.tsv`): forces 73.5 meV/Å RMSE
+    (47.2 without Na atoms), energy 2.06 meV/atom; per element H 19.3, C 41.4, O 41.5,
+    N 73.7, Fe 89.2, Na 390.1 meV/Å; slope of prediction on reference ≥ 0.99 for all but
+    Na (0.18, r 0.41). Energy errors are a constant offset per composition (RMSE ≈ MAE per
+    config_type): no effect at fixed composition.
+  - Na: the reference forces carry a CP2K grid (egg-box) error (numbers and checks in
+    `docs/rdf-mlmd-vs-aimd.md`, limit 7): the net reference force of Na frames equals the
+    sum of the Na residuals; the Na residual is periodic in the absolute position with the
+    700 Ry grid (best fit at N = 162, 576, 324 on all 9 axes). The 400/60 AIMD Na positions
+    are non-uniform modulo the 400 Ry grid. Scripts in the session scratchpad, not kept.
+  - AIMD timestep from the registered trajectory headers: 1.5 fs (cubo-puro), 1.0 fs
+    (cubo222, interface-1). Fe2/Fe3 from geometry equals the AIMD counts (4/4, 30/32, 8/8).
+  - Check (`runs/mlmd-v2-check/check.tsv`): LAMMPS = `mace_eval_configs` on the 3 start
+    frames, PASS (|ΔE|/N ≤ 1.7e-12 eV/atom, max |ΔF| 5.0e-9 eV/Å), cells < 12 Å and the Na
+    map included. Timesteps/s on 1 V100: cubo-puro 17.955, cubo222 4.871, interface-1 7.013.
+    Production estimate (5 replicas × nsteps / rate + start-up from the check logs):
+    cubo-puro 0.69 h, cubo222 1.57 h, interface-1 1.09 h; 3.35 GPU-h in all.
+- Decisions (owner):
+  - "ok, vamos seguir com o teste de RDF"; "ok, no rascunho": MLMD protocol and reading
+    rule of `docs/rdf-mlmd-vs-aimd.md` (agent's proposal, reasons in the doc).
+  - "vamos prosseguir sem as trajetorias da neumann…": start frame from `train.xyz`,
+    Fe2/Fe3 from geometry, σ from the replicas only; "ok, faça tudo e estime a duracao do
+    teste" (before any MLMD run).
+  - v2 for the MLMD; no LR-decay stage now (agent's recommendation: the validation-loss
+    plateau is largely the Na label floor). Test outputs not used for any choice.
+- Problems:
+  - The 2026-11-18 session ended without `/end-session` (journal, status, ledger, push).
+  - Agent's errors, corrected before approval: a g1 verdict in the first RDF rule (twice
+    the AIMD block error exceeds 10 % of g1 in 9 of 26 pairs); the claim that the AIMD Na
+    pairs may be biased (the grid ripple averages out on the g(r) scale; argument, not a
+    test). At the session start the agent printed the first lines of
+    `runs/pb_mace_v1-test/errors/errors.tsv` (format check); not used.
+  - LAMMPS build: no `fix temp/csvr` (Nosé–Hoover instead of the AIMD's CSVR); `lmp` needs
+    `libcudart.so.11.0` from `shared/cuda-links/cuda-11.4` (legacy jobs inherited it from
+    the login shell; now explicit in the config, checked with `ldd`).
+  - Owner's shell: `rm` is `rm -i` (a command waited on the prompt and was stopped).
+- Next: the 3 production jobs (ask first; wall time about twice the estimate), MLMD RDFs,
+  `src/rdf_compare.py`, register, claim ID-3.
+  Owner: ID-1/ID-2 registration and the Na limit for them; Na basis/pseudopotential.
+
 ## 2026-11-17 — sdumont — Training monitoring, manuscript V7
 - Goal: follow the training of `pb_mace_v1` (job 11745412) and document the training in
   the owner's manuscript (Methodology and SI), version 7, before the chat is lost.

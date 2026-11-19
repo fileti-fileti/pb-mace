@@ -135,26 +135,26 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
 
 ## Status
 <!-- BEGIN STATUS -->
-- Updated: 2026-11-17 — sdumont
-- State: on neumann, SDumont (clone in `/scratch`, ADR-0014) and GitHub; `consolidado/` on
-  SDumont (sha256 OK); AIMD reference RDFs registered; training `pb_mace_v1` running (job
-  11745412, ~12.4 h); claim ID-1 pending; manuscript V7 in `pb-mace-store/manuscript/`
-  (outside git). No model, MLMD or final claims yet.
+- Updated: 2026-11-19 — sdumont
+- State: on neumann, SDumont (`/scratch`, ADR-0014) and GitHub; `pb_mace_v2` is the MLMD model
+  (validation-loss rule; LAMMPS file); Na labels carry a CP2K grid error (RDF doc, limit 7);
+  RDF rule fixed, ID-3 pending; ID-1, ID-2 pending (test evals run, not registered); LAMMPS
+  check PASS (job 11750830); V7 in `pb-mace-store/manuscript/`. No MLMD production or final claims.
 - Now (SDumont):
-  - Job 11745412: DONE or FAIL in `runs/pb_mace_v1/`, chain jobs, `cost_ledger.py add`.
-  - Metrics script in `src/` (+ tests) for claim ID-1, before the test evaluation (`docs/mace-training.md`).
-  - Test: `eval_configs` on `test.xyz` (ask first; `*_dev` max 20 min), metrics, register, ID-1 rule, V7 `[PENDING]`s.
+  - MLMD production (ask first): `prep_mlmd.py --system` × 3, 5 replicas each; ~0.7/1.6/1.1 GPU-h (journal 2026-11-19).
+  - MLMD RDFs (`configs/rdf/mlmd_pb_mace_v2.json`), `src/rdf_compare.py`, register, apply the ID-3 rule.
 - Later:
-  - `docs/rdf-mlmd-vs-aimd.md`: MLMD protocol, agreement criterion, pending claim; before any MLMD.
-  - Final model in the LAMMPS+MACE build of `sdumont.yaml` (`create_lammps_model`, V7 §6.2); cells < 2× cutoff.
-  - Next model: early-stopping patience (40) < scheduler patience (50) keeps the learning rate constant.
+  - ID-1, ID-2: metrics of `runs/pb_mace_v2-test`, register both, apply their rules; V7 `[PENDING]`s.
+  - Next model: early stopping (40) < scheduler patience (50) kept the LR at 2e-4 for 400 epochs; LR decay only if the RDFs fail.
+  - Grid-error (egg-box) diagnostics: from the scratchpad into `src/` with a test, if cited outside the doc.
   - `template` remote on SDumont once lab-template is on GitHub (ADR-0012).
 - Waiting on owner:
-  - MLMD cells: same as the AIMD (doc, agent's proposal) or replicated / cubo222 only.
-  - SDumont: cost unit (ADR-0005), `/scratch` purge rule.
+  - ID-1/ID-2: which files to register; add the Na grid-error limit to both (diff first).
+  - Na: basis and pseudopotential of Na in the qz and AIMD inputs (neumann); relabel the Na frames or not.
+  - SDumont: cost unit (ADR-0005), `/scratch` purge rule, Slurm e-mail at job end.
   - Git author name on SDumont (`fileti-fileti`) vs neumann (`Eudes Fileti`): keep or align.
   - Manuscript V7 `[CONFIRM]`s: b/TS/TSr variants, interface_aimd/longa, gate, AIMD block length, per-system std.
   - Independent test set (no test frames of cubo222 or the interface-1 AIMD): dataset generation is out of scope now.
 - Last sync — neumann: 2026-11-17, end-of-session commit on top of `3f65ae6`
-- Last sync — sdumont: 2026-11-17, end-of-session commit on top of `d0a93db`
+- Last sync — sdumont: 2026-11-19, end-of-session commit on top of `e44ecab`
 <!-- END STATUS -->
