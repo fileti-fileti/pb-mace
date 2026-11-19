@@ -42,3 +42,26 @@ result and never changed afterwards; a changed rule makes a new claim.
   test (`docs/mace-training.md`, pb_mace_v2).
 - Evidence: pending
 - Method: `docs/mace-training.md` (pb_mace_v2). Jobs: pending. Cost: pending
+
+### ID-3. Does MLMD with `pb_mace_v2` reproduce the AIMD first-shell structure of cubo-puro, cubo222 and interface-1? (pending)
+- Rule, fixed before any MLMD run (2026-11-19, `docs/rdf-mlmd-vs-aimd.md`; owner: "ok, no
+  rascunho"; σ changed the same day, before any MLMD run, owner: "ok, faça tudo e estime a
+  duracao do teste"): per pair, r1 (first-peak position; tolerance 0.05 Å) and n1
+  (coordination number at the AIMD's first minimum; tolerance 5 % of the AIMD value); Δ =
+  registered AIMD value − mean of 5 MLMD replicas, each as long as the AIMD; σ = s·sqrt(1
+  + 1/5), s = spread of the replicas; yes if |Δ| + 2σ ≤ tolerance, no if |Δ| − 2σ >
+  tolerance, otherwise inconclusive. One verdict per group (framework, water, Na) and
+  system; a replica that loses atoms or gives non-finite values makes its system "no". g1
+  (peak height) reported without a verdict.
+- Numbers: pending
+- Reading: pending
+- Limits: frames of these AIMD runs are in the training set (reproduction, not transfer),
+  and the MLMD starts from one of them; trajectories at 400/60, labels at 700/70; short
+  AIMD (5–12 ps); σ has no floor from the AIMD's own error; CP2K grid (egg-box) error on
+  Na in the labels and in the AIMD (limit 7 of the doc): Na dynamics not tested.
+- Evidence: pending
+- Method: `docs/rdf-mlmd-vs-aimd.md`. Model: `pb_mace_v2.model` (sha256
+  0a38794dfde8bdf5de835c3a45e40b35b8bbdecbd5992c2dfb7ee57575c7f2f8), LAMMPS file
+  `pb_mace_v2.model-lammps.pt` (sha256
+  1bec51806daf555a8a12ff0cb0852a3507398372e3100f596dd0418c25ef45b0). Jobs: pending.
+  Cost: pending
