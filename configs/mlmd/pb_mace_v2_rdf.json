@@ -1,0 +1,33 @@
+{
+  "description": "MLMD of pb_mace_v2 for the RDF comparison with the registered AIMD RDFs (docs/rdf-mlmd-vs-aimd.md). Read by scripts/prep_mlmd.py. Start: first frame of the system's config_type in data/consolidado/train.xyz (an AIMD frame of the same run; training side, never test), checked against data/consolidado.sha256; the AIMD trajectories stay on neumann (owner, 2026-11-19). fe2_fe3: Fe2/Fe3 counts of the AIMD reference (results/aimd-rdf-reference/run_info.json, nA of Fe2-C and Fe3-N). nsteps, dump_every and dt_fs repeat the AIMD (same run_info: last step, stride, time/step). lammps_ld_library_path: the owner's legacy MLMD (pb/mlmd/run14_A2/params.sh) plus the CUDA 11.4 runtime that lmp links (libcudart.so.11.0), set in the owner's login shell (legacy jobs inherited it); prep_mlmd.py checks with ldd that every library resolves. Masses: standard atomic weights, H 2.0141 as the AIMD.",
+  "model": "runs/pb_mace_v2/MACE_models/pb_mace_v2.model-lammps.pt",
+  "model_source": "runs/pb_mace_v2/MACE_models/pb_mace_v2.model",
+  "lammps_ld_library_path": [
+    "/scratch/acmes/eudes.fileti3/projects/shared/envs/mace_env/lib",
+    "/scratch/acmes/eudes.fileti3/projects/shared/cuda-links/cuda-11.4/lib64",
+    "/scratch/acmes/eudes.fileti3/projects/shared/software/libtorch-gpu/lib"
+  ],
+  "temperature_K": 350.0,
+  "tdamp_fs": 100.0,
+  "replicas": 5,
+  "seed_base": 1000,
+  "bench_steps": 200,
+  "masses": {"Fe": 55.845, "C": 12.011, "N": 14.007, "Na": 22.98976928, "O": 15.999, "H": 2.0141},
+  "systems": {
+    "cubo-puro": {
+      "start": "data/consolidado/train.xyz", "config_type": "cubo_puro", "fe2_fe3": [4, 4],
+      "cell": [10.17, 10.17, 10.17],
+      "dt_fs": 1.5, "nsteps": 8666, "dump_every": 7
+    },
+    "cubo222": {
+      "start": "data/consolidado/train.xyz", "config_type": "cubo222", "fe2_fe3": [30, 32],
+      "cell": [20.34, 20.34, 20.34],
+      "dt_fs": 1.0, "nsteps": 5500, "dump_every": 10
+    },
+    "interface-1": {
+      "start": "data/consolidado/train.xyz", "config_type": "interface_longa", "fe2_fe3": [8, 8],
+      "cell": [10.087, 10.087, 36.002],
+      "dt_fs": 1.0, "nsteps": 5500, "dump_every": 10
+    }
+  }
+}

@@ -1,0 +1,774 @@
+{
+  "description": "MLMD RDFs of pb_mace_v2 (configs/mlmd/pb_mace_v2_rdf.json; runs runs/mlmd-v2-<system>/rep<k>/traj.xyz, LAMMPS xyz, time = step * dt_fs; Fe2/Fe3 from runs/mlmd-v2-<system>/kinds.inc, written by prep_mlmd.py): same pairs, dr, nblocks and discard_fs as configs/rdf/aimd_reference.json (docs/rdf-mlmd-vs-aimd.md). Systems <system>_r<k>, as src/rdf_compare.py expects.",
+  "dr": 0.02,
+  "nblocks": 5,
+  "block_check": [
+    2,
+    4,
+    5,
+    8,
+    10
+  ],
+  "systems": {
+    "cubo-puro_r1": {
+      "trajectory": [
+        "runs/mlmd-v2-cubo-puro/rep1/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-cubo-puro/kinds.inc",
+      "cell": [
+        10.17,
+        10.17,
+        10.17
+      ],
+      "discard_fs": 1000.0,
+      "dt_fs": 1.5,
+      "label": "MLMD pb_mace_v2 replica 1",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ]
+      ]
+    },
+    "cubo-puro_r2": {
+      "trajectory": [
+        "runs/mlmd-v2-cubo-puro/rep2/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-cubo-puro/kinds.inc",
+      "cell": [
+        10.17,
+        10.17,
+        10.17
+      ],
+      "discard_fs": 1000.0,
+      "dt_fs": 1.5,
+      "label": "MLMD pb_mace_v2 replica 2",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ]
+      ]
+    },
+    "cubo-puro_r3": {
+      "trajectory": [
+        "runs/mlmd-v2-cubo-puro/rep3/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-cubo-puro/kinds.inc",
+      "cell": [
+        10.17,
+        10.17,
+        10.17
+      ],
+      "discard_fs": 1000.0,
+      "dt_fs": 1.5,
+      "label": "MLMD pb_mace_v2 replica 3",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ]
+      ]
+    },
+    "cubo-puro_r4": {
+      "trajectory": [
+        "runs/mlmd-v2-cubo-puro/rep4/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-cubo-puro/kinds.inc",
+      "cell": [
+        10.17,
+        10.17,
+        10.17
+      ],
+      "discard_fs": 1000.0,
+      "dt_fs": 1.5,
+      "label": "MLMD pb_mace_v2 replica 4",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ]
+      ]
+    },
+    "cubo-puro_r5": {
+      "trajectory": [
+        "runs/mlmd-v2-cubo-puro/rep5/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-cubo-puro/kinds.inc",
+      "cell": [
+        10.17,
+        10.17,
+        10.17
+      ],
+      "discard_fs": 1000.0,
+      "dt_fs": 1.5,
+      "label": "MLMD pb_mace_v2 replica 5",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ]
+      ]
+    },
+    "cubo222_r1": {
+      "trajectory": [
+        "runs/mlmd-v2-cubo222/rep1/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-cubo222/kinds.inc",
+      "cell": [
+        20.34,
+        20.34,
+        20.34
+      ],
+      "discard_fs": 500.0,
+      "dt_fs": 1.0,
+      "label": "MLMD pb_mace_v2 replica 1",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ],
+        [
+          "Fe3",
+          "O"
+        ],
+        [
+          "Na",
+          "O"
+        ],
+        [
+          "O",
+          "O"
+        ],
+        [
+          "O",
+          "H"
+        ],
+        [
+          "N",
+          "H"
+        ],
+        [
+          "Fe2",
+          "Fe3"
+        ]
+      ]
+    },
+    "cubo222_r2": {
+      "trajectory": [
+        "runs/mlmd-v2-cubo222/rep2/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-cubo222/kinds.inc",
+      "cell": [
+        20.34,
+        20.34,
+        20.34
+      ],
+      "discard_fs": 500.0,
+      "dt_fs": 1.0,
+      "label": "MLMD pb_mace_v2 replica 2",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ],
+        [
+          "Fe3",
+          "O"
+        ],
+        [
+          "Na",
+          "O"
+        ],
+        [
+          "O",
+          "O"
+        ],
+        [
+          "O",
+          "H"
+        ],
+        [
+          "N",
+          "H"
+        ],
+        [
+          "Fe2",
+          "Fe3"
+        ]
+      ]
+    },
+    "cubo222_r3": {
+      "trajectory": [
+        "runs/mlmd-v2-cubo222/rep3/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-cubo222/kinds.inc",
+      "cell": [
+        20.34,
+        20.34,
+        20.34
+      ],
+      "discard_fs": 500.0,
+      "dt_fs": 1.0,
+      "label": "MLMD pb_mace_v2 replica 3",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ],
+        [
+          "Fe3",
+          "O"
+        ],
+        [
+          "Na",
+          "O"
+        ],
+        [
+          "O",
+          "O"
+        ],
+        [
+          "O",
+          "H"
+        ],
+        [
+          "N",
+          "H"
+        ],
+        [
+          "Fe2",
+          "Fe3"
+        ]
+      ]
+    },
+    "cubo222_r4": {
+      "trajectory": [
+        "runs/mlmd-v2-cubo222/rep4/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-cubo222/kinds.inc",
+      "cell": [
+        20.34,
+        20.34,
+        20.34
+      ],
+      "discard_fs": 500.0,
+      "dt_fs": 1.0,
+      "label": "MLMD pb_mace_v2 replica 4",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ],
+        [
+          "Fe3",
+          "O"
+        ],
+        [
+          "Na",
+          "O"
+        ],
+        [
+          "O",
+          "O"
+        ],
+        [
+          "O",
+          "H"
+        ],
+        [
+          "N",
+          "H"
+        ],
+        [
+          "Fe2",
+          "Fe3"
+        ]
+      ]
+    },
+    "cubo222_r5": {
+      "trajectory": [
+        "runs/mlmd-v2-cubo222/rep5/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-cubo222/kinds.inc",
+      "cell": [
+        20.34,
+        20.34,
+        20.34
+      ],
+      "discard_fs": 500.0,
+      "dt_fs": 1.0,
+      "label": "MLMD pb_mace_v2 replica 5",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ],
+        [
+          "Fe3",
+          "O"
+        ],
+        [
+          "Na",
+          "O"
+        ],
+        [
+          "O",
+          "O"
+        ],
+        [
+          "O",
+          "H"
+        ],
+        [
+          "N",
+          "H"
+        ],
+        [
+          "Fe2",
+          "Fe3"
+        ]
+      ]
+    },
+    "interface-1_r1": {
+      "trajectory": [
+        "runs/mlmd-v2-interface-1/rep1/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-interface-1/kinds.inc",
+      "cell": [
+        10.087,
+        10.087,
+        36.002
+      ],
+      "discard_fs": 500.0,
+      "dt_fs": 1.0,
+      "label": "MLMD pb_mace_v2 replica 1",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ],
+        [
+          "Fe3",
+          "O"
+        ],
+        [
+          "Na",
+          "O"
+        ],
+        [
+          "O",
+          "O"
+        ],
+        [
+          "O",
+          "H"
+        ],
+        [
+          "N",
+          "H"
+        ]
+      ]
+    },
+    "interface-1_r2": {
+      "trajectory": [
+        "runs/mlmd-v2-interface-1/rep2/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-interface-1/kinds.inc",
+      "cell": [
+        10.087,
+        10.087,
+        36.002
+      ],
+      "discard_fs": 500.0,
+      "dt_fs": 1.0,
+      "label": "MLMD pb_mace_v2 replica 2",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ],
+        [
+          "Fe3",
+          "O"
+        ],
+        [
+          "Na",
+          "O"
+        ],
+        [
+          "O",
+          "O"
+        ],
+        [
+          "O",
+          "H"
+        ],
+        [
+          "N",
+          "H"
+        ]
+      ]
+    },
+    "interface-1_r3": {
+      "trajectory": [
+        "runs/mlmd-v2-interface-1/rep3/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-interface-1/kinds.inc",
+      "cell": [
+        10.087,
+        10.087,
+        36.002
+      ],
+      "discard_fs": 500.0,
+      "dt_fs": 1.0,
+      "label": "MLMD pb_mace_v2 replica 3",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ],
+        [
+          "Fe3",
+          "O"
+        ],
+        [
+          "Na",
+          "O"
+        ],
+        [
+          "O",
+          "O"
+        ],
+        [
+          "O",
+          "H"
+        ],
+        [
+          "N",
+          "H"
+        ]
+      ]
+    },
+    "interface-1_r4": {
+      "trajectory": [
+        "runs/mlmd-v2-interface-1/rep4/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-interface-1/kinds.inc",
+      "cell": [
+        10.087,
+        10.087,
+        36.002
+      ],
+      "discard_fs": 500.0,
+      "dt_fs": 1.0,
+      "label": "MLMD pb_mace_v2 replica 4",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ],
+        [
+          "Fe3",
+          "O"
+        ],
+        [
+          "Na",
+          "O"
+        ],
+        [
+          "O",
+          "O"
+        ],
+        [
+          "O",
+          "H"
+        ],
+        [
+          "N",
+          "H"
+        ]
+      ]
+    },
+    "interface-1_r5": {
+      "trajectory": [
+        "runs/mlmd-v2-interface-1/rep5/traj.xyz"
+      ],
+      "kinds": "runs/mlmd-v2-interface-1/kinds.inc",
+      "cell": [
+        10.087,
+        10.087,
+        36.002
+      ],
+      "discard_fs": 500.0,
+      "dt_fs": 1.0,
+      "label": "MLMD pb_mace_v2 replica 5",
+      "pairs": [
+        [
+          "Fe2",
+          "C"
+        ],
+        [
+          "Fe3",
+          "N"
+        ],
+        [
+          "C",
+          "N"
+        ],
+        [
+          "Na",
+          "N"
+        ],
+        [
+          "Na",
+          "C"
+        ],
+        [
+          "Fe3",
+          "O"
+        ],
+        [
+          "Na",
+          "O"
+        ],
+        [
+          "O",
+          "O"
+        ],
+        [
+          "O",
+          "H"
+        ],
+        [
+          "N",
+          "H"
+        ]
+      ]
+    }
+  }
+}

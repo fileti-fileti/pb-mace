@@ -69,6 +69,33 @@ class TestRdf(unittest.TestCase):
         self.assertEqual(frames[:, 0, 0].tolist(), [1.0, 1.0, 2.0, 2.0, 2.0])
         self.assertEqual(sym, ["H"])
 
+    def test_lammps_xyz_needs_dt(self):
+        def frame(step, x):
+            return "2\nAtoms. Timestep: {}\nH {} 0.0 0.0\nO 1.0 0.0 0.0\n".format(step, x)
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "traj.xyz")
+            with open(p, "w") as f:
+                f.write("".join(frame(s, 0.1 * s) for s in (0, 7, 14)))
+            steps, times, sym, frames = self.rdf.stitch([p], dt_fs=1.5)
+            with self.assertRaises(ValueError):
+                self.rdf.stitch([p])
+        self.assertEqual(steps.tolist(), [0, 7, 14])
+        self.assertEqual(times.tolist(), [0.0, 10.5, 21.0])
+        self.assertEqual(sym, ["H", "O"])
+        self.assertAlmostEqual(frames[2, 0, 0], 1.4)
+
+    def test_block_curves_average_to_full_curve(self):
+        L = 8.0
+        frames = np.random.RandomState(3).uniform(0, L, size=(100, 50, 3))
+        idx = np.arange(50)
+        edges = self.rdf.bin_edges([L, L, L], 0.1)
+        r, g, err, n, counts, ideal = self.rdf.partial_rdf(frames, idx, idx, [L, L, L], edges, 5)
+        gb, nb = self.rdf.block_curves(counts, ideal, len(idx), 5)
+        self.assertEqual(gb.shape, (5, len(r)))
+        np.testing.assert_allclose(gb.mean(axis=0), g)          # 5 equal blocks of 20 frames
+        np.testing.assert_allclose(nb.mean(axis=0), n)
+        np.testing.assert_allclose(gb.std(axis=0, ddof=1) / np.sqrt(5), err)
+
     def test_kinds_and_elements(self):
         with tempfile.TemporaryDirectory() as d:
             p = os.path.join(d, "COORD.inc")

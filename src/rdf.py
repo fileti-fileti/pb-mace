@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
-"""Partial radial distribution functions g_AB(r) from CP2K trajectories (pb-mace).
+"""Partial radial distribution functions g_AB(r) from CP2K or LAMMPS xyz trajectories (pb-mace).
 
 Orthorhombic cell, minimum image, r_max <= half the shortest cell edge. Method and
 parameters: docs/rdf-mlmd-vs-aimd.md. Needs numpy and matplotlib (neumann: `analysis` env).
 
     <env>/bin/python src/rdf.py configs/rdf/aimd_reference.json runs/<run dir>
 
-Writes per system `rdf_<system>_<A>-<B>.dat` (r, g, g_err, n) and `rdf_<system>.png`,
-plus `run_info.json` (commit, config, frames used, block check). Refuses a dirty tree.
+Writes per system `rdf_<system>_<A>-<B>.dat` (r, g, g_err, n),
+`rdf_<system>_<A>-<B>_blocks.dat` (r, g and n of each contiguous block: the uncertainty of
+the first-peak quantities in src/rdf_compare.py) and `rdf_<system>.png`, plus
+`run_info.json` (commit, config, frames used, block check). Refuses a dirty tree.
+Trajectory headers: CP2K `i = <step>, time = <fs>`, or LAMMPS `dump xyz`
+`Atoms. Timestep: <step>` with the system's `dt_fs` in the config (time = step * dt_fs).
+Optional system key `label` names the trajectory source in the plot title (default AIMD).
 """
 import bisect
 import json
@@ -19,6 +24,7 @@ import sys
 import numpy as np
 
 HEADER = re.compile(r"i\s*=\s*(-?\d+)\s*,\s*time\s*=\s*([-0-9.Ee+]+)")
+LAMMPS_HEADER = re.compile(r"Atoms\.\s+Timestep:\s*(\d+)")
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -46,37 +52,49 @@ def read_kinds(path):
     return kinds
 
 
-def iter_xyz(path):
-    """Yield (step, time_fs, symbols, positions) per frame of a CP2K -pos-1.xyz file.
-    A truncated last frame (run killed while writing) is dropped with a warning."""
+def parse_header(line, path, dt_fs=None):
+    """(step, time_fs) from a CP2K or a LAMMPS xyz comment line."""
+    m = HEADER.search(line)
+    if m is not None:
+        return int(m.group(1)), float(m.group(2))
+    m = LAMMPS_HEADER.search(line)
+    if m is not None:
+        if dt_fs is None:
+            raise ValueError("LAMMPS xyz {} needs dt_fs in the config".format(path))
+        return int(m.group(1)), int(m.group(1)) * float(dt_fs)
+    raise ValueError("frame without 'i = ..., time = ...' or 'Timestep:' in {}".format(path))
+
+
+def iter_xyz(path, dt_fs=None):
+    """Yield (step, time_fs, symbols, positions) per frame of a CP2K -pos-1.xyz or a LAMMPS
+    dump xyz file. A truncated last frame (run killed while writing) is dropped with a
+    warning."""
     with open(path) as f:
         while True:
             line = f.readline()
             if not line.strip():
                 return
             n = int(line.split()[0])
-            m = HEADER.search(f.readline())
-            if m is None:
-                raise ValueError("frame without 'i = ..., time = ...' in {}".format(path))
+            step, time_fs = parse_header(f.readline(), path, dt_fs)
             sym, pos = [], np.empty((n, 3))
             for k in range(n):
                 t = f.readline().split()
                 if len(t) < 4:
                     print("warning: truncated frame at step {} in {}: dropped".format(
-                        m.group(1), path), file=sys.stderr)
+                        step, path), file=sys.stderr)
                     return
                 sym.append(t[0])
                 pos[k] = [float(x) for x in t[1:4]]
-            yield int(m.group(1)), float(m.group(2)), sym, pos
+            yield step, time_fs, sym, pos
 
 
-def stitch(paths):
+def stitch(paths, dt_fs=None):
     """Frames of the files in run order. A frame whose step is <= the last kept step drops
     the kept frames from that step on: after a restart from an earlier checkpoint, the
     last branch through a step wins. Returns (steps, times, symbols, frames)."""
     steps, times, frames, symbols = [], [], [], None
     for p in paths:
-        for step, t, sym, pos in iter_xyz(p):
+        for step, t, sym, pos in iter_xyz(p, dt_fs):
             if symbols is None:
                 symbols = sym
             elif sym != symbols:
@@ -127,6 +145,14 @@ def partial_rdf(frames, ia, ib, cell, edges, nblocks):
     return r, g, err, n, counts, ideal
 
 
+def block_curves(counts, ideal, n_a, nblocks):
+    """g and n of each of nblocks contiguous blocks of frames: arrays (nblocks, nbins)."""
+    blocks = np.array_split(counts, nblocks)
+    g = np.array([b.mean(axis=0) / ideal for b in blocks])
+    n = np.array([np.cumsum(b.mean(axis=0)) / n_a for b in blocks])
+    return g, n
+
+
 def block_error(counts, ideal, nblocks):
     """Standard error of g over contiguous blocks of frames (NaN with < 2 blocks)."""
     if nblocks < 2 or len(counts) < nblocks:
@@ -143,7 +169,7 @@ def git_commit():
 
 
 def run_system(name, cfg, dr, nblocks, block_check, outdir):
-    steps, times, symbols, frames = stitch(cfg["trajectory"])
+    steps, times, symbols, frames = stitch(cfg["trajectory"], cfg.get("dt_fs"))
     kinds = read_kinds(cfg["kinds"])
     if len(kinds) != len(symbols):
         sys.exit("{}: {} kinds vs {} atoms".format(name, len(kinds), len(symbols)))
@@ -176,12 +202,18 @@ def run_system(name, cfg, dr, nblocks, block_check, outdir):
                     name, a, b, len(frames), steps[0], steps[-1], cfg["discard_fs"], dr,
                     edges[-1], nblocks)
         np.savetxt(path, np.column_stack([r, g, err, n]), fmt="%.6f", header=head)
+        gb, nb = block_curves(counts, ideal, len(ia), nblocks)
+        np.savetxt(path[:-4] + "_blocks.dat", np.column_stack([r] + list(gb) + list(nb)),
+                   fmt="%.6f", header=head.splitlines()[0] + "\nr_A " + " ".join(
+                       ["g_b{}".format(k + 1) for k in range(nblocks)]
+                       + ["n_b{}".format(k + 1) for k in range(nblocks)]))
         results.append((a, b, r, g, err, n))
-    plot(name, results, info["frames"], os.path.join(outdir, "rdf_{}.png".format(name)))
+    plot(name, results, info["frames"], os.path.join(outdir, "rdf_{}.png".format(name)),
+         cfg.get("label", "AIMD"))
     return info
 
 
-def plot(name, results, nframes, path):
+def plot(name, results, nframes, path, label="AIMD"):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -199,7 +231,7 @@ def plot(name, results, nframes, path):
         ax2.set_ylabel("n(r)", color="C1")
     for ax in list(axes.flat)[len(results):]:
         ax.axis("off")
-    fig.suptitle("{} — AIMD, {} frames".format(name, nframes))
+    fig.suptitle("{} — {}, {} frames".format(name, label, nframes))
     fig.tight_layout()
     fig.savefig(path, dpi=120)
     plt.close(fig)
