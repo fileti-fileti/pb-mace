@@ -19,6 +19,15 @@ Reading, as fixed in the doc before submission (commit 2b2f93f):
 - Remedy (each other run of the Na frame): fixed if s_Na <= 2 x max_el s_el and
   |SF|max <= 2 x |SF|max, both of CONTROL_RUN.
 - No verdict: s_el and |SF| vs setting; Q1_RUN vs Q1_REF_RUN forces at shift 0.
+
+Reading v2 (run_info "layout": "per_shift", "reading": "v2"; scripts/prep_na_translation_v2.py;
+fixed in the doc after submission, before any output was read, commit 264c1c6): each shift is
+its own single point in RUN/shift_K/. As above, except: valid shift = SCF converged and every
+Fe Mulliken spin within V2_SPIN_TOL of the reference state (the legacy label's spins from
+run_info, or for seed "generate" the run's seed_gen/ output); shift 0 need not be valid; fewer
+than V2_MIN_VALID valid shifts: the run is inconclusive; a run is read only when every shift
+(and seed_gen) ended; Q1_REF_RUN is V2_Q1_REF_RUN. Reported only: max |spin - label| of the
+q1 seed_gen.
 The grid size N is read from the output (finest PW grid, x axis); the shift phases are
 reported against it. Standard library only; runs on Python >= 3.6.
 """
@@ -43,6 +52,9 @@ NA_FRAME = "cubo_puro"
 DIAG_RUN = "cubo_puro-q9-c700"
 CONTROL_RUN = "vacancia-q9-c700"
 Q1_RUN, Q1_REF_RUN = "cubo_puro-q1-c700", "cubo_puro-q9-c1600"
+V2_SPIN_TOL = 0.01
+V2_MIN_VALID = 6
+V2_Q1_REF_RUN = "cubo_puro-q9-c2400"
 HOSTS = ("Fe", "C", "N")
 ELEMENTS = ("Fe", "C", "N", "Na", "O", "H")
 
@@ -154,8 +166,68 @@ def analyse_run(rd, info):
     return row, forces
 
 
-def reading(rows, forces, run_dir):
-    r = {"repro": None, "diagnosis": "inconclusive", "remedies": {}, "q1_vs_q9_c1600": None}
+def read_single(sd, forces_file):
+    """One single point in dir sd -> (step, forces, grid_n); step and forces are None
+    unless the output ended with exactly one step."""
+    out = sd / "relabel.out"
+    if not out.is_file():
+        return None, None, None
+    p = parse_out(out.read_text())
+    if not p["ended"] or len(p["steps"]) != 1:
+        return None, None, p["grid_n"]
+    f = pt.read_forces((sd / forces_file).read_text(), 1, str(sd / forces_file))
+    return p["steps"][0], f, p["grid_n"]
+
+
+def max_dspin(spins, ref):
+    """Largest |spin - ref| over the Fe atoms of ref ({index (str or int): spin})."""
+    if not ref:
+        raise ValueError("empty reference spins")
+    return max(abs(spins.get(int(i), float("inf")) - s) for i, s in ref.items())
+
+
+def analyse_run_v2(rd, info, n_shifts):
+    row = {"run": rd.name, "frame": info["frame"], "setting": info["setting"]}
+    ff = info["forces_file"]
+    ref = info["legacy_fe_spins"]
+    if info["seed"] == "generate":
+        st, _, _ = read_single(rd / "seed_gen", ff)
+        if st is None:
+            row["status"] = "seed_gen not ended"
+            return row, None
+        row["seed_gen_dspin_vs_label"] = max_dspin(st["fe_spins"], ref)
+        ref = st["fe_spins"]
+    got = [read_single(rd / "shift_{}".format(k), ff) for k in range(n_shifts)]
+    n_ended = sum(1 for st, _, _ in got if st is not None)
+    grid = [g for _, _, g in got if g]
+    row.update(ended=n_ended == n_shifts, grid_n=grid[0] if grid else None, n_steps=n_ended)
+    if n_ended != n_shifts:
+        row["status"] = "not ended ({}/{})".format(n_ended, n_shifts)
+        return row, None
+    if len(set(grid)) != 1:
+        row["status"] = "grid sizes differ between shifts: {}".format(sorted(set(grid)))
+        return row, None
+    steps = [st for st, _, _ in got]
+    forces = [f for _, f, _ in got]
+    dspin = [max_dspin(st["fe_spins"], ref) for st in steps]
+    valid = [st["converged"] and ds <= V2_SPIN_TOL for st, ds in zip(steps, dspin)]
+    h = info["cell_A"] / row["grid_n"]
+    row.update(h_A=h, phases=[s / h for s in info["shifts_A"]], valid=valid, dspin=dspin,
+               energies_meV=[(st["energy"] - steps[0]["energy"]) * HA_TO_MEV for st in steps])
+    if sum(valid) < V2_MIN_VALID:
+        row["status"] = "inconclusive ({} valid shifts)".format(sum(valid))
+        return row, forces
+    s_el, sumf = spread_stats(forces, valid)
+    row.update(status="ok", s_el=s_el, sumF=sumf,
+               sumF_max=max(f for f, v in zip(sumf, valid) if v),
+               dE_spread_meV=max(e for e, v in zip(row["energies_meV"], valid) if v)
+               - min(e for e, v in zip(row["energies_meV"], valid) if v))
+    return row, forces
+
+
+def reading(rows, forces, run_dir, q1_ref=Q1_REF_RUN):
+    q1_key = "q1_vs_" + q1_ref.split("-", 1)[1].replace("-", "_")
+    r = {"repro": None, "diagnosis": "inconclusive", "remedies": {}, q1_key: None}
     d, c = rows.get(DIAG_RUN), rows.get(CONTROL_RUN)
     if d is None or d.get("status") != "ok":
         r["note"] = "{} not ok".format(DIAG_RUN)
@@ -167,7 +239,8 @@ def reading(rows, forces, run_dir):
         return r
     s = d["s_el"]
     host = max(s[e] for e in HOSTS if e in s)
-    r["diag_numbers"] = {"s_Na": s["Na"], "max_host": host, "ratio": s["Na"] / host}
+    r["diag_numbers"] = {"s_Na": s["Na"], "max_host": host,
+                         "ratio": s["Na"] / host if host > 0 else None}
     if s["Na"] >= DIAG["confirm_min"] and s["Na"] >= DIAG["confirm_ratio"] * host:
         r["diagnosis"] = "confirmed"
     elif s["Na"] < DIAG["refute_min"] or s["Na"] < DIAG["refute_ratio"] * host:
@@ -186,8 +259,8 @@ def reading(rows, forces, run_dir):
             else:
                 ok = row["s_el"]["Na"] <= lim_s and row["sumF_max"] <= lim_f
                 r["remedies"][name] = "fixed" if ok else "not fixed"
-    if forces.get(Q1_RUN) and forces.get(Q1_REF_RUN):
-        r["q1_vs_q9_c1600"] = rms_diff_by_element(forces[Q1_RUN][0], forces[Q1_REF_RUN][0])
+    if forces.get(Q1_RUN) and forces.get(q1_ref):
+        r[q1_key] = rms_diff_by_element(forces[Q1_RUN][0], forces[q1_ref][0])
     return r
 
 
@@ -203,10 +276,16 @@ def main(argv=None):
     run_dir = Path(a.run_dir).resolve()
     info = json.loads((run_dir / "run_info.json").read_text())
     out = Path(a.out) if a.out else run_dir / "analysis"
+    v2 = info.get("layout") == "per_shift"
+    if v2 and info.get("reading") != "v2":
+        raise ValueError("per_shift layout with reading {!r}".format(info.get("reading")))
     rows, forces = {}, {}
     for name, ri in sorted(info["runs"].items()):
-        rows[name], forces[name] = analyse_run(run_dir / name, ri)
-    r = reading(rows, forces, run_dir)
+        rows[name], forces[name] = (analyse_run_v2(run_dir / name, ri, info["n_shifts"]) if v2
+                                    else analyse_run(run_dir / name, ri))
+    r = reading(rows, forces, run_dir, q1_ref=V2_Q1_REF_RUN if v2 else Q1_REF_RUN)
+    if v2 and Q1_RUN in rows:
+        r["q1_seed_gen_dspin_vs_label"] = rows[Q1_RUN].get("seed_gen_dspin_vs_label")
     out.mkdir(parents=True, exist_ok=True)
     cols = ["run", "status", "grid_n", "h_A", "phases", "valid", "max_dspin",
             "dE_spread_meV", "sumF_max"] + ["s_" + e for e in ELEMENTS]
