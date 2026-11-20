@@ -1,0 +1,56 @@
+{
+  "description": "Rigid-translation test of the qz force labels (docs/na-label-grid-error.md, steps 2-3). Each run takes one training-side labelled frame, shifts it rigidly along x by k*h/n_shifts (k = 0..n_shifts-1, h = cell/N, N = finest-grid size of that run's setting) and recomputes it with the frame's own qz input, changing only the setting. Exact forces do not change under a rigid shift: the spread of the forces over the shifts measures the grid (egg-box) error directly, without a model.",
+  "legacy_root": "/home/eudes/prussian-blue/cubo/dataset",
+  "frames_tsv": "consolidado/frames.tsv",
+  "frames_tsv_sums": "data/consolidado.sha256",
+  "cp2k_data_dir": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data",
+  "n_shifts": 4,
+  "frames": {
+    "cubo_puro": {
+      "dir": "cubo-puro-new/rotulagem/b01",
+      "snapshot": 1,
+      "forces_file": "rqz-frc-1.xyz",
+      "natoms": 60,
+      "cell": 10.170
+    },
+    "vacancia": {
+      "dir": "vacancia-14wat/relabel_qz/c01",
+      "snapshot": 1,
+      "forces_file": "REFTRAJ-frc-1.xyz",
+      "natoms": 85,
+      "cell": 9.910
+    }
+  },
+  "settings": {
+    "q9-c400": {"cutoff": 400, "rel_cutoff": 60},
+    "q9-c700": {"cutoff": 700, "rel_cutoff": 70},
+    "q9-c1200": {"cutoff": 1200, "rel_cutoff": 70},
+    "q9-c1600": {"cutoff": 1600, "rel_cutoff": 70},
+    "q1-c700": {
+      "cutoff": 700,
+      "rel_cutoff": 70,
+      "na": {
+        "basis_set": "TZVP-MOLOPT-PBE-GTH-q1",
+        "basis_file": "BASIS_MOLOPT_UZH",
+        "potential": "GTH-PBE-q1",
+        "potential_file": "POTENTIAL_UZH"
+      }
+    }
+  },
+  "runs": [
+    ["cubo_puro", "q9-c700", "01:00:00"],
+    ["cubo_puro", "q9-c400", "01:00:00"],
+    ["cubo_puro", "q9-c1200", "02:00:00"],
+    ["cubo_puro", "q9-c1600", "03:00:00"],
+    ["cubo_puro", "q1-c700", "01:00:00"],
+    ["vacancia", "q9-c700", "04:00:00"],
+    ["vacancia", "q9-c400", "04:00:00"]
+  ],
+  "slurm": {
+    "partition": "EPYC_9734",
+    "nodelist": "n12",
+    "ntasks": 28,
+    "cpus_per_task": 2,
+    "layout_source": "owner's n12 benchmark, ~/prussian-blue/cubo/dataset/conv_test/pb_conv.py (RANKS_DEFAULT 28: '8 workers x 28 ranks x 2 threads (benchmark validado no n12)'); job template ~/prussian-blue/cubo/dataset/cubo222/submit_FM_test.sh"
+  }
+}
