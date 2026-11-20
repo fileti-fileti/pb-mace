@@ -29,6 +29,9 @@ One line per term.
 - **Reading rule**: question, metric, threshold and what counts as yes/no, fixed before a run.
 - **Replica**: an independent MLMD run of the same system and length with new velocities (seed); the spread over replicas is the uncertainty of the RDF comparison (`scripts/prep_mlmd.py`).
 - **Registered result**: verbatim copy under `results/<name>/` with `PROVENANCE.json` checksums.
+- **REL_CUTOFF**: CP2K `&MGRID` keyword: the cutoff used for a Gaussian of exponent 1, which sets the multigrid level each Gaussian is mapped to; qz uses 70 Ry, the AIMD 60 Ry.
+- **Semicore pseudopotential**: a pseudopotential that keeps an inner shell in the valence; Na `GTH-PBE-q9` (2s²2p⁶3s¹) needs much tighter basis Gaussians than Na `GTH-PBE-q1` (3s¹ only) (`docs/na-label-grid-error.md`).
+- **Shift spread** (s_el): per element, the RMS over atoms and components of the standard deviation of the force over the shifts of a translation test, meV/Å (`src/na_translation.py`).
 - **Split group**: the unit of the train/valid/test split of `consolidado/` (`grupo` in `frames.tsv`): a block of consecutive frames of an AIMD pool or one rare-event window.
 - **Smoke run**: a short toy job that checks a run's setup end to end (data, env, GPU memory, time per epoch) before the real job; exempt from the reading rule.
 - **Stitching**: joining the pieces of a restarted CP2K trajectory; the last branch through a step wins (`src/rdf.py`).

@@ -14,6 +14,75 @@ Title: `## YYYY-MM-DD — <machine> — <short title>`.
 ```
 
 <!-- NEW ENTRIES BELOW -->
+## 2026-11-20 — neumann — Na label cause read from the inputs; translation test submitted
+- Goal: find why the Na labels make the model fail (owner: "Precisamos determinar pq a
+  rotulagem do Na levou a resultados tao ruins no modelo ML"): step 1 (reading) and the
+  translation test of `docs/na-label-grid-error.md`.
+- Done:
+  - `/start-session`: clone 18 commits behind origin, clean; `git pull --ff-only` 1264b44 →
+    `c31ba17`.
+  - Read, no runs: the qz inputs of all `consolidado/` sources, the AIMD input, the label
+    filter, the basis/potential files and the owner's legacy cutoff test (Results).
+  - `fe35fc2` `scripts/prep_na_translation.py`, `configs/na_translation/translation_test.json`
+    and tests; `2b2f93f` reading rule of the translation test in
+    `docs/na-label-grid-error.md`, before submission; `ba4214c` `src/na_translation.py`
+    (analysis that applies that rule) and tests. Suite: 126 tests OK (18 skipped).
+  - Run dir `runs/na-translation-test/` prepared at `fe35fc2` (all prep checks passed);
+    `cp2k.psmp --check` SUCCESS on the 7 inputs (negative control: an invalid enum and an
+    unknown keyword give rc=1). Inputs differ from the legacy ones only in the setting,
+    `PRINT_LEVEL MEDIUM`, `EXTRAPOLATION USE_PREV_WF` and the REFTRAJ on 4 shifts.
+  - Jobs on n12 (`EPYC_9734`), 28 MPI x 2 OpenMP each, submitted 2026-11-20 14:02:
+    4385 vacancia-q9-c700, 4386 cubo_puro-q9-c1600, 4387 cubo_puro-q9-c700,
+    4388 vacancia-q9-c400, 4389 cubo_puro-q9-c1200 (RUNNING at the session end);
+    4390 cubo_puro-q9-c400, 4391 cubo_puro-q1-c700 (PENDING, Resources).
+  - Ledger: `cost_ledger.py add --since 2026-11-17`: 0 rows added (no project job ended);
+    10 ended jobs outside the project skipped.
+- Results (reading of the inputs; inference, the translation test is the direct check):
+  - The 391 source dirs of `consolidado/` share CUTOFF 700, REL_CUTOFF 70, default NGRIDS,
+    no `&XC_GRID` and DZVP-MOLOPT-SR bases, with and without Na (legacy water:
+    `agua-pura/REFTRAJ.inp`, also 700/70). CP2K 2024.1 (cubo-puro b01 header).
+  - Na is `GTH-PBE-q9` (2s2p semicore) with `DZVP-MOLOPT-SR-GTH-q9`: nonlocal projector
+    radii 0.144/0.130 bohr (other elements ≥ 0.21) and the largest basis exponent of the
+    system, 23.52 bohr⁻² (O 10.39, H 10.07, Fe 8.42, N 7.34, C 5.61). Proxy for how well the
+    700 Ry grid resolves the tightest product Gaussian, exp(−E/(8α)): Na 2.4e-2, O 2.2e-4,
+    H 1.7e-4, Fe 3.1e-5; Na needs ~1600 Ry for the resolution O has at 700 Ry. Every Na q9
+    basis in the CP2K 2024.1 data dir has α_max 23.5–23.8; the UZH Na q1 basis has 0.56.
+  - AIMD (`cubo-puro-new/aimd.inp`): same Na q9, CUTOFF 400 / REL_CUTOFF 60 (proxy 1.2e-1).
+  - Label filter (`filtra_relabel.py`): SCF converged and Fe spin gate; unconverged SCF is
+    not the cause.
+  - The 700/70 choice came from the owner's cutoff test (`conv_test/conv/`, stages A and
+    C) on `interface-1@207/357`, the old interface without Na (48 C, 16 Fe, 100 H, 48 N,
+    50 O). It was never rechecked after Na entered the `-new` systems.
+  - An energy ripple of 4.5 meV per Na gives the fitted 0.45 eV/Å at h = 0.0628 Å
+    (F = 2πΔE/h): energies fit (2 meV/atom), Na forces do not.
+  - qz wall time per frame (one batch each): cubo-puro 233 s (56 MPI, n12), cubo222 2224 s
+    (56), interface-1 longa 509 s (96), vacancia-14wat c01 1251 s (128, n09).
+  - `BASIS_MOLOPT`, `POTENTIAL`, `dftd3.dat`: same sha256 in `cubo-puro-new/`,
+    `vacancia-14wat/` and the CP2K 2024.1 data dir.
+  - CP2K finest grids (test outputs): 162, 216, 256 points at 700, 1200, 1600 Ry
+    (10.170 Å); 160 and 120 at 700 and 400 Ry (9.910 Å). Shift 0 positions: frames
+    `cubo-puro-new/rotulagem/b01` #1 and `vacancia-14wat/relabel_qz/c01` #1, both train.
+- Decisions (owner):
+  - "Sim, segue": step 1 of the Na doc, reading only.
+  - "mote o teste ... Vamos ver o resultado do teste antes": the relabel/scope decision
+    waits for the test.
+  - "ok": the reading rule (`2b2f93f`) and the 7 jobs. Agent's choices in the setup:
+    training-side frames only; `USE_PREV_WF` for shifts k > 0 (same electronic state;
+    shift 0 starts as the labels did); 28 x 2 layout from the owner's `pb_conv.py`; no
+    vacancia run at 1600 Ry (the non-Na cutoff error is already in `conv_test/`).
+- Problems:
+  - `grid_points()` of the prep expected 250 points at 1600 Ry; CP2K chose 256, so the
+    1600 Ry shifts span 0.77 of a grid period instead of 0.75. The analysis reads N from
+    the output. The same CP2K choice explains the 256 quoted for 400 Ry in the Na doc.
+  - The harness denied a command containing `rm -rf` (project deny rule); redone in a new
+    scratchpad dir.
+  - n12 is the only node free for CP2K (n09–n11 run the owner's `aimd_xgnt`); 8 jobs of
+    another user (112 CPUs each) are held on `EPYC_9734` and would compete if released.
+- Next: when 4385–4391 end: `cost_ledger.py add`, `python3 src/na_translation.py
+  runs/na-translation-test`, apply the reading, register (ask which files), then the
+  owner's scope decision (relabel; q9 at a higher cutoff vs Na q1). SDumont: as before
+  (MLMD production 11753217–19, then the MLMD RDFs).
+
 ## 2026-11-20 — sdumont — MLMD production submitted; Na label context for neumann
 - Goal: start the MLMD production for claim ID-3; write up the Na label (grid) error so
   that it can be worked on neumann.
