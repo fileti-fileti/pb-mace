@@ -150,7 +150,7 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
   - `template` remote on SDumont once lab-template is on GitHub (ADR-0012).
 - Waiting on owner:
   - ID-1/ID-2: which files to register; add the Na grid-error limit to both (diff first).
-  - Na: basis and pseudopotential of Na in the qz and AIMD inputs (neumann); relabel the Na frames or not.
+  - Na: basis and pseudopotential of Na in the qz and AIMD inputs (neumann); relabel the Na frames or not (scope change; context and plan in `docs/na-label-grid-error.md`).
   - SDumont: cost unit (ADR-0005), `/scratch` purge rule, Slurm e-mail at job end.
   - Git author name on SDumont (`fileti-fileti`) vs neumann (`Eudes Fileti`): keep or align.
   - Manuscript V7 `[CONFIRM]`s: b/TS/TSr variants, interface_aimd/longa, gate, AIMD block length, per-system std.
