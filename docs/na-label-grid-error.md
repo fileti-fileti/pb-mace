@@ -160,6 +160,26 @@ This is a proposal: each step needs the owner's ok, and every job is asked first
   per-atom ripple.
 - In both cases the Na dynamics stay unlearned.
 
+## Translation test (set up 2026-11-20, neumann)
+- Prep `scripts/prep_na_translation.py`, config `configs/na_translation/translation_test.json`
+  (`fe35fc2`), run dir `runs/na-translation-test/` (7 jobs, n12, 28 MPI x 2 OpenMP).
+- Frames (train): cubo_puro b01 #1 (60 atoms, 4 Na); control vacancia c01 #1 (85, no Na).
+- Shifts: x by k*h/4, k = 0..3, h = cell/N (N read from the output).
+### Reading (fixed before submission; a test, exempt from the claim rule)
+- s_el: RMS over the atoms of el and the 3 components of the std of the force over the
+  valid shifts (meV/Å). |ΣF|max: largest norm of the summed force over the shifts.
+  Valid shift: every Fe Mulliken spin within 0.3 of shift 0 (pb_conv.py default);
+  fewer than 3 valid shifts -> that run is inconclusive.
+- Check: shift 0 of cubo_puro-q9-c700 reproduces the legacy label (max |ΔF| ≤ 10 meV/Å),
+  else the whole test is inconclusive.
+- Diagnosis (cubo_puro-q9-c700): confirmed if s_Na ≥ 100 meV/Å and
+  s_Na ≥ 5 × max(s_Fe, s_C, s_N); refuted if s_Na < 50 or s_Na < 2 × that max;
+  otherwise inconclusive.
+- Remedy (each other cubo_puro setting): "fixed" if s_Na ≤ 2 × max_el s_el and
+  |ΣF|max ≤ 2 × |ΣF|max, both of vacancia-q9-c700 (the quality of today's non-Na labels).
+- No verdict, reported only: s_el and |ΣF| vs cutoff; q1 vs q9-c1600 forces at shift 0
+  (a first look at q1 physics, not a validation); vacancia-q9-c400 (AIMD setting).
+
 ## Handoff
 - Read first: this doc; `docs/rdf-mlmd-vs-aimd.md`, limit 7; journal 2026-11-19.
 - Dataset on neumann: `~/prussian-blue/cubo/dataset/consolidado/` (sha256 in journal
