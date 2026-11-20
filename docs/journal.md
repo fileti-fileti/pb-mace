@@ -14,6 +14,53 @@ Title: `## YYYY-MM-DD — <machine> — <short title>`.
 ```
 
 <!-- NEW ENTRIES BELOW -->
+## 2026-11-20 — sdumont — MLMD production submitted; Na label context for neumann
+- Goal: start the MLMD production for claim ID-3; write up the Na label (grid) error so
+  that it can be worked on neumann.
+- Done:
+  - `/start-session`: in sync with origin at `8a21143`. Found the three production run
+    dirs `runs/mlmd-v2-{cubo-puro,cubo222,interface-1}` prepared 2026-11-20 06:32 at
+    `8a21143` (`prep_mlmd.py`, mode production), not submitted and not logged. Checked
+    against claim ID-3 and `docs/rdf-mlmd-vs-aimd.md`: model and config sha256, nsteps × dt
+    = AIMD length (13.0/5.5/5.5 ps), frame interval (10.5/10/10 fs), wall time ≈ 2× the
+    estimate.
+  - `4981216` `docs/na-label-grid-error.md` (evidence, affected frames and sources on
+    neumann, unknowns, proposed plan) and the status-block line pointing to it; pushed.
+  - Jobs 11753217 `mlmd-v2-cubo-puro` (1:30), 11753218 `mlmd-v2-cubo222` (3:15), 11753219
+    `mlmd-v2-interface-1` (2:15) submitted on `sequana_gpu` from their run dirs; PENDING
+    (Priority) at the session end. The run dirs record `8a21143`; `8a21143..4981216`
+    changes docs only.
+  - Ledger: 0 rows added; 0 jobs outside the project skipped.
+- Results (monitoring, training-side data only; `docs/na-label-grid-error.md`):
+  - `pb_mace_v2` on `valid.xyz`, force RMSE in frames without / with Na: H 16.3/22.5,
+    C 26.8/44.3, N 29.3/81.1, O 35.0/48.4, Fe 40.2/99.0 meV/Å; Na 390.1. The other elements
+    err 1.4–2.8× more in Na frames; cause unknown.
+  - Reference labels (train + valid): median |ΣF| 1.05–3.15 eV/Å in the 11 Na config_types,
+    0.16–0.45 eV/Å without Na; median |F| component of Na 0.24–0.30 eV/Å, below the fitted
+    ripple amplitude (0.45 eV/Å).
+  - 1350 of 3047 frames carry Na (train 1141, valid 150, test 59).
+  - Grid spacing L/N: 0.062–0.063 Å at 700 Ry, 0.080–0.081 Å at 400 Ry. Limit 7 of the RDF
+    doc quotes 0.083 Å for the ripple period: matches neither; to recheck.
+- Decisions (owner):
+  - "ok, commit e push": the Na doc and its status-block line.
+  - "sim submete!": the three production jobs, from the run dirs prepared at `8a21143`.
+  - Agent's assessment, given to the owner, not yet a decision: a relabel is a scope change
+    (labelling out of scope since 2026-11-17) and needs an ADR; a translation test on one
+    frame comes first; a global CP2K change may force relabelling all 3047 frames; the
+    MLMD production goes ahead (framework and water groups do not rest on the Na labels).
+- Problems:
+  - Unlogged activity on 2026-11-20 06:31–06:32 (no commit, no journal): test metrics and
+    parity written (`runs/pb_mace_v2-test/{errors,parity}/`, `runs/pb_mace_v1-test/parity/`)
+    and the three production dirs prepared. The test outputs were not read this session.
+  - The owner thought the production had run; sacct (since 2026-10-01) and the empty
+    replica dirs showed it had never been submitted.
+  - The 2026-11-19 grid-fit scripts (session scratchpad) are lost; the fit of limit 7
+    cannot be rerun. The tables of this session also came from scratchpad scripts.
+- Next: SDumont: watch 11753217–19 (DONE/UNSTABLE/FAIL per replica; resubmit node or
+  wall-time failures only), then MLMD RDFs, `src/rdf_compare.py`, register, claim ID-3.
+  neumann: the owner's scope decision on relabelling, then the reading and the translation
+  test of `docs/na-label-grid-error.md`.
+
 ## 2026-11-19 — sdumont — v2 chosen, Na label grid error, MLMD vs AIMD RDF set up
 - Goal: close the 2026-11-18 gap, read the convergence and the validation parity of the
   models, decide whether the MLMD can start, and set up the MLMD vs AIMD RDF test.

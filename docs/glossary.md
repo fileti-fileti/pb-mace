@@ -21,6 +21,7 @@ One line per term.
 - **MACE**: the equivariant message-passing MLFF architecture trained in this project.
 - **MLFF**: machine-learned force field; maps a structure to its energy and forces.
 - **MLMD**: molecular dynamics driven by an MLFF.
+- **Net force**: |ΣF|, the norm of the summed reference forces of a frame; zero for exact forces in a periodic cell, so its size measures label error (large in the Na frames, `docs/na-label-grid-error.md`).
 - **Parity plot**: model prediction against reference label, per frame (energy) or per force component; `src/plot_parity.py`.
 - **Patience**: epochs without a validation-loss improvement before MACE stops training (`patience`, 40) or lowers the learning rate (`scheduler_patience`, 50).
 - **RDF**: radial distribution function g(r) of an atom pair.
@@ -33,3 +34,4 @@ One line per term.
 - **Stitching**: joining the pieces of a restarted CP2K trajectory; the last branch through a step wins (`src/rdf.py`).
 - **Status block**: the part of `CLAUDE.md` between the STATUS markers; current state only.
 - **Teach-back**: the owner explains a research decision in their own words before it is adopted; not used in this project (ADR-0013).
+- **Translation test**: a whole frame shifted rigidly by fractions of the DFT grid spacing; exact forces do not change, so the spread of the CP2K forces over the shifts measures the grid (egg-box) error without a model (`docs/na-label-grid-error.md`).

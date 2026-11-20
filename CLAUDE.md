@@ -135,26 +135,28 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
 
 ## Status
 <!-- BEGIN STATUS -->
-- Updated: 2026-11-19 — sdumont
+- Updated: 2026-11-20 — sdumont
 - State: on neumann, SDumont (`/scratch`, ADR-0014) and GitHub; `pb_mace_v2` is the MLMD model
-  (validation-loss rule; LAMMPS file); Na labels carry a CP2K grid error (RDF doc, limit 7);
-  RDF rule fixed, ID-3 pending; ID-1, ID-2 pending (test evals run, not registered); LAMMPS
-  check PASS (job 11750830); V7 in `pb-mace-store/manuscript/`. No MLMD production or final claims.
+  (validation-loss rule; LAMMPS file); Na labels carry a CP2K grid error (context and plan for
+  neumann: `docs/na-label-grid-error.md`); RDF rule fixed, ID-3 pending; MLMD production submitted
+  2026-11-20 (jobs 11753217/18/19, pending); ID-1, ID-2 pending (test metrics written, not
+  registered); V7 in `pb-mace-store/manuscript/`. No final claims.
 - Now (SDumont):
-  - MLMD production (ask first): `prep_mlmd.py --system` × 3, 5 replicas each; ~0.7/1.6/1.1 GPU-h (journal 2026-11-19).
+  - MLMD production: jobs 11753217 (cubo-puro), 11753218 (cubo222), 11753219 (interface-1); DONE/UNSTABLE/FAIL per replica; resubmit node or wall-time failures only.
   - MLMD RDFs (`configs/rdf/mlmd_pb_mace_v2.json`), `src/rdf_compare.py`, register, apply the ID-3 rule.
 - Later:
-  - ID-1, ID-2: metrics of `runs/pb_mace_v2-test`, register both, apply their rules; V7 `[PENDING]`s.
+  - ID-1, ID-2: test metrics in `runs/pb_mace_v{1,2}-test/` (written 2026-11-20, unlogged), register both, apply their rules; V7 `[PENDING]`s.
   - Next model: early stopping (40) < scheduler patience (50) kept the LR at 2e-4 for 400 epochs; LR decay only if the RDFs fail.
-  - Grid-error (egg-box) diagnostics: from the scratchpad into `src/` with a test, if cited outside the doc.
+  - neumann: Na translation test and relabel plan (`docs/na-label-grid-error.md`), after the owner's scope decision.
+  - Na label statistics (|ΣF| per config_type, Na/non-Na error split): into `src/` with a test if needed again (scratchpad scripts not kept).
   - `template` remote on SDumont once lab-template is on GitHub (ADR-0012).
 - Waiting on owner:
   - ID-1/ID-2: which files to register; add the Na grid-error limit to both (diff first).
-  - Na: basis and pseudopotential of Na in the qz and AIMD inputs (neumann); relabel the Na frames or not (scope change; context and plan in `docs/na-label-grid-error.md`).
+  - Na: relabel or not (scope change, then an ADR); basis and pseudopotential of Na in the qz and AIMD inputs (neumann).
   - SDumont: cost unit (ADR-0005), `/scratch` purge rule, Slurm e-mail at job end.
   - Git author name on SDumont (`fileti-fileti`) vs neumann (`Eudes Fileti`): keep or align.
   - Manuscript V7 `[CONFIRM]`s: b/TS/TSr variants, interface_aimd/longa, gate, AIMD block length, per-system std.
   - Independent test set (no test frames of cubo222 or the interface-1 AIMD): dataset generation is out of scope now.
 - Last sync — neumann: 2026-11-17, end-of-session commit on top of `3f65ae6`
-- Last sync — sdumont: 2026-11-19, end-of-session commit on top of `e44ecab`
+- Last sync — sdumont: 2026-11-20, end-of-session commit on top of `4981216`
 <!-- END STATUS -->
