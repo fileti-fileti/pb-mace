@@ -1,0 +1,60 @@
+{
+  "description": "Translation test v2 (docs/na-label-grid-error.md). As v1, but the electronic state is held: each of the 8 shifts (k*h/8, k = 0..7, along x) is its own CP2K single point started from the same converged wavefunction in the legacy label's state (seed.wfn), with the full U from the first SCF step. Seeds: v1 outputs whose shifts kept the label's Fe spins (cubo_puro-q9-c1600 last shift: max |dspin| 0.000; vacancia-q9-c700: 0.001); the Na q1 seed is generated in the job from the unshifted frame with the label protocol. grid_n: finest-grid sizes printed by the v1 outputs.",
+  "legacy_root": "/home/eudes/prussian-blue/cubo/dataset",
+  "frames_tsv": "consolidado/frames.tsv",
+  "frames_tsv_sums": "data/consolidado.sha256",
+  "cp2k_data_dir": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data",
+  "n_shifts": 8,
+  "frames": {
+    "cubo_puro": {
+      "dir": "cubo-puro-new/rotulagem/b01",
+      "snapshot": 1,
+      "forces_file": "rqz-frc-1.xyz",
+      "natoms": 60,
+      "cell": 10.170,
+      "grid_n": {"700": 162, "1600": 256},
+      "seeds": {"q9": "runs/na-translation-test/cubo_puro-q9-c1600/rqz-RESTART.wfn"}
+    },
+    "vacancia": {
+      "dir": "vacancia-14wat/relabel_qz/c01",
+      "snapshot": 1,
+      "forces_file": "REFTRAJ-frc-1.xyz",
+      "natoms": 85,
+      "cell": 9.910,
+      "grid_n": {"700": 160},
+      "seeds": {"q9": "runs/na-translation-test/vacancia-q9-c700/rqz01-RESTART.wfn"}
+    }
+  },
+  "settings": {
+    "q9-c700": {"cutoff": 700, "rel_cutoff": 70, "seed": "q9"},
+    "q9-c1600": {"cutoff": 1600, "rel_cutoff": 70, "seed": "q9"},
+    "q9-c2000": {"cutoff": 2000, "rel_cutoff": 70, "seed": "q9"},
+    "q9-c2400": {"cutoff": 2400, "rel_cutoff": 70, "seed": "q9"},
+    "q1-c700": {
+      "cutoff": 700,
+      "rel_cutoff": 70,
+      "seed": "generate",
+      "na": {
+        "basis_set": "TZVP-MOLOPT-PBE-GTH-q1",
+        "basis_file": "BASIS_MOLOPT_UZH",
+        "potential": "GTH-PBE-q1",
+        "potential_file": "POTENTIAL_UZH"
+      }
+    }
+  },
+  "runs": [
+    ["cubo_puro", "q9-c2400", "07:00:00"],
+    ["cubo_puro", "q9-c2000", "05:00:00"],
+    ["cubo_puro", "q9-c1600", "04:00:00"],
+    ["vacancia", "q9-c700", "02:00:00"],
+    ["cubo_puro", "q9-c700", "01:30:00"],
+    ["cubo_puro", "q1-c700", "02:00:00"]
+  ],
+  "slurm": {
+    "partition": "EPYC_9734",
+    "nodelist": "n12",
+    "ntasks": 28,
+    "cpus_per_task": 2,
+    "layout_source": "owner's n12 benchmark, ~/prussian-blue/cubo/dataset/conv_test/pb_conv.py (RANKS_DEFAULT 28: '8 workers x 28 ranks x 2 threads (benchmark validado no n12)'); job template ~/prussian-blue/cubo/dataset/cubo222/submit_FM_test.sh"
+  }
+}
