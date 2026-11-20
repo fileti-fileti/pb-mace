@@ -30,6 +30,7 @@ One line per term.
 - **Replica**: an independent MLMD run of the same system and length with new velocities (seed); the spread over replicas is the uncertainty of the RDF comparison (`scripts/prep_mlmd.py`).
 - **Registered result**: verbatim copy under `results/<name>/` with `PROVENANCE.json` checksums.
 - **REL_CUTOFF**: CP2K `&MGRID` keyword: the cutoff used for a Gaussian of exponent 1, which sets the multigrid level each Gaussian is mapped to; qz uses 70 Ry, the AIMD 60 Ry.
+- **Seed wavefunction**: in translation test v2, a converged CP2K wavefunction in the legacy label's electronic state (Fe spins); every shift starts from it with the full U, so all shifts share one state (`scripts/prep_na_translation_v2.py`).
 - **Semicore pseudopotential**: a pseudopotential that keeps an inner shell in the valence; Na `GTH-PBE-q9` (2s²2p⁶3s¹) needs much tighter basis Gaussians than Na `GTH-PBE-q1` (3s¹ only) (`docs/na-label-grid-error.md`).
 - **Shift spread** (s_el): per element, the RMS over atoms and components of the standard deviation of the force over the shifts of a translation test, meV/Å (`src/na_translation.py`).
 - **Split group**: the unit of the train/valid/test split of `consolidado/` (`grupo` in `frames.tsv`): a block of consecutive frames of an AIMD pool or one rare-event window.

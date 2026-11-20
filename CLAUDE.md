@@ -139,11 +139,13 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
 - State: on neumann, SDumont (`/scratch`, ADR-0014) and GitHub; `pb_mace_v2` is the MLMD model
   (validation-loss rule; LAMMPS file); Na labels carry a CP2K grid error, likely cause from the
   inputs: Na q9 semicore basis too tight for the 700/70 grid, chosen on a Na-free system
-  (journal 2026-11-20); translation test running on neumann (jobs 4385–4391, reading fixed in
-  `docs/na-label-grid-error.md`); MLMD production submitted on SDumont 2026-11-20 (11753217/18/19);
+  (journal 2026-11-20); translation test v1 inconclusive (shift 0 missed the label by
+  266.5 meV/Å; `results/na-translation-test-v1/`); v2 (state held by a seed wavefunction, 8
+  shifts; reading in `docs/na-label-grid-error.md`, `264c1c6`) running on neumann (jobs
+  4392–4397); MLMD production submitted on SDumont 2026-11-20 (11753217/18/19);
   ID-1, ID-2, ID-3 pending; V7 in `pb-mace-store/manuscript/`. No final claims.
 - Now (neumann):
-  - Translation test: jobs 4385–4391 (n12); when ended: `cost_ledger.py add`, `src/na_translation.py runs/na-translation-test`, apply the doc's reading, register (ask which files).
+  - Translation test v2: jobs 4392–4397 (n12); when ended: `cost_ledger.py add`, `src/na_translation.py runs/na-translation-test-v2`, apply the v2 reading, register (ask which files).
 - Now (SDumont):
   - MLMD production: jobs 11753217 (cubo-puro), 11753218 (cubo222), 11753219 (interface-1); DONE/UNSTABLE/FAIL per replica; resubmit node or wall-time failures only.
   - MLMD RDFs (`configs/rdf/mlmd_pb_mace_v2.json`), `src/rdf_compare.py`, register, apply the ID-3 rule.
@@ -155,11 +157,11 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
   - `template` remote on SDumont once lab-template is on GitHub (ADR-0012).
 - Waiting on owner:
   - ID-1/ID-2: which files to register; add the Na grid-error limit to both (diff first).
-  - Na: relabel or not, after the translation test (scope change, then an ADR); remedy q9 at a higher cutoff vs Na q1.
+  - Na: relabel or not, after the translation test v2 (scope change, then an ADR); remedy q9 at a higher cutoff vs Na q1.
   - SDumont: cost unit (ADR-0005), `/scratch` purge rule, Slurm e-mail at job end.
   - Git author name on SDumont (`fileti-fileti`) vs neumann (`Eudes Fileti`): keep or align.
   - Manuscript V7 `[CONFIRM]`s: b/TS/TSr variants, interface_aimd/longa, gate, AIMD block length, per-system std.
   - Independent test set (no test frames of cubo222 or the interface-1 AIMD): dataset generation is out of scope now.
-- Last sync — neumann: 2026-11-20, end-of-session commit on top of `ba4214c`
+- Last sync — neumann: 2026-11-20, end-of-session commit on top of `1ff35f8`
 - Last sync — sdumont: 2026-11-20, end-of-session commit on top of `4981216`
 <!-- END STATUS -->

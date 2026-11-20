@@ -1,0 +1,304 @@
+{
+ "commit": "fe35fc2c7304668f7c9e9e937d36666a0fc321a9",
+ "config": "configs/na_translation/translation_test.json",
+ "config_sha256": "6b58f3872f5bd4e239e9de719d9545d8de345f60d728fa5750c61ec11cd61bb3",
+ "created": "2026-11-20T13:55:30",
+ "frames_tsv_sha256": "7842446de21f1585f5107ea1fa63e0d3f4f94077e6f8c0f0ec49656afd047a9a",
+ "machine": "neumann",
+ "n_shifts": 4,
+ "runs": {
+  "cubo_puro-q1-c700": {
+   "cell_A": 10.17,
+   "cutoff": 700,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/BASIS_MOLOPT"
+    },
+    "BASIS_MOLOPT_UZH": {
+     "sha256": "394bf1196353838cec389cb079a41a81b42a07afa49a18ededb9cc6e053c0291",
+     "source": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data/BASIS_MOLOPT_UZH"
+    },
+    "COORD.inc": {
+     "sha256": "fda9ce0b71355fddb6ce19f56102dd40f80ec95cce00f225f0b533d8d97afa2c",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/COORD.inc"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/POTENTIAL"
+    },
+    "POTENTIAL_UZH": {
+     "sha256": "7fd6942a627c7d1a897d938e198ea3c930630ac98d3e7099426bd83596c6b763",
+     "source": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data/POTENTIAL_UZH"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/dftd3.dat"
+    }
+   },
+   "forces_file": "rqz-frc-1.xyz",
+   "frame": "cubo_puro",
+   "grid_n_expected": 162,
+   "h_A_expected": 0.06277777777777778,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/rotulagem/b01",
+   "legacy_inp_sha256": "44785c3e3496c08f658d8cf43bb6514076f73a2098fdf5dad4ed7cf07bb67199",
+   "na": {
+    "basis_file": "BASIS_MOLOPT_UZH",
+    "basis_set": "TZVP-MOLOPT-PBE-GTH-q1",
+    "potential": "GTH-PBE-q1",
+    "potential_file": "POTENTIAL_UZH"
+   },
+   "rel_cutoff": 70,
+   "setting": "q1-c700",
+   "shifts_A": [
+    0.0,
+    0.015694444444444445,
+    0.03138888888888889,
+    0.04708333333333334
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "01:00:00"
+  },
+  "cubo_puro-q9-c1200": {
+   "cell_A": 10.17,
+   "cutoff": 1200,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/BASIS_MOLOPT"
+    },
+    "COORD.inc": {
+     "sha256": "fda9ce0b71355fddb6ce19f56102dd40f80ec95cce00f225f0b533d8d97afa2c",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/COORD.inc"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/POTENTIAL"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/dftd3.dat"
+    }
+   },
+   "forces_file": "rqz-frc-1.xyz",
+   "frame": "cubo_puro",
+   "grid_n_expected": 216,
+   "h_A_expected": 0.04708333333333333,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/rotulagem/b01",
+   "legacy_inp_sha256": "44785c3e3496c08f658d8cf43bb6514076f73a2098fdf5dad4ed7cf07bb67199",
+   "na": null,
+   "rel_cutoff": 70,
+   "setting": "q9-c1200",
+   "shifts_A": [
+    0.0,
+    0.011770833333333333,
+    0.023541666666666666,
+    0.0353125
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "02:00:00"
+  },
+  "cubo_puro-q9-c1600": {
+   "cell_A": 10.17,
+   "cutoff": 1600,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/BASIS_MOLOPT"
+    },
+    "COORD.inc": {
+     "sha256": "fda9ce0b71355fddb6ce19f56102dd40f80ec95cce00f225f0b533d8d97afa2c",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/COORD.inc"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/POTENTIAL"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/dftd3.dat"
+    }
+   },
+   "forces_file": "rqz-frc-1.xyz",
+   "frame": "cubo_puro",
+   "grid_n_expected": 250,
+   "h_A_expected": 0.04068,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/rotulagem/b01",
+   "legacy_inp_sha256": "44785c3e3496c08f658d8cf43bb6514076f73a2098fdf5dad4ed7cf07bb67199",
+   "na": null,
+   "rel_cutoff": 70,
+   "setting": "q9-c1600",
+   "shifts_A": [
+    0.0,
+    0.01017,
+    0.02034,
+    0.030510000000000002
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "03:00:00"
+  },
+  "cubo_puro-q9-c400": {
+   "cell_A": 10.17,
+   "cutoff": 400,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/BASIS_MOLOPT"
+    },
+    "COORD.inc": {
+     "sha256": "fda9ce0b71355fddb6ce19f56102dd40f80ec95cce00f225f0b533d8d97afa2c",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/COORD.inc"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/POTENTIAL"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/dftd3.dat"
+    }
+   },
+   "forces_file": "rqz-frc-1.xyz",
+   "frame": "cubo_puro",
+   "grid_n_expected": 125,
+   "h_A_expected": 0.08136,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/rotulagem/b01",
+   "legacy_inp_sha256": "44785c3e3496c08f658d8cf43bb6514076f73a2098fdf5dad4ed7cf07bb67199",
+   "na": null,
+   "rel_cutoff": 60,
+   "setting": "q9-c400",
+   "shifts_A": [
+    0.0,
+    0.02034,
+    0.04068,
+    0.061020000000000005
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "01:00:00"
+  },
+  "cubo_puro-q9-c700": {
+   "cell_A": 10.17,
+   "cutoff": 700,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/BASIS_MOLOPT"
+    },
+    "COORD.inc": {
+     "sha256": "fda9ce0b71355fddb6ce19f56102dd40f80ec95cce00f225f0b533d8d97afa2c",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/COORD.inc"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/POTENTIAL"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/dftd3.dat"
+    }
+   },
+   "forces_file": "rqz-frc-1.xyz",
+   "frame": "cubo_puro",
+   "grid_n_expected": 162,
+   "h_A_expected": 0.06277777777777778,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/rotulagem/b01",
+   "legacy_inp_sha256": "44785c3e3496c08f658d8cf43bb6514076f73a2098fdf5dad4ed7cf07bb67199",
+   "na": null,
+   "rel_cutoff": 70,
+   "setting": "q9-c700",
+   "shifts_A": [
+    0.0,
+    0.015694444444444445,
+    0.03138888888888889,
+    0.04708333333333334
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "01:00:00"
+  },
+  "vacancia-q9-c400": {
+   "cell_A": 9.91,
+   "cutoff": 400,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/vacancia-14wat/BASIS_MOLOPT"
+    },
+    "COORD.xyz": {
+     "sha256": "3465d35076efccce93448108bbfcc614ad7aaa14212bb0f2e0999fbccf3c5cae",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/vacancia-14wat/COORD.xyz"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data/POTENTIAL"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data/dftd3.dat"
+    }
+   },
+   "forces_file": "REFTRAJ-frc-1.xyz",
+   "frame": "vacancia",
+   "grid_n_expected": 120,
+   "h_A_expected": 0.08258333333333333,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/vacancia-14wat/relabel_qz/c01",
+   "legacy_inp_sha256": "5960c09fe541aad53a7f6e55c275a5d7b946fe51c2332532d6501b9c04b64824",
+   "na": null,
+   "rel_cutoff": 60,
+   "setting": "q9-c400",
+   "shifts_A": [
+    0.0,
+    0.020645833333333332,
+    0.041291666666666664,
+    0.06193749999999999
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "04:00:00"
+  },
+  "vacancia-q9-c700": {
+   "cell_A": 9.91,
+   "cutoff": 700,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/vacancia-14wat/BASIS_MOLOPT"
+    },
+    "COORD.xyz": {
+     "sha256": "3465d35076efccce93448108bbfcc614ad7aaa14212bb0f2e0999fbccf3c5cae",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/vacancia-14wat/COORD.xyz"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data/POTENTIAL"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data/dftd3.dat"
+    }
+   },
+   "forces_file": "REFTRAJ-frc-1.xyz",
+   "frame": "vacancia",
+   "grid_n_expected": 160,
+   "h_A_expected": 0.0619375,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/vacancia-14wat/relabel_qz/c01",
+   "legacy_inp_sha256": "5960c09fe541aad53a7f6e55c275a5d7b946fe51c2332532d6501b9c04b64824",
+   "na": null,
+   "rel_cutoff": 70,
+   "setting": "q9-c700",
+   "shifts_A": [
+    0.0,
+    0.015484375,
+    0.03096875,
+    0.046453125
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "04:00:00"
+  }
+ }
+}

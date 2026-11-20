@@ -1,0 +1,42 @@
+{
+  "name": "na-translation-test-v1",
+  "registered_at": "2026-11-20T19:12:58+00:00",
+  "machine": "neumann",
+  "hostname": "headnode.cluster.neumann.unifesp.br",
+  "repo_commit": "1ff35f896b7346ef82e041f733a95d76c90bfebd",
+  "source_dir": "/home/eudes/pb-mace-store/runs/na-translation-test",
+  "patterns": [
+    "analysis/*",
+    "run_info.json"
+  ],
+  "files": [
+    {
+      "path": "analysis/per_shift.tsv",
+      "source": "/home/eudes/pb-mace-store/runs/na-translation-test/analysis/per_shift.tsv",
+      "sha256": "0621b288dc8d4b76d4855bad6f76fb04a9742ca94de51ae8605e4525fd32574e",
+      "bytes": 1197,
+      "source_mtime": "2026-11-20T18:04:56+00:00"
+    },
+    {
+      "path": "analysis/summary.tsv",
+      "source": "/home/eudes/pb-mace-store/runs/na-translation-test/analysis/summary.tsv",
+      "sha256": "a12e24f2eb9c793e881ede64df6ffbe9fefe4f3ff97f1873c0f01d88fcd6ae48",
+      "bytes": 828,
+      "source_mtime": "2026-11-20T18:04:56+00:00"
+    },
+    {
+      "path": "analysis/verdict.json",
+      "source": "/home/eudes/pb-mace-store/runs/na-translation-test/analysis/verdict.json",
+      "sha256": "d7a96ea0c248d6e89a060acbbe39d15c50379fb646050ee872199ae5f3cf3740",
+      "bytes": 6352,
+      "source_mtime": "2026-11-20T18:04:56+00:00"
+    },
+    {
+      "path": "run_info.json",
+      "source": "/home/eudes/pb-mace-store/runs/na-translation-test/run_info.json",
+      "sha256": "12562985ab8bd6233071adbd26e430cd5ee44ca7d587f0e00699cb7f21793c49",
+      "bytes": 10940,
+      "source_mtime": "2026-11-20T16:55:30+00:00"
+    }
+  ]
+}

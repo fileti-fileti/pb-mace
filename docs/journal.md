@@ -14,6 +14,74 @@ Title: `## YYYY-MM-DD — <machine> — <short title>`.
 ```
 
 <!-- NEW ENTRIES BELOW -->
+## 2026-11-20 — neumann — Translation test v1 inconclusive; v2 (state held) submitted
+- Goal: read the translation test v1 (jobs 4385–4391) and run the v2 (owner: "aprovo v2.
+  Submeta").
+- Done:
+  - `/start-session`: in sync with origin at `50818f4`; tree dirty (4 untracked files), so
+    no pull. Jobs 4385–4391 all COMPLETED 0:0 on n12 (ended 14:21–14:56).
+  - Found unlogged activity after `50818f4` (14:08): `src/na_translation.py
+    runs/na-translation-test` run at 15:04 (`analysis/`); `cost_ledger.py add` at 15:05
+    (rows 4385–4391); v2 prep, test and config written 15:16–15:17. Read, then committed:
+    `6eaf0a6` (ledger), `d1af820` (`scripts/prep_na_translation_v2.py`,
+    `configs/na_translation/translation_test_v2.json`, `tests/test_prep_na_translation_v2.py`).
+  - Checks before submission: seeds in the label's state (max |Fe spin − label|: the
+    cubo_puro-q9-c1600 v1 output 0.001 at shift 0, 0.000 at the last shift; vacancia-q9-c700
+    0.000 and 0.001); prep at `d1af820` passed all checks (`runs/na-translation-test-v2/`);
+    inputs differ from the legacy ones only by PRINT_LEVEL, CUTOFF, `SCF_GUESS RESTART` +
+    `WFN_RESTART_FILE_NAME seed.wfn`, no `INIT_U_RAMPING_EACH_SCF`, `U_RAMPING 0.0` and one
+    snapshot; `cp2k.psmp --check` rc=0 on the 7 inputs (6 `shift_0` + q1 `seed_gen`).
+  - Jobs on n12 (`EPYC_9734`), 28 MPI x 2 OpenMP, submitted 2026-11-20 16:02:
+    4392 cubo_puro-q9-c2400, 4393 cubo_puro-q9-c2000, 4394 cubo_puro-q9-c1600,
+    4395 vacancia-q9-c700, 4396 cubo_puro-q9-c700 (RUNNING at the session end);
+    4397 cubo_puro-q1-c700 (PENDING, Resources).
+  - `264c1c6` v2 section and reading in `docs/na-label-grid-error.md`, after submission,
+    before any v2 output was read.
+  - `1ff35f8` `src/na_translation.py` reads the v2 per-shift layout (dispatch on the
+    run_info layout) + `tests/test_na_translation_v2.py` (6 tests); `reading()` no longer
+    divides by a zero host spread. Rerun on the v1 data: `verdict.json` and `summary.tsv`
+    identical. Suite: 142 tests OK (conda python), 142 OK, 18 skipped (`/usr/bin/python3`
+    3.6.8).
+  - Registered `results/na-translation-test-v1/` (`analysis/*`, `run_info.json`; 4 files,
+    `--check` OK).
+  - Ledger: `cost_ledger.py add`: 0 rows added (4385–4391 already in); 1 ended job outside
+    the project skipped.
+- Results:
+  - v1, by its fixed rule (`results/na-translation-test-v1/analysis/verdict.json`):
+    inconclusive. Shift 0 of cubo_puro-q9-c700 vs the legacy label: max |ΔF| 266.5 meV/Å
+    (limit 10); diagnosis and remedies not read.
+  - v1 cubo_puro-q9-c700 shift 0 sits 0.099 (max |Fe spin − label|) from the label's state;
+    the shifts of q9-c700 and q9-c1200 changed state inside the 0.3 gate (ΔE −270 and
+    −367 meV; dspin 0.099 and 0.135).
+- Decisions (owner):
+  - "aprovo v2. Submeta": the v2 and its 6 jobs. Agent's assessment given before: v2 holds
+    the state but does not by itself explain the v1 shift-0 miss; it proposed a
+    reading-only comparison first; the owner chose to submit.
+  - "ok": the v2 reading (`264c1c6`): v1 thresholds unchanged; valid shift = Fe spins
+    within 0.01 of the reference state (v1's 0.3 let changes of 0.07–0.13 through);
+    ≥ 6 of 8 valid; reference = legacy label (q9) or `seed_gen` (q1); q1 vs q9-c2400
+    reported only.
+  - Owner's choices at the end: register v1 `analysis/*` + `run_info.json`; apply the v2
+    analysis support.
+- Problems:
+  - Unlogged activity 15:04–15:17 after the end-of-session commit `50818f4` (analysis,
+    ledger, v2 prep): no commit and no journal until this session.
+  - v1's validity gate (Fe spin within 0.3 of shift 0) did not catch electronic-state
+    changes of 0.07–0.13 with ΔE −270/−367 meV; those shifts counted as valid.
+  - v2 reading fixed after submission (owner asked to submit first); no v2 output was read
+    before it.
+  - `reading()` of `src/na_translation.py` raised ZeroDivisionError on a zero host spread
+    (found by the new synthetic tests; the v1 data were unaffected).
+  - The harness denied a command containing `rm -rf` (project deny rule); redone without it.
+  - v2 c2000 and c2400 use N from `grid_points()` (288, 300), not from CP2K outputs; if
+    CP2K picks another N, the 8 shifts do not span exactly 7/8 of a grid period (the
+    analysis reports the real phases).
+- Next: when 4392–4397 end: `cost_ledger.py add`, `python3 src/na_translation.py
+  runs/na-translation-test-v2`, apply the v2 reading, register (ask which files). If shift 0
+  of v2 q9-c700 still misses the label: compare it with the label (spins, energy, atoms with
+  the largest ΔF) before the scope decision (relabel; q9 at a higher cutoff vs Na q1).
+  SDumont: as before (MLMD production 11753217–19, then the MLMD RDFs).
+
 ## 2026-11-20 — neumann — Na label cause read from the inputs; translation test submitted
 - Goal: find why the Na labels make the model fail (owner: "Precisamos determinar pq a
   rotulagem do Na levou a resultados tao ruins no modelo ML"): step 1 (reading) and the
