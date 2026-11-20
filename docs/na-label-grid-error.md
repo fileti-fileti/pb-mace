@@ -180,6 +180,33 @@ This is a proposal: each step needs the owner's ok, and every job is asked first
 - No verdict, reported only: s_el and |ΣF| vs cutoff; q1 vs q9-c1600 forces at shift 0
   (a first look at q1 physics, not a validation); vacancia-q9-c400 (AIMD setting).
 
+## Translation test v2 (set up 2026-11-20, neumann)
+- Why: v1 was inconclusive by its own rule: shift 0 of cubo_puro-q9-c700 missed the legacy
+  label by max |ΔF| 266.5 meV/Å (limit 10), its Fe spins 0.099 from the label's; shifts of
+  q9-c700 and q9-c1200 changed state (ΔE −270, −367 meV) inside the 0.3 spin gate.
+- Prep `scripts/prep_na_translation_v2.py`, config `configs/na_translation/translation_test_v2.json`
+  (`d1af820`), run dir `runs/na-translation-test-v2/`; jobs 4392–4397 (n12, 28 MPI x 2
+  OpenMP), submitted 2026-11-20 16:02.
+- Each of 8 shifts (x by k*h/8, k = 0..7) is its own single point from one seed wavefunction,
+  full U from the first SCF step. Seeds: v1 outputs in the label's state (Fe spins within
+  0.001 of the label): cubo_puro-q9-c1600, vacancia-q9-c700; q1: generated in the job from
+  the unshifted frame with the label protocol (`seed_gen/`).
+- Settings: cubo_puro q9 at 700, 1600, 2000, 2400 Ry (REL_CUTOFF 70) and q1 at 700;
+  control vacancia q9 at 700.
+### Reading v2 (fixed after submission, before any output was read; a test, exempt from the claim rule)
+- s_el and |ΣF|max: as v1, over the valid shifts.
+- Valid shift: every Fe Mulliken spin within 0.01 of the reference state: the legacy label
+  (q9 runs) or the run's `seed_gen` output (q1). Fewer than 6 valid shifts -> that run is
+  inconclusive.
+- Check: shift 0 of cubo_puro-q9-c700 reproduces the legacy label (max |ΔF| ≤ 10 meV/Å),
+  else the whole test is inconclusive.
+- Diagnosis (cubo_puro-q9-c700) and Remedy (each other cubo_puro run vs vacancia-q9-c700):
+  the v1 thresholds, unchanged.
+- No verdict, reported only: s_el and |ΣF| vs cutoff; q1 vs q9-c2400 forces at shift 0;
+  Fe spins of the q1 `seed_gen` vs the label's; per-shift energies.
+- Analysis: `src/na_translation.py` reads the v1 layout only; the v2 layout (`shift_K/`)
+  goes in, with a test, before any output is read.
+
 ## Handoff
 - Read first: this doc; `docs/rdf-mlmd-vs-aimd.md`, limit 7; journal 2026-11-19.
 - Dataset on neumann: `~/prussian-blue/cubo/dataset/consolidado/` (sha256 in journal
