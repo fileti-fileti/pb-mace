@@ -1,0 +1,8 @@
+machine,job_id,job_name,partition,state,exit_code,start,end,elapsed_s,alloc_cpus,nodelist,workdir,cost,cost_unit,recorded_at
+neumann,4385,natr-vacancia-q9-c700,EPYC_9734,COMPLETED,0:0,2026-11-20T14:02:44,2026-11-20T14:31:05,1701,56,n12,/home/eudes/pb-mace-store/runs/na-translation-test/vacancia-q9-c700,26.4600,core-hours,2026-11-20T18:05:15+00:00
+neumann,4386,natr-cubo_puro-q9-c1600,EPYC_9734,COMPLETED,0:0,2026-11-20T14:02:44,2026-11-20T14:56:46,3242,56,n12,/home/eudes/pb-mace-store/runs/na-translation-test/cubo_puro-q9-c1600,50.4311,core-hours,2026-11-20T18:05:15+00:00
+neumann,4387,natr-cubo_puro-q9-c700,EPYC_9734,COMPLETED,0:0,2026-11-20T14:02:44,2026-11-20T14:21:59,1155,56,n12,/home/eudes/pb-mace-store/runs/na-translation-test/cubo_puro-q9-c700,17.9667,core-hours,2026-11-20T18:05:15+00:00
+neumann,4388,natr-vacancia-q9-c400,EPYC_9734,COMPLETED,0:0,2026-11-20T14:02:44,2026-11-20T14:24:49,1325,56,n12,/home/eudes/pb-mace-store/runs/na-translation-test/vacancia-q9-c400,20.6111,core-hours,2026-11-20T18:05:15+00:00
+neumann,4389,natr-cubo_puro-q9-c1200,EPYC_9734,COMPLETED,0:0,2026-11-20T14:02:44,2026-11-20T14:35:54,1990,56,n12,/home/eudes/pb-mace-store/runs/na-translation-test/cubo_puro-q9-c1200,30.9556,core-hours,2026-11-20T18:05:15+00:00
+neumann,4390,natr-cubo_puro-q9-c400,EPYC_9734,COMPLETED,0:0,2026-11-20T14:21:59,2026-11-20T14:34:50,771,56,n12,/home/eudes/pb-mace-store/runs/na-translation-test/cubo_puro-q9-c400,11.9933,core-hours,2026-11-20T18:05:15+00:00
+neumann,4391,natr-cubo_puro-q1-c700,EPYC_9734,COMPLETED,0:0,2026-11-20T14:24:49,2026-11-20T14:47:43,1374,56,n12,/home/eudes/pb-mace-store/runs/na-translation-test/cubo_puro-q1-c700,21.3733,core-hours,2026-11-20T18:05:15+00:00
