@@ -73,7 +73,7 @@ thermo_style    custom step time temp pe ke etotal press
 thermo          {dump}
 thermo_modify   flush yes
 dump            trj all xyz {dump} traj.xyz
-dump_modify     trj element {elements} sort id format float %.6f
+dump_modify     trj element {elements} sort id format line "%s %.6f %.6f %.6f"
 run             {nsteps}
 """
 

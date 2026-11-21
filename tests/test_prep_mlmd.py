@@ -104,8 +104,11 @@ class PrepMlmdTest(unittest.TestCase):
                   "timestep        0.001500", "velocity        all create 350.0 ${SEED} mom yes rot no",
                   "fix             nvt all nvt temp 350.0 350.0 0.1",
                   "dump            trj all xyz 7 traj.xyz",
-                  "dump_modify     trj element Fe C N Na sort id", "run             70"):
+                  'dump_modify     trj element Fe C N Na sort id format line "%s %.6f %.6f %.6f"',
+                  "run             70"):
             self.assertIn(s, inp)
+        # dump xyz takes only "format line" or "format none" (jobs 11753217-19 failed on "format float")
+        self.assertNotIn("format float", inp)
         self.assertEqual(sorted(p.name for p in rd.iterdir() if p.is_dir()), ["rep1", "rep2", "rep3"])
         job = (rd / "job.sbatch").read_text()
         for s in ("#SBATCH -p gpu\n", "#SBATCH --exclude=node1\n", "#SBATCH -t 1-00:00:00\n",
