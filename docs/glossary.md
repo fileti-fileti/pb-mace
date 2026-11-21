@@ -7,12 +7,14 @@ One line per term.
 - **Bare repo**: a git repo with no working tree; `origin` of the neumann repos created before ADR-0012.
 - **Block error**: standard error from contiguous blocks of frames; a lower bound when blocks are shorter than the correlation time.
 - **Claim**: a statement in `docs/claims.md` with a reading rule fixed before the result.
+- **Committee**: models trained on the same data with the same protocol but different seeds; their disagreement on a configuration estimates the model's uncertainty there (proposed for the nanocube edges, not decided).
 - **Continuation**: a new model trained from another run's checkpoint (weights, optimizer and LR-scheduler state) with `prep_mace_train.py --init-checkpoint`; e.g. `pb_mace_v2` from epoch 199 of `pb_mace_v1`.
 - **Deploy key**: an ssh key with access to one GitHub repo only; one per (repo, machine) (ADR-0012).
 - **Egg-box error**: in grid-based DFT (CP2K GPW) the energy of an atom oscillates as it moves between real-space grid points (period = grid spacing), so its forces get a spurious term that does not sum to zero; large on Na in the qz labels (`docs/rdf-mlmd-vs-aimd.md`, limit 7).
 - **E0s**: per-element isolated-atom energies that MACE subtracts from the total energy; here fitted by least squares (`E0s: average`), so only their sums over the training compositions are meaningful.
 - **EMA**: exponential moving average of the model weights during training (decay 0.99); MACE validates and saves the averaged weights.
 - **Fe2 / Fe3**: CP2K kind labels of the two iron sites, C-bound (Fe2) and N-bound (Fe3, with U in qz); MACE has one Fe element, so the MLMD assigns them from geometry (Fe with a C within 2.4 Å = Fe2; `scripts/prep_mlmd.py`).
+- **Fe motif**: the first shell of an Fe as (nC, nN, nO) within 2.6 Å, e.g. (0, 5, 1) = Fe(III) with 5 N and 1 water O; used to compare a structure's environments with the training set's.
 - **Fine-tuning**: training a model starting from the weights of a foundation model.
 - **First-shell quantities**: r1 (position of the first peak of g(r)), g1 (its height) and n1 (coordination number at the AIMD's first minimum); the RDF reading rule judges r1 and n1 (`src/rdf_compare.py`).
 - **Foundation model**: a MACE model pre-trained on a broad dataset; here MACE-MP-0 small (`data/foundation/`).
@@ -21,12 +23,14 @@ One line per term.
 - **MACE**: the equivariant message-passing MLFF architecture trained in this project.
 - **MLFF**: machine-learned force field; maps a structure to its energy and forces.
 - **MLMD**: molecular dynamics driven by an MLFF.
+- **Nanocube**: the owner's water-passivated Prussian-blue cube of 5×5×5 Fe sites (corners removed, hydrated Fe(CN)₆ vacancy at the centre, interior Na⁺), neumann `~/prussian-blue/cubo/dataset/nanocubo/nanocubo_vac.pdb`; proposed main MLMD object (ADR-0015 pending).
 - **Net force**: |ΣF|, the norm of the summed reference forces of a frame; zero for exact forces in a periodic cell, so its size measures label error (large in the Na frames, `docs/na-label-grid-error.md`).
 - **Parity plot**: model prediction against reference label, per frame (energy) or per force component; `src/plot_parity.py`.
 - **Patience**: epochs without a validation-loss improvement before MACE stops training (`patience`, 40) or lowers the learning rate (`scheduler_patience`, 50).
 - **RDF**: radial distribution function g(r) of an atom pair.
 - **qz**: the owner's CP2K labelling protocol: UKS PBE-D3(BJ), U 6 eV on Fe(III) only, cutoff 700/70, EPS 1e-6.
 - **Reading rule**: question, metric, threshold and what counts as yes/no, fixed before a run.
+- **Receptive field**: the distance within which other atoms affect a MACE atom's energy, r_max × interaction layers; `pb_mace_v2`: 6 Å × 2 = 12 Å (LAMMPS log).
 - **Replica**: an independent MLMD run of the same system and length with new velocities (seed); the spread over replicas is the uncertainty of the RDF comparison (`scripts/prep_mlmd.py`).
 - **Registered result**: verbatim copy under `results/<name>/` with `PROVENANCE.json` checksums.
 - **REL_CUTOFF**: CP2K `&MGRID` keyword: the cutoff used for a Gaussian of exponent 1, which sets the multigrid level each Gaussian is mapped to; qz uses 70 Ry, the AIMD 60 Ry.

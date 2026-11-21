@@ -14,6 +14,90 @@ Title: `## YYYY-MM-DD — <machine> — <short title>`.
 ```
 
 <!-- NEW ENTRIES BELOW -->
+## 2026-11-21 — sdumont — ID-3 MLMD fixed and resubmitted; nanocube proposed
+- Goal: read the MLMD production jobs 11753217–19 and get the ID-3 MLMD running; assess the
+  owner's nanocube (`nanocubo_vac.pdb`, neumann) as the main MLMD object.
+- Done:
+  - `/start-session`: in sync with origin at `d59e0d2`, tree clean, no pull. Jobs
+    11753217/18/19 FAILED 1:0 on 2026-11-20 13:31 after 36–37 s; 0 of 5 replicas DONE each.
+  - `7fc9fb5` `scripts/prep_mlmd.py` IN_PROD: `dump_modify ... format line "%s %.6f %.6f
+    %.6f"`; `tests/test_prep_mlmd.py` asserts the full line and no `format float` (fails on
+    the old line, checked with `git stash`). Suite: 142 tests OK (`python3` 3.10.20 and
+    `mace_env`).
+  - Re-prep at `7fc9fb5` with the 2026-11-20 arguments (sequana_gpu, exclude sdumont8042, 6
+    CPUs, 1:30/3:15/2:15): `runs/mlmd-v2-{cubo-puro,cubo222,interface-1}-r2`. Against the
+    failed dirs only the commit, job name, `RUN=` and the dump_modify line differ
+    (`start.data`, `kinds.inc`, model and config sha256 identical). Failed dirs kept.
+  - Input check on the login node (it has 2 V100 GPUs; the CUDA path ran) in
+    `runs/mlmd-v2-r2-skiprun/` (commit recorded): `lmp -skiprun` parsed the three inputs
+    with no ERROR but skips `run` entirely in LAMMPS 10 Sep 2025; a test copy with `run 20`
+    (`in_short.lmp`): rc=0, no ERROR/WARNING, 3 frames each, every atom line with 6
+    decimals; `src/rdf.py` `iter_xyz` reads them (60/530/267 atoms, step × dt right).
+  - Jobs 11754110 `mlmd-v2-cubo-puro-r2`, 11754111 `mlmd-v2-cubo222-r2`, 11754112
+    `mlmd-v2-interface-1-r2` on sequana_gpu, RUNNING since 2026-11-21 06:20; after ~5 min
+    rep1 at step 7560/8666, 1500/5500, 2370/5500, no ERROR.
+  - Nanocube coverage in `data/consolidado/train.xyz` (scratchpad scripts, not kept):
+    Results. SDumont has GROMACS modules (2023.2, 2024.1, 2026.0 builds, among others); no
+    Packmol module, none in `mace_env`. `data/nanocubo/` created, empty, for the owner's copy.
+  - Ledger: 3 rows added (11753217–19, FAILED, 36/37/36 s); 0 jobs outside the project
+    skipped. Glossary: Committee, Fe motif, Nanocube, Receptive field.
+- Results (monitoring, not claims):
+  - 11753217–19, all 15 replicas: `ERROR: Unknown dump_modify format keyword: float
+    (src/dump.cpp:1219)`; dump xyz takes only `format line` or `format none`.
+    `mlmd-v2-check` runs IN_CHECK (dump custom, where `format float` is valid), so IN_PROD
+    had never been parsed by LAMMPS.
+  - Training Fe motifs (nC, nN, nO within 2.6 Å): (0,3,3), the 24 nanocube edge Fe(III):
+    0 (at most 2 O on an Fe(III), `vacancia_*`); Fe(II) with 2 terminal CN (12 edge sites of
+    a 5×5×5 lattice without corners): 15 of 13 755; covered: (0,5,1) 4429, (0,6,0) 7272,
+    Fe(II) with 1 terminal CN 3215 (`interface_*`). So ~36 of the 116 nanocube Fe sit in
+    environments absent from training; ID-3 (periodic systems) does not test them.
+  - Every `interface_*` config_type has Na; the Na-free framework config_types are
+    `vacancia_*` only. Na nearest-N distance per config_type: median 2.51–2.66 Å; the
+    owner reports 2.59 Å for all nanocube Na.
+  - `pb_mace_v2` receptive field: r_max 6 Å × 2 layers = 12 Å (LAMMPS log).
+  - Nanocube from the owner's description (file not read yet): 62×3 + 54×2 − 324 = −30,
+    closed by 30 Na⁺; 1124 atoms. Agent's estimates, not measured: 0.8/1.0/1.2 nm of water
+    → box ~42/46/50 Å, ~6.8k/9k/12k atoms; cube rotation ~10–15° in 100 ps
+    (Stokes–Einstein–Debye, radius ~13 Å, real-water viscosity), enough at 0.8 nm to bring
+    the cube–image gap below 12 Å.
+- Decisions (owner):
+  - "commit. aplica o diff": `7fc9fb5`. "ok rode o ID-3": the three resubmissions. The
+    doc's failure rule covers model and node/wall-time failures only; this was an input
+    error with 0 MD steps and no output read, so the ID-3 rule is unchanged (agent).
+  - "O modelo deve ser o v2": ID-3 and the nanocube MLMD with `pb_mace_v2`.
+  - "ADR ok": ADR-0015 for the nanocube, from the agent's proposal: keep the 30 Na
+    (without them the system is −30 or has 30 Fe(II)→Fe(III), and its surfaces are Na-free,
+    unlike every training interface); 1.0 nm of water (20 Å between images) with a
+    density-profile check after the NPT; remove the cube's rotation in LAMMPS (`fix
+    momentum N angular rescale` on the cube; COLVARS orientation if available); water
+    density from a classical GROMACS NPT with the cube restrained (no stress in the model);
+    the edges need a committee or a declared limit (open).
+  - Nanocube work on SDumont (owner's proposal; the agent agreed: model, LAMMPS and MLMD
+    are here; the original stays on neumann).
+  - Input test on the login node in `/scratch`, not in a queue (owner asked why not a normal
+    queue; agent: a queued test waits as long as the production, and a bad input fails the
+    production in ~40 s anyway); owner: "segue o teste".
+- Problems:
+  - 11753217–19 FAILED, root cause above. Not caught by `mlmd-v2-check` nor by the unit
+    test (it asserted only the start of the dump_modify line). The two 2026-11-20 neumann
+    sessions carried "production submitted" after the jobs had failed at 13:31.
+  - `lmp -skiprun` does not run setup or write a dump in this LAMMPS; a short-run copy was
+    needed.
+  - The nanocube and the October solvation inputs (Packmol, GROMACS topology, `.mdp`) are
+    on neumann only; Na count not checked. neumann login: YAML `eudes@172.20.22.62`, the
+    owner's prompt `fileti@neumann`.
+  - The agent first gave the training Na–N median as 2.60–2.66 Å; the output gives
+    2.51 (`interface_aimd`) to 2.66.
+- Next:
+  - SDumont: 11754110–12 (DONE/UNSTABLE/FAIL per replica), then the MLMD RDFs, `src/rdf_compare.py`,
+    register, ID-3 rule.
+  - Nanocube: the owner copies neumann → Mac → `data/nanocubo/` (tar over ssh; manifest
+    `nanocubo.sha256` made on the Mac with `shasum -a 256`); then `sha256sum -c`, element
+    counts (expected Fe 116, C 324, N 324, Na 30, O 110, H 220), and the ADR-0015 draft
+    after the owner's answers (committee; `gmx solvate` + envelope filter vs a Packmol env;
+    path of the October files; the nanocube MLMD's question and temperature).
+  - neumann: translation test v2 (jobs 4392–4397) as in its Now.
+
 ## 2026-11-20 — neumann — Translation test v1 inconclusive; v2 (state held) submitted
 - Goal: read the translation test v1 (jobs 4385–4391) and run the v2 (owner: "aprovo v2.
   Submeta").
