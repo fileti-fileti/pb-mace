@@ -123,7 +123,8 @@ class PrepTest(unittest.TestCase):
         self.seed.write_text("q9 seed wfn")
         self.dirs = {}
         for key, rel in (("A1", "ev/W/rotulos/j01"), ("A2", "ev/W/rotulos/j02"),
-                         ("B1", "ev/N/rotulos/j01"), ("B3", "ev/N/rotulos/j03")):
+                         ("B1", "ev/N/rotulos/j01"), ("B3", "ev/N/rotulos/j03"),
+                         ("B4", "ev/N/rotulos/j04")):
             d = self.legacy / rel
             d.mkdir(parents=True)
             (d / "relabel.inp").write_text(EV_INP.format(seed=self.seed).replace(
@@ -134,6 +135,8 @@ class PrepTest(unittest.TestCase):
             (d / "COORD.inc").write_text(COORD)
             self.dirs[key] = d
         (self.dirs["B3"] / "parcial_123").mkdir()           # a restarted label job
+        (self.dirs["B4"] / "relabel.inp").write_text(        # another state protocol
+            GEN_INP.replace("EXTRAPOLATION USE_GUESS", "EXTRAPOLATION USE_PREV_WF"))
         g = self.legacy / "rot" / "b01"
         g.mkdir(parents=True)
         (g / "relabel.inp").write_text(GEN_INP)
@@ -149,6 +152,7 @@ class PrepTest(unittest.TestCase):
         rows += [("tB", "train", "ev/N/rotulos/j01", k) for k in (1, 2, 3)]
         rows += [("tB", "train", "ev/N/rotulos/j03", 1),
                  ("tB", "train", "ev/N/rotulos/j03/parcial_123", 2),
+                 ("tB", "train", "ev/N/rotulos/j04", 1), ("tB", "train", "ev/N/rotulos/j04", 2),
                  ("tC", "train", "ev/W/rotulos/j01", 1)]
         tsv = ["i\tconfig_type\tgrupo\tdestino\torigem\tframe\tpool\tE_eV"]
         tsv += ["{}\t{}\t{}:0\t{}\t{}/relabel.out\t{}\t{}\t-1.5".format(i, ct, ct, dest, o, k, k)
@@ -193,16 +197,20 @@ class PrepTest(unittest.TestCase):
 
     def test_draw_is_seeded_training_side_and_eligible(self):
         rows = q.read_tsv((self.legacy / "consolidado" / "frames.tsv").read_text())
-        d = q.draw(rows, self.cfg["draw"], self.legacy)
-        self.assertEqual(d, q.draw(rows, self.cfg["draw"], self.legacy))
+        d = q.draw(rows, self.cfg["draw"], self.legacy, self.seed)
+        self.assertEqual(d, q.draw(rows, self.cfg["draw"], self.legacy, self.seed))
         self.assertEqual([s for s, _ in d], ["A", "A", "B", "B"])
         rng = random.Random(7)
         want = rng.sample([r for r in rows if r["i"] in ("1", "2", "3")], 2)
-        want += rng.sample([r for r in rows if r["i"] in ("5", "6", "7")], 2)  # j03: parcial_
+        want += rng.sample([r for r in rows if r["i"] in ("5", "6", "7")], 2)  # not j03, j04
         self.assertEqual([r["i"] for _, r in d], [r["i"] for r in want])
+        cache = {}
+        self.assertFalse(q.eligible("ev/N/rotulos/j04/relabel.out", self.legacy, self.seed, cache))
+        self.assertFalse(q.eligible("ev/N/rotulos/j03/relabel.out", self.legacy, self.seed, cache))
+        self.assertTrue(q.eligible("ev/N/rotulos/j01/relabel.out", self.legacy, self.seed, cache))
         self.cfg["draw"]["n_per_stratum"] = 4                   # only 3 eligible per stratum
         with self.assertRaises(pt.PrepError):
-            q.draw(rows, self.cfg["draw"], self.legacy)
+            q.draw(rows, self.cfg["draw"], self.legacy, self.seed)
 
     def test_run_dirs(self):
         out, cmds = self.prep()

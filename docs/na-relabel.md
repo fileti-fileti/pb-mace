@@ -55,6 +55,12 @@ as the converged semicore reference, Na q9 at 2000/70?
     subdirectory (restarted label jobs).
   - `interface_aimd` is excluded: its labels started from the atomic guess, while all
     the others started from the seed `eventos/interface-1np/base/chute.wfn`.
+  - Amended 2026-11-25, before any input was written: the origem's `relabel.inp` must use
+    that seeded protocol (SCF_GUESS RESTART from `chute.wfn`, EXTRAPOLATION USE_GUESS).
+    - Reason: the first prep stopped on N3 `j01`, one of three label jobs that used another
+      state protocol (atomic guess or USE_PREV_WF). The other two are a W4a job and a longa
+      job; 15 of 16 N3 jobs and 17 of 18 W4a jobs are seeded.
+    - The draw changes with this; the reading rule does not.
 - **Draw.** `random.Random(20261125)`. For each stratum, in the order EQ, N3, W4, TS:
   `sample(eligible rows sorted by i, 3)`. The prep script makes the draw and records it.
 - **Base input.** The `relabel.inp` of the first drawn frame's `origem`.

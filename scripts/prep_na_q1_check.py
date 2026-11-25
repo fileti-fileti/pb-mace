@@ -8,7 +8,9 @@ CONFIG: configs/na_relabel/*.json. The script
 - draws the frames from consolidado/frames.tsv (checked against its sha256 list): per
   stratum, in the config's order, random.Random(seed).sample(rows, n_per_stratum) over the
   rows of the draw's split (train or valid only) whose config_type is in the stratum and
-  whose origem is eligible (no parcial_* path part, no parcial_* subdir), sorted by i;
+  whose origem is eligible, sorted by i. Eligible: no parcial_* path part, no parcial_*
+  subdir, and its relabel.inp uses the seeded protocol (SCF_GUESS RESTART from
+  WFN_RESTART_FILE_NAME = q9_seed, EXTRAPOLATION USE_GUESS, U_RAMPING 0, no ramp each SCF);
 - takes the base input: relabel.inp of the first drawn frame's origem (the seeded label
   protocol: SCF_GUESS RESTART from WFN_RESTART_FILE_NAME = q9_seed, full U from the first
   SCF step, EXTRAPOLATION USE_GUESS, 700/70). Every drawn origem must have the same input
@@ -156,23 +158,31 @@ def read_tsv(text):
     return [dict(zip(rows[0], r)) for r in rows[1:]]
 
 
-def eligible(origem, legacy, cache):
+def seeded(text, q9_seed):
+    """True if a legacy relabel.inp uses the seeded label protocol (state held by q9_seed)."""
+    return (all(pt.kw_values(text, k) == [v] for k, v in SEEDED[2:])
+            and pt.kw_values(text, "WFN_RESTART_FILE_NAME") == [str(q9_seed)])
+
+
+def eligible(origem, legacy, q9_seed, cache):
     d = (legacy / origem).parent
     if d not in cache:
         cache[d] = (not any(p.startswith("parcial_") for p in Path(origem).parts)
-                    and d.is_dir()
+                    and (d / "relabel.inp").is_file()
                     and not any(c.is_dir() and c.name.startswith("parcial_")
-                                for c in d.iterdir()))
+                                for c in d.iterdir())
+                    and seeded((d / "relabel.inp").read_text(), q9_seed))
     return cache[d]
 
 
-def draw(rows, d, legacy):
+def draw(rows, d, legacy, q9_seed):
     """-> [(stratum, row)] in draw order."""
     rng, cache, out = random.Random(d["seed"]), {}, []
     for name, types in d["strata"]:
         pool = sorted((r for r in rows if r["destino"] == d["split"]
                        and r["config_type"] in types
-                       and eligible(r["origem"], legacy, cache)), key=lambda r: int(r["i"]))
+                       and eligible(r["origem"], legacy, q9_seed, cache)),
+                      key=lambda r: int(r["i"]))
         if len(pool) < d["n_per_stratum"]:
             raise PrepError("stratum {}: {} eligible rows, need {}".format(
                 name, len(pool), d["n_per_stratum"]))
@@ -280,7 +290,7 @@ def prepare(repo, cfg_path, name, machine=None, mcfg=None, now=None):
         raise PrepError("q9 seed {}: missing or empty".format(q9_seed))
     ff = cfg["forces_file"]
 
-    drawn = draw(read_tsv(tsv.read_text()), cfg["draw"], legacy)
+    drawn = draw(read_tsv(tsv.read_text()), cfg["draw"], legacy, q9_seed)
     frames, base, base_src, kinds0 = [], None, None, None
     for k, (stratum, row) in enumerate(drawn, 1):
         src = (legacy / row["origem"]).parent
