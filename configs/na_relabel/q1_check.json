@@ -1,0 +1,93 @@
+{
+ "description": "q1 check of the Na relabelling protocol (docs/na-relabel.md, ADR-0016; reading rule fixed there 2026-11-25). 12 train-split interface-1np frames drawn in 4 strata; settings q9-c700 (reproduction check on the first EQ and TS frames), q9-c2000 (reference), q1-c700 (protocol), q1-c2000 (control). Every setting restarts each frame from a seed with the full U, as the longa and event labels did (base input: the first drawn frame's relabel.inp); the q1 seed is one single point of the first drawn frame with the interface_aimd label protocol (seed_protocol_dir: SCF_GUESS ATOMIC, U ramping 0.5 eV each SCF) and Na q1 at 700/70. Layout 96 MPI x 1 thread on n12: the legacy interface labels (GLOBAL| lines of their relabel.out; launched by ~/prussian-blue/cubo/dataset/roda_fila_rotulos.sh). Wall times: agent's estimates from the legacy timings and the v2 ratios (x3.8 at 2000 Ry, x1.2 for q1); a job cut by its wall time resumes when resubmitted.",
+ "legacy_root": "/home/eudes/prussian-blue/cubo/dataset",
+ "frames_tsv": "consolidado/frames.tsv",
+ "frames_tsv_sums": "data/consolidado.sha256",
+ "cp2k_data_dir": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data",
+ "draw": {
+  "seed": 20261125,
+  "split": "train",
+  "n_per_stratum": 3,
+  "strata": [
+   [
+    "EQ",
+    [
+     "interface_longa"
+    ]
+   ],
+   [
+    "N3",
+    [
+     "interface_N3"
+    ]
+   ],
+   [
+    "W4",
+    [
+     "interface_W4a",
+     "interface_W4b"
+    ]
+   ],
+   [
+    "TS",
+    [
+     "interface_W4aTS",
+     "interface_W4aTSr",
+     "interface_W4bTS",
+     "interface_W4bTSr"
+    ]
+   ]
+  ],
+  "repro_strata": [
+   "EQ",
+   "TS"
+  ]
+ },
+ "seed_protocol_dir": "interface-1np-new/rotulagem/b01",
+ "q9_seed": "eventos/interface-1np/base/chute.wfn",
+ "na_q1": {
+  "basis_set": "TZVP-MOLOPT-PBE-GTH-q1",
+  "basis_file": "BASIS_MOLOPT_UZH",
+  "potential": "GTH-PBE-q1",
+  "potential_file": "POTENTIAL_UZH"
+ },
+ "forces_file": "rqz-frc-1.xyz",
+ "seed_job_time": "02:00:00",
+ "settings": {
+  "q9-c700": {
+   "cutoff": 700,
+   "rel_cutoff": 70,
+   "na": "q9",
+   "frames": "repro",
+   "time": "04:00:00"
+  },
+  "q9-c2000": {
+   "cutoff": 2000,
+   "rel_cutoff": 70,
+   "na": "q9",
+   "frames": "all",
+   "time": "2-00:00:00"
+  },
+  "q1-c700": {
+   "cutoff": 700,
+   "rel_cutoff": 70,
+   "na": "q1",
+   "frames": "all",
+   "time": "12:00:00"
+  },
+  "q1-c2000": {
+   "cutoff": 2000,
+   "rel_cutoff": 70,
+   "na": "q1",
+   "frames": "all",
+   "time": "2-00:00:00"
+  }
+ },
+ "slurm": {
+  "partition": "EPYC_9734",
+  "nodelist": "n12",
+  "ntasks": 96,
+  "cpus_per_task": 1,
+  "layout_source": "legacy interface-1np labels: 96 MPI x 1 thread (GLOBAL| lines of eventos/interface-1np/*/rotulos/j*/relabel.out and interface-1np-new/longa/rotulos/b*/relabel.out), launched on n12 by ~/prussian-blue/cubo/dataset/roda_fila_rotulos.sh"
+ }
+}

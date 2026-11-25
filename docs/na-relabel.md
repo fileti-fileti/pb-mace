@@ -105,9 +105,11 @@ as the converged semicore reference, Na q9 at 2000/70?
   - Fe spin differences, SCF steps and wall time per frame.
 
 ### How to run
-- TODO(agent): `scripts/prep_relabel.py` (draw, inputs, seeds, jobs; with tests) and
-  `src/na_q1_check.py` (this rule; with tests). Prep and analysis run on a clean tree, and
-  the run records its commit.
+- Prep: `scripts/prep_na_q1_check.py configs/na_relabel/q1_check.json --name na-q1-check`
+  (draw, inputs, seeds, jobs; tests in `tests/test_prep_na_q1_check.py`). It needs a clean
+  tree, and the run records its commit.
+- Analysis: `python3 src/na_q1_check.py runs/na-q1-check` (this rule; tests in
+  `tests/test_na_q1_check.py`).
 - Jobs: ask first. The q1 seed job runs before the others.
 
 ### Results
