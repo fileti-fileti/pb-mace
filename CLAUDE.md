@@ -137,37 +137,38 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
 
 ## Status
 <!-- BEGIN STATUS -->
-- Updated: 2026-11-21 — sdumont
+- Updated: 2026-11-25 — neumann
 - State: on neumann, SDumont (`/scratch`, ADR-0014) and GitHub; `pb_mace_v2` is the MLMD model
-  (validation-loss rule; LAMMPS file); Na labels carry a CP2K grid error (likely the Na q9
-  basis vs the 700/70 grid; journal 2026-11-20); translation test v1 inconclusive
-  (`results/na-translation-test-v1/`), v2 running on neumann (jobs 4392–4397, reading
-  `264c1c6`); ID-3 MLMD resubmitted 2026-11-21 after an input error (11754110–12, `7fc9fb5`);
-  nanocube proposed as the main MLMD object (ADR-0015 to write; its edge Fe motifs are absent
-  from training, journal 2026-11-21); ID-1, ID-2, ID-3 pending; V7 in
-  `pb-mace-store/manuscript/`. No final claims.
+  (validation-loss rule; LAMMPS file); main MLMD object: the PB(100)/water slab, 3×3 test
+  config ready (ADR-0015; nanocube dropped); Na grid error confirmed by translation test v2
+  (`results/na-translation-test-v2/`); Na protocol q1 at 700/70 (ADR-0016), on the condition
+  of the q1 check (`docs/na-relabel.md`; `runs/na-q1-check` at `46ca661`, seed job 4405
+  running); ID-3 MLMD on SDumont since 2026-11-21 (11754110–12); ID-1, ID-2, ID-3 pending;
+  V7 in `pb-mace-store/manuscript/`. No final claims.
 - Now (neumann):
-  - Translation test v2: jobs 4392–4397 (n12); when ended: `cost_ledger.py add`, `src/na_translation.py runs/na-translation-test-v2`, apply the v2 reading, register (ask which files).
+  - q1 check: when 4405 ends, `cost_ledger.py add`, seed check (SCF converged, Fe spins ≤ 0.01 from f01's label), then ask to submit q9-c700, q9-c2000, q1-c700, q1-c2000 (`runs/na-q1-check/*/job.sh`).
+  - q1 check, after those end: `python3 src/na_q1_check.py runs/na-q1-check`, register (ask which files), apply the rule to ADR-0016.
 - Now (SDumont):
   - ID-3 MLMD: jobs 11754110 (cubo-puro), 11754111 (cubo222), 11754112 (interface-1) in `runs/mlmd-v2-*-r2`; DONE/UNSTABLE/FAIL per replica; resubmit node or wall-time failures only.
   - MLMD RDFs (`configs/rdf/mlmd_pb_mace_v2.json`), `src/rdf_compare.py`, register, apply the ID-3 rule.
-  - Nanocube, after the owner's copy: `sha256sum -c` in `data/nanocubo/`, element counts, then the ADR-0015 draft (diff first).
+  - Slab test: `prep_mlmd.py configs/mlmd/slab100_test.json --check` (ask), then the NVT (2 replicas; nsteps after the check's speed; ask).
 - Later:
+  - Relabel phase 1 after a "yes" (537 non-event Na frames, ~8.4k core-h): its prep, and the retrained model's reading rule before training; then phase 2 (813 event frames).
+  - Slab for a paper: thicker water, slab-thickness and lateral convergence, a Na reference other than the 400/60 AIMD (ADR-0015).
   - ID-1, ID-2: test metrics in `runs/pb_mace_v{1,2}-test/` (written 2026-11-20, unlogged), register both, apply their rules; V7 `[PENDING]`s.
   - Next model: early stopping (40) < scheduler patience (50) kept the LR at 2e-4 for 400 epochs; LR decay only if the RDFs fail.
   - Na doc "Not known" items from journal 2026-11-20 (diff first); prep `grid_points()` gives 250, CP2K 256 at 1600 Ry: fix before reuse.
-  - Into `src/` with tests: Na label statistics and the Fe-motif coverage check (scratchpad scripts not kept).
+  - Into `src/` with tests: the Fe-motif coverage check (scratchpad script not kept).
   - `prep_mlmd.py --check` parses only IN_CHECK: also run the production input briefly (2026-11-21 failure).
-  - `sdumont.yaml`: GROMACS modules exist (pick one for the nanocube NPT); login node has 2 V100 (diff first).
+  - `sdumont.yaml`: GROMACS modules exist; login node has 2 V100 (diff first).
   - `template` remote on SDumont once lab-template is on GitHub (ADR-0012).
 - Waiting on owner:
-  - Nanocube: copy neumann → Mac → `data/nanocubo/` with the October Packmol/GROMACS inputs (path?); neumann login `eudes` (YAML) or `fileti`; committee yes/no; `gmx solvate` + envelope filter or a Packmol env; MLMD question and temperature.
+  - Slab paper: the 2–3 central questions (agent's proposal 2026-11-25: water structure, Na⁺ distribution and desolvation, rare-event free energies vs the AIMD/PMF).
   - ID-1/ID-2: which files to register; add the Na grid-error limit to both (diff first).
-  - Na: relabel or not, after the translation test v2 (scope change, then an ADR); remedy q9 at a higher cutoff vs Na q1.
   - SDumont: cost unit (ADR-0005), `/scratch` purge rule, Slurm e-mail at job end.
   - Git author name on SDumont (`fileti-fileti`) vs neumann (`Eudes Fileti`): keep or align.
   - Manuscript V7 `[CONFIRM]`s: b/TS/TSr variants, interface_aimd/longa, gate, AIMD block length, per-system std.
   - Independent test set (no test frames of cubo222 or the interface-1 AIMD): dataset generation is out of scope now.
-- Last sync — neumann: 2026-11-20, end-of-session commit on top of `1ff35f8`
+- Last sync — neumann: 2026-11-25, end-of-session commit on top of `46ca661`
 - Last sync — sdumont: 2026-11-21, end-of-session commit on top of `7fc9fb5`
 <!-- END STATUS -->

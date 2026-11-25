@@ -14,6 +14,73 @@ Title: `## YYYY-MM-DD — <machine> — <short title>`.
 ```
 
 <!-- NEW ENTRIES BELOW -->
+## 2026-11-25 — neumann — Na grid error confirmed (v2); focus on the PB(100) slab; q1 check started
+- Goal: read translation test v2 and choose the Na label fix. After the owner moved the focus
+  from the nanocube to a PB(100)/water slab: prepare the slab test and the Na relabelling.
+- Done:
+  - `/start-session`: fast-forward pull of the SDumont session of 2026-11-21 (`7fc9fb5`,
+    `98f5a76`).
+  - `a6cadb7` `src/na_label_stats.py` + 8 tests: net force of the Na labels per
+    config_type, TS vs equilibrium frames, rule fixed before the run (owner "faz a
+    checagem"). Run `runs/na-label-stats` at `a6cadb7`, clean tree. Not registered (owner:
+    "Nao vamos por esse caminho").
+  - Web literature search on Prussian-blue/PBA–water interfaces (agent; not a formal
+    bibliographic check; summary in ADR-0015, Context).
+  - Jobs 4392–4397 COMPLETED; ledger +6 rows (599 core-h); `src/na_translation.py
+    runs/na-translation-test-v2`; registered `results/na-translation-test-v2/`
+    (`analysis/*`, `run_info.json`), `e63ab21`.
+  - `f9afc7a` `scripts/prep_mlmd.py`: optional `replicate` key; 2 new tests (fail on the old
+    script, pass on the new). `configs/mlmd/slab100_test.json`: 3×3 slab. Build check on
+    the real frame (train.xyz frame 1352, `interface_longa:1`): 2403 atoms,
+    30.261 × 30.261 × 36.002 Å, Fe2/Fe3 72/72 recomputed = copies, closest atoms of
+    different copies 0.94 Å.
+  - `5bcc028` ADR-0015, ADR-0016, `docs/na-relabel.md` (q1 check rule), v2 result in
+    `docs/na-label-grid-error.md`, `CLAUDE.md` Project.
+  - `57c4487` `scripts/prep_na_q1_check.py`, `src/na_q1_check.py`,
+    `configs/na_relabel/q1_check.json`, 13 tests. `46ca661` eligibility fix (Problems).
+    Suite: 165 tests OK.
+  - Prep at `46ca661`: `runs/na-q1-check`. Against the legacy inputs only the planned lines
+    differ (seed file, one snapshot, cutoff, Na KIND); the geometry and reference forces in
+    all 38 frame dirs equal the legacy files; `seed_q9.wfn` sha256 = `chute.wfn`.
+  - Job 4405 (q1 seed, n12, 96 MPI × 1) submitted at 16:45; running at session end.
+- Results:
+  - Translation test v2, by its rule (`docs/na-label-grid-error.md`, Result v2): check
+    0.53 meV/Å; diagnosis confirmed (s_Na 289.7 meV/Å, 28.9× the largest host spread);
+    q1-c700 fixed (s_Na 0.0), q9-c1600 not fixed (33.4), q9-c2000 fixed (7.2), q9-c2400
+    fixed (2.4). Reported only: q1-c700 vs q9-c2400 RMS ΔF Na 59.2, N 22.7, Fe 16.7,
+    C 11.4 meV/Å; wall time vs q9-c700: 2.1× (1600), 3.8× (2000), 3.6× (2400), 1.2× (q1).
+  - Na label net force, by its rule (monitoring, `runs/na-label-stats/verdict.json`):
+    "same". x = |ΣF|/√n_Na: TS n 224, p90 1.011, max 1.541 eV/Å; equilibrium n 134, p90
+    0.929, max 1.330; r_p90 1.088, r_max 1.159. The TS labels are not worse than the
+    equilibrium ones.
+  - The interface-1 cell is already a PB(100) slab with water on both faces; interface-2
+    (legacy AIMD, 687 atoms, no Na, AFM) is all Fe(III) by formal count (ADR-0015).
+  - Agent's cost estimates: relabelling the 1350 Na frames with q1 ~33–46k core-h; q1 check
+    ~1.5–4.3k core-h (`docs/na-relabel.md`).
+- Decisions (owner):
+  - "acho q poderiamos mudar um pouco o foco ... simular uma interface infinida em 2D, uma
+    slab" and "vamos. preparar a slab, e fazer alguns testes iniciais. em paralelo vamos
+    focar na nova rotulacao", then "ok" to the five proposals: ADR-0015 (slab is the main
+    object, nanocube dropped, Na relabelling in scope, interface-2 later); ADR-0016 (Na q1
+    at 700/70, on the q1 check); the q1 check; relabelling in two phases; the 3×3 slab test.
+  - "ok pra tudo": diffs applied and committed, v2 registered, the q1-c2000 control kept.
+  - "submeta o job": 4405.
+  - Agent: the q1 check eligibility was amended before any input was written (doc); the
+    reading rule is unchanged.
+- Problems:
+  - First q1 check prep stopped: "eventos/interface-1np/N3/rotulos/j01/relabel.out snapshot
+    11: input differs beyond ['LAST_SNAPSHOT', 'SEED', 'STEPS']". Root cause: 3 legacy label
+    jobs (N3 j01, one W4a, one longa) used another state protocol (atomic guess or
+    USE_PREV_WF); the draw now takes only seeded origins (`46ca661`).
+- Next:
+  - neumann, when 4405 ends: `cost_ledger.py add`; seed check (SCF converged, Fe spins
+    within 0.01 of f01's legacy label); then ask to submit the four settings in
+    `runs/na-q1-check`.
+  - After those end: `python3 src/na_q1_check.py runs/na-q1-check`, register, apply the rule
+    to ADR-0016.
+  - SDumont: ID-3 jobs; slab test `prep_mlmd.py configs/mlmd/slab100_test.json --check`
+    (ask), then the NVT.
+
 ## 2026-11-21 — sdumont — ID-3 MLMD fixed and resubmitted; nanocube proposed
 - Goal: read the MLMD production jobs 11753217–19 and get the ID-3 MLMD running; assess the
   owner's nanocube (`nanocubo_vac.pdb`, neumann) as the main MLMD object.

@@ -23,11 +23,12 @@ One line per term.
 - **MACE**: the equivariant message-passing MLFF architecture trained in this project.
 - **MLFF**: machine-learned force field; maps a structure to its energy and forces.
 - **MLMD**: molecular dynamics driven by an MLFF.
-- **Nanocube**: the owner's water-passivated Prussian-blue cube of 5×5×5 Fe sites (corners removed, hydrated Fe(CN)₆ vacancy at the centre, interior Na⁺), neumann `~/prussian-blue/cubo/dataset/nanocubo/nanocubo_vac.pdb`; proposed main MLMD object (ADR-0015 pending).
+- **Nanocube**: the owner's water-passivated Prussian-blue cube of 5×5×5 Fe sites (corners removed, hydrated Fe(CN)₆ vacancy at the centre, interior Na⁺), neumann `~/prussian-blue/cubo/dataset/nanocubo/nanocubo_vac.pdb`; dropped as the main MLMD object by ADR-0015 (2026-11-25).
 - **Net force**: |ΣF|, the norm of the summed reference forces of a frame; zero for exact forces in a periodic cell, so its size measures label error (large in the Na frames, `docs/na-label-grid-error.md`).
 - **Parity plot**: model prediction against reference label, per frame (energy) or per force component; `src/plot_parity.py`.
 - **Patience**: epochs without a validation-loss improvement before MACE stops training (`patience`, 40) or lowers the learning rate (`scheduler_patience`, 50).
 - **RDF**: radial distribution function g(r) of an atom pair.
+- **q1 check**: test of the Na q1 labelling protocol against Na q9 at 2000 Ry on 12 interface frames (relative energies, kT threshold); rule in `docs/na-relabel.md`, condition of ADR-0016.
 - **qz**: the owner's CP2K labelling protocol: UKS PBE-D3(BJ), U 6 eV on Fe(III) only, cutoff 700/70, EPS 1e-6.
 - **Reading rule**: question, metric, threshold and what counts as yes/no, fixed before a run.
 - **Receptive field**: the distance within which other atoms affect a MACE atom's energy, r_max × interaction layers; `pb_mace_v2`: 6 Å × 2 = 12 Å (LAMMPS log).
@@ -35,9 +36,11 @@ One line per term.
 - **Registered result**: verbatim copy under `results/<name>/` with `PROVENANCE.json` checksums.
 - **REL_CUTOFF**: CP2K `&MGRID` keyword: the cutoff used for a Gaussian of exponent 1, which sets the multigrid level each Gaussian is mapped to; qz uses 70 Ry, the AIMD 60 Ry.
 - **Seed wavefunction**: in translation test v2, a converged CP2K wavefunction in the legacy label's electronic state (Fe spins); every shift starts from it with the full U, so all shifts share one state (`scripts/prep_na_translation_v2.py`).
+- **Seeded label protocol**: how most interface-1np labels were computed: every snapshot restarts from `eventos/interface-1np/base/chute.wfn` with the full U (SCF_GUESS RESTART, U_RAMPING 0, EXTRAPOLATION USE_GUESS), which holds one electronic state; 3 label jobs used another state protocol (`docs/na-relabel.md`).
 - **Semicore pseudopotential**: a pseudopotential that keeps an inner shell in the valence; Na `GTH-PBE-q9` (2s²2p⁶3s¹) needs much tighter basis Gaussians than Na `GTH-PBE-q1` (3s¹ only) (`docs/na-label-grid-error.md`).
 - **Shift spread** (s_el): per element, the RMS over atoms and components of the standard deviation of the force over the shifts of a translation test, meV/Å (`src/na_translation.py`).
 - **Split group**: the unit of the train/valid/test split of `consolidado/` (`grupo` in `frames.tsv`): a block of consecutive frames of an AIMD pool or one rare-event window.
+- **Slab**: the interface-1 cell, a periodic PB(100) slab of 4 Fe planes with water on both faces (two interfaces per cell); its lateral supercells (`replicate` in `scripts/prep_mlmd.py`) are the main MLMD object (ADR-0015).
 - **Smoke run**: a short toy job that checks a run's setup end to end (data, env, GPU memory, time per epoch) before the real job; exempt from the reading rule.
 - **Stitching**: joining the pieces of a restarted CP2K trajectory; the last branch through a step wins (`src/rdf.py`).
 - **Status block**: the part of `CLAUDE.md` between the STATUS markers; current state only.
