@@ -7,8 +7,10 @@ rules and conventions only. Keep it under ~160 lines; history goes to `docs/jour
 ## Project
 - **pb-mace**: train a MACE machine-learned force field (MLFF) on an existing, already
   labelled Prussian-blue dataset; test and validate it; run MLMD with it and compare its
-  RDFs with the AIMD RDFs (owner, 2026-11-17). Out of scope now: dataset generation, CP2K
-  runs, active learning.
+  RDFs with the AIMD RDFs (owner, 2026-11-17). Main MLMD object: the PB(100)/water slab
+  (ADR-0015). In scope since 2026-11-25: relabelling the 1350 Na frames with Na q1 on
+  neumann (ADR-0016, `docs/na-relabel.md`). Out of scope now: other dataset generation
+  (new AIMD, interface-2), active learning.
 - Dataset: neumann `~/prussian-blue/cubo/dataset/consolidado/` (2026-11-16): MACE extxyz
   train/valid/test split by groups, `REF_energy`/`REF_forces` (eV, eV/Å), labels qz; no
   stress/virial for Prussian blue. To SDumont from the owner's Mac (sha256: journal

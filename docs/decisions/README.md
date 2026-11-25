@@ -21,6 +21,8 @@ teach-back (ADR-0013, superseding that part of ADR-0001).
 | [0012](0012-github-origin-and-sdumont-locations.md) | GitHub as origin; SDumont locations | Accepted; SDumont clone location superseded by 0014 |
 | [0013](0013-lighter-decision-process.md) | Lighter decision process: the owner's ok replaces the teach-back | Accepted |
 | [0014](0014-sdumont-clone-in-scratch.md) | SDumont clone in /scratch | Accepted |
+| [0015](0015-main-object-pb100-slab.md) | Main MLMD object: the PB(100)/water slab; Na relabelling in scope | Accepted |
+| [0016](0016-na-label-protocol-q1.md) | Na label protocol: GTH-PBE-q1 at 700/70 | Accepted, on the q1 check |
 
 ## Template
 

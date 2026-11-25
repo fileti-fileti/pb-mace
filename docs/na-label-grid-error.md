@@ -207,6 +207,19 @@ This is a proposal: each step needs the owner's ok, and every job is asked first
 - Analysis: `src/na_translation.py` reads the v1 layout only; the v2 layout (`shift_K/`)
   goes in, with a test, before any output is read.
 
+### Result v2 (2026-11-25, read by the v2 rule)
+- Jobs 4392–4397 COMPLETED, 599 core-h (ledger). Printed by
+  `python3 src/na_translation.py runs/na-translation-test-v2` (writes `analysis/`).
+- Check: shift 0 of cubo_puro-q9-c700 reproduces the label within 0.53 meV/Å (limit 10);
+  every run has 8 of 8 valid shifts (Fe spins at most 0.001 from the reference state).
+- Diagnosis: confirmed. s_Na 289.7 meV/Å, 28.9× the largest host spread (10.0).
+- Remedies (limits s_Na ≤ 28.1, |ΣF|max ≤ 529 meV/Å): q1-c700 fixed (s_Na 0.0),
+  q9-c1600 not fixed (33.4), q9-c2000 fixed (7.2), q9-c2400 fixed (2.4).
+- Reported only: q1-c700 vs q9-c2400 at shift 0, RMS ΔF Na 59.2, N 22.7, Fe 16.7,
+  C 11.4 meV/Å; the q1 seed's Fe spins 0.0008 from the label's.
+- Consequence: ADR-0016 (Na q1 at 700/70, on the condition of a check) and
+  `docs/na-relabel.md`.
+
 ## Handoff
 - Read first: this doc; `docs/rdf-mlmd-vs-aimd.md`, limit 7; journal 2026-11-19.
 - Dataset on neumann: `~/prussian-blue/cubo/dataset/consolidado/` (sha256 in journal
