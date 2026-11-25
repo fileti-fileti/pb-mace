@@ -1,0 +1,46 @@
+{
+  "description": "First tests of the PB(100)/water slab (ADR-0015): a 3x3 lateral supercell of the interface-1 cell, built by scripts/prep_mlmd.py from the first interface_longa frame of data/consolidado/train.xyz (training side, checked against data/consolidado.sha256). 2403 atoms, 30.261 x 30.261 x 36.002 A, Fe2/Fe3 72/72 (agent's build check 2026-11-25); same slab and water thickness as the training cell, so no environment absent from training; lateral edge > 2 x the 12 A receptive field. A test, exempt from the claim rule: --check (LAMMPS = MACE eval; timesteps/s) first, then NVT with 2 replicas; with pb_mace_v2 (Na labels with the grid error, docs/na-label-grid-error.md) it tests stability, cost and water structure, not Na physics. nsteps (100 ps at 1 fs) is revised after the check's speed. Model, LAMMPS libraries, thermostat and masses as configs/mlmd/pb_mace_v2_rdf.json (350 K, the AIMD temperature).",
+  "model": "runs/pb_mace_v2/MACE_models/pb_mace_v2.model-lammps.pt",
+  "model_source": "runs/pb_mace_v2/MACE_models/pb_mace_v2.model",
+  "lammps_ld_library_path": [
+    "/scratch/acmes/eudes.fileti3/projects/shared/envs/mace_env/lib",
+    "/scratch/acmes/eudes.fileti3/projects/shared/cuda-links/cuda-11.4/lib64",
+    "/scratch/acmes/eudes.fileti3/projects/shared/software/libtorch-gpu/lib"
+  ],
+  "temperature_K": 350.0,
+  "tdamp_fs": 100.0,
+  "replicas": 2,
+  "seed_base": 2000,
+  "bench_steps": 200,
+  "masses": {
+    "Fe": 55.845,
+    "C": 12.011,
+    "N": 14.007,
+    "Na": 22.98976928,
+    "O": 15.999,
+    "H": 2.0141
+  },
+  "systems": {
+    "slab100-3x3": {
+      "start": "data/consolidado/train.xyz",
+      "config_type": "interface_longa",
+      "fe2_fe3": [
+        8,
+        8
+      ],
+      "cell": [
+        10.087,
+        10.087,
+        36.002
+      ],
+      "replicate": [
+        3,
+        3,
+        1
+      ],
+      "dt_fs": 1.0,
+      "nsteps": 100000,
+      "dump_every": 100
+    }
+  }
+}

@@ -126,6 +126,31 @@ class PrepMlmdTest(unittest.TestCase):
         self.assertEqual(info["systems"]["box"]["fe2_fe3"], [1, 1])
         self.assertEqual(info["seeds"], [1001, 1002, 1003])
 
+    def test_replicate(self):
+        self.cfg["systems"]["box"]["replicate"] = [2, 1, 1]
+        self.write_cfg()
+        rd = self.prep()
+        data = (rd / "start.data").read_text().splitlines()
+        self.assertIn("10 atoms", data)
+        self.assertIn("0.0 20.000000 xlo xhi", data)
+        self.assertIn("0.0 10.000000 ylo yhi", data)
+        atoms = data[data.index("Atoms # atomic") + 2:]
+        self.assertEqual(atoms[4], "5 4 9.50000000 1.00000000 5.00000000")    # copy 0 Na
+        self.assertEqual(atoms[9], "10 4 19.50000000 1.00000000 5.00000000")  # copy 1 Na, +a
+        kinds = (rd / "kinds.inc").read_text().splitlines()
+        self.assertIn("replicated 2x1x1", kinds[0])
+        self.assertEqual([l.split()[0] for l in kinds[2:12]],
+                         ["Fe2", "C", "Fe3", "N", "Na"] * 2)   # Fe2 bonded across the new edge
+        s = json.loads((rd / "run_info.json").read_text())["systems"]["box"]
+        self.assertEqual((s["n_atoms"], s["cell"], s["start_cell"], s["replicate"]),
+                         (10, [20.0, 10.0, 10.0], [10.0, 10.0, 10.0], [2, 1, 1]))
+        self.assertEqual((s["fe2_fe3"], s["fe2_fe3_run"]), ([1, 1], [2, 2]))
+
+    def test_no_replicate_keeps_the_frame(self):
+        s = json.loads((self.prep() / "run_info.json").read_text())["systems"]["box"]
+        self.assertEqual((s["n_atoms"], s["cell"], s["replicate"], s["fe2_fe3_run"]),
+                         (5, [10.0, 10.0, 10.0], [1, 1, 1], [1, 1]))
+
     def test_check_run_dir(self):
         rd = self.prep(check=True, system=None, name="chk", partition="gpu_dev", time="00:20:00")
         d = rd / "box"
@@ -169,6 +194,11 @@ class PrepMlmdTest(unittest.TestCase):
         self.cfg["extra"] = 1
         self.write_cfg()
         self.refused()
+        del self.cfg["extra"]
+        for bad in ([0, 1, 1], [1, 1], [1.5, 1, 1], [True, 1, 1], "2x2x1"):
+            self.cfg["systems"]["box"]["replicate"] = bad
+            self.write_cfg()
+            self.refused()
 
     def test_dirty_tree_and_existing_dir_refused(self):
         self.prep(name="a")

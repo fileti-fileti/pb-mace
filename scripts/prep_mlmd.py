@@ -8,11 +8,14 @@ Usage (login node, clean work tree; nothing is submitted, the command is printed
 
 CONFIG: configs/mlmd/*.json (model, temperature, thermostat, replicas, seeds, masses; per
 system: start extxyz and config_type, expected Fe2/Fe3 counts, cell, dt_fs, nsteps,
-dump_every). The start structure is the first frame of the config_type in the start file (a
-frame of the system's AIMD run, training side), wrapped into the orthorhombic cell; atom
-order is kept. Fe2/Fe3 from its geometry: Fe2 = Fe with a C within 2.4 A, Fe3 = the other
-Fe; the counts must equal fe2_fe3 (the AIMD reference). Written to kinds.inc (CP2K &COORD
-style, read by src/rdf.py) in the run dir.
+dump_every; optional replicate [nx, ny, nz]). The start structure is the first frame of the
+config_type in the start file (a frame of the system's AIMD run, training side), wrapped into
+the orthorhombic cell; atom order is kept. Fe2/Fe3 from its geometry: Fe2 = Fe with a C
+within 2.4 A, Fe3 = the other Fe; the counts must equal fe2_fe3 (the AIMD reference).
+cell and fe2_fe3 describe the start frame; with replicate, the simulated cell is cell x
+replicate and the frame is copied nx*ny*nz times (copy-major atom order, x fastest), and the
+Fe2/Fe3 of the supercell, recomputed from its geometry, must equal the copied ones.
+Written to kinds.inc (CP2K &COORD style, read by src/rdf.py) in the run dir.
 
 Production (--system): runs/RUN/ with start.data, in.lmp, rep1..repN/ and one job that runs
 the replicas in turn (seed = seed_base + k): NVT (Nose-Hoover chain), new Maxwell-Boltzmann
@@ -49,6 +52,7 @@ ELEMENT_ORDER = ("Fe", "C", "N", "Na", "O", "H")   # LAMMPS atom types, in this 
 KV_RE = re.compile(r'([A-Za-z_][\w-]*)=("([^"]*)"|\S+)')
 FE2_CUTOFF = 2.4   # A: Fe-C bond ~1.9 A; Fe-N ~2.0 A, Fe-O ~2.2 A (no C that close to Fe3)
 SYSTEM_KEYS = {"start", "config_type", "fe2_fe3", "cell", "dt_fs", "nsteps", "dump_every"}
+OPTIONAL_SYSTEM_KEYS = {"replicate"}
 TOP_KEYS = {"description", "model", "model_source", "lammps_ld_library_path",
             "temperature_K", "tdamp_fs", "replicas", "seed_base", "bench_steps", "masses",
             "systems"}
@@ -158,8 +162,13 @@ def load_config(path):
         raise pm.PrepError("{}: unknown keys {} / missing keys {}".format(
             path, sorted(extra), sorted(missing)))
     for name, s in cfg["systems"].items():
-        if set(s) != SYSTEM_KEYS:
-            raise pm.PrepError("{}: system {}: keys must be {}".format(path, name, sorted(SYSTEM_KEYS)))
+        if not SYSTEM_KEYS <= set(s) <= SYSTEM_KEYS | OPTIONAL_SYSTEM_KEYS:
+            raise pm.PrepError("{}: system {}: keys must be {} (optional {})".format(
+                path, name, sorted(SYSTEM_KEYS), sorted(OPTIONAL_SYSTEM_KEYS)))
+        rp = s.get("replicate", [1, 1, 1])
+        if (not isinstance(rp, list) or len(rp) != 3
+                or not all(isinstance(n, int) and not isinstance(n, bool) and n >= 1 for n in rp)):
+            raise pm.PrepError("{}: system {}: replicate must be 3 integers >= 1".format(path, name))
         if len(s["cell"]) != 3 or min(s["cell"]) <= 0:
             raise pm.PrepError("{}: system {}: bad cell".format(path, name))
         if s["dt_fs"] <= 0 or s["nsteps"] < 1 or s["dump_every"] < 1:
@@ -241,6 +250,19 @@ def wrap(pos, cell):
     return [tuple(x % L for x, L in zip(p, cell)) for p in pos]
 
 
+def replicate(items, pos, cell, reps):
+    """Copy a periodic frame reps = [nx, ny, nz] times -> (items, pos, supercell); copy-major
+    atom order (copy (ix, iy, iz), x fastest), each copy keeps the frame's atom order."""
+    out_i, out_p = [], []
+    for iz in range(reps[2]):
+        for iy in range(reps[1]):
+            for ix in range(reps[0]):
+                d = (ix * cell[0], iy * cell[1], iz * cell[2])
+                out_i += list(items)
+                out_p += [tuple(x + dx for x, dx in zip(p, d)) for p in pos]
+    return out_i, out_p, [L * n for L, n in zip(cell, reps)]
+
+
 def lammps_data(sym, pos, cell, masses, elements, title):
     types = {e: k + 1 for k, e in enumerate(elements)}
     out = ["# {}".format(title), "",
@@ -297,12 +319,23 @@ def system_files(repo, cfg, name, masses):
     if got != list(s["fe2_fe3"]):
         raise pm.PrepError("{}: Fe2/Fe3 from geometry {} != expected {}".format(
             where, got, s["fe2_fe3"]))
+    reps = s.get("replicate", [1, 1, 1])
     title = "{}: frame {} of {} (config_type {}, group {}), wrapped".format(
         name, idx, s["start"], s["config_type"], info.get("grupo", "NA"))
+    cell = list(s["cell"])
+    if reps != [1, 1, 1]:
+        sym, _, _ = replicate(sym, wpos, cell, reps)
+        kinds, wpos, cell = replicate(kinds, wpos, cell, reps)
+        if fe_kinds(sym, wpos, cell) != kinds:
+            raise pm.PrepError("{}: Fe2/Fe3 of the {} supercell differ from the copies".format(
+                where, "x".join(map(str, reps))))
+        title += ", replicated {}".format("x".join(map(str, reps)))
     return {"cfg": s, "start": start, "start_sha256": sums[str(start)], "frame": idx,
             "group": info.get("grupo"), "elements": elements, "n_atoms": len(sym),
-            "fe2_fe3": got, "data": lammps_data(sym, wpos, s["cell"], masses, elements, title),
-            "extxyz": extxyz(sym, wpos, s["cell"]), "kinds": kinds_inc(kinds, wpos, title)}
+            "fe2_fe3": got, "replicate": reps, "cell": cell,
+            "fe2_fe3_run": [kinds.count("Fe2"), kinds.count("Fe3")],
+            "data": lammps_data(sym, wpos, cell, masses, elements, title),
+            "extxyz": extxyz(sym, wpos, cell), "kinds": kinds_inc(kinds, wpos, title)}
 
 
 def prepare(repo, machine, mcfg, a, now=None, ldd=True):
@@ -394,8 +427,10 @@ def prepare(repo, machine, mcfg, a, now=None, ldd=True):
                                   "config_type": sy["cfg"]["config_type"], "frame": sy["frame"],
                                   "group": sy["group"]},
                         "fe2_fe3": sy["fe2_fe3"], "n_atoms": sy["n_atoms"],
+                        "replicate": sy["replicate"], "start_cell": sy["cfg"]["cell"],
+                        "fe2_fe3_run": sy["fe2_fe3_run"],
                         "elements": sy["elements"],
-                        "cell": sy["cfg"]["cell"], "dt_fs": sy["cfg"]["dt_fs"],
+                        "cell": sy["cell"], "dt_fs": sy["cfg"]["dt_fs"],
                         "nsteps": sy["cfg"]["nsteps"], "dump_every": sy["cfg"]["dump_every"]}
                     for n, sy in systems.items()},
         "temperature_K": temp, "tdamp_fs": cfg["tdamp_fs"], "masses": cfg["masses"],
