@@ -1,0 +1,381 @@
+{
+ "commit": "d1af8205a23141fa1bed4d2d026947ca1d85a392",
+ "config": "configs/na_translation/translation_test_v2.json",
+ "config_sha256": "86eba4347f8b2d0faad3c899b861c3f344e48ef979bcba44730262ba03ae398d",
+ "created": "2026-11-20T15:57:37",
+ "frames_tsv_sha256": "7842446de21f1585f5107ea1fa63e0d3f4f94077e6f8c0f0ec49656afd047a9a",
+ "layout": "per_shift",
+ "machine": "neumann",
+ "n_shifts": 8,
+ "reading": "v2",
+ "runs": {
+  "cubo_puro-q1-c700": {
+   "cell_A": 10.17,
+   "cutoff": 700,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/BASIS_MOLOPT"
+    },
+    "BASIS_MOLOPT_UZH": {
+     "sha256": "394bf1196353838cec389cb079a41a81b42a07afa49a18ededb9cc6e053c0291",
+     "source": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data/BASIS_MOLOPT_UZH"
+    },
+    "COORD.inc": {
+     "sha256": "fda9ce0b71355fddb6ce19f56102dd40f80ec95cce00f225f0b533d8d97afa2c",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/COORD.inc"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/POTENTIAL"
+    },
+    "POTENTIAL_UZH": {
+     "sha256": "7fd6942a627c7d1a897d938e198ea3c930630ac98d3e7099426bd83596c6b763",
+     "source": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data/POTENTIAL_UZH"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/dftd3.dat"
+    }
+   },
+   "forces_file": "rqz-frc-1.xyz",
+   "frame": "cubo_puro",
+   "grid_n_used": 162,
+   "h_A_used": 0.06277777777777778,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/rotulagem/b01",
+   "legacy_fe_spins": {
+    "1": 0.249644,
+    "2": 0.321607,
+    "3": 0.267257,
+    "4": 0.286895,
+    "5": 4.527993,
+    "6": 4.545289,
+    "7": 4.536083,
+    "8": 4.548898
+   },
+   "legacy_inp_sha256": "44785c3e3496c08f658d8cf43bb6514076f73a2098fdf5dad4ed7cf07bb67199",
+   "na": {
+    "basis_file": "BASIS_MOLOPT_UZH",
+    "basis_set": "TZVP-MOLOPT-PBE-GTH-q1",
+    "potential": "GTH-PBE-q1",
+    "potential_file": "POTENTIAL_UZH"
+   },
+   "project": "rqz",
+   "rel_cutoff": 70,
+   "seed": "generate",
+   "setting": "q1-c700",
+   "shifts_A": [
+    0.0,
+    0.007847222222222222,
+    0.015694444444444445,
+    0.02354166666666667,
+    0.03138888888888889,
+    0.03923611111111111,
+    0.04708333333333334,
+    0.05493055555555556
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "02:00:00"
+  },
+  "cubo_puro-q9-c1600": {
+   "cell_A": 10.17,
+   "cutoff": 1600,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/BASIS_MOLOPT"
+    },
+    "COORD.inc": {
+     "sha256": "fda9ce0b71355fddb6ce19f56102dd40f80ec95cce00f225f0b533d8d97afa2c",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/COORD.inc"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/POTENTIAL"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/dftd3.dat"
+    },
+    "seed.wfn": {
+     "sha256": "525acb510deaab4c2a044e8d9d96ab4e255794fcda09ba2cbb6b15ebdf8783d0",
+     "source": "/home/eudes/pb-mace-store/runs/na-translation-test/cubo_puro-q9-c1600/rqz-RESTART.wfn"
+    }
+   },
+   "forces_file": "rqz-frc-1.xyz",
+   "frame": "cubo_puro",
+   "grid_n_used": 256,
+   "h_A_used": 0.0397265625,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/rotulagem/b01",
+   "legacy_fe_spins": {
+    "1": 0.249644,
+    "2": 0.321607,
+    "3": 0.267257,
+    "4": 0.286895,
+    "5": 4.527993,
+    "6": 4.545289,
+    "7": 4.536083,
+    "8": 4.548898
+   },
+   "legacy_inp_sha256": "44785c3e3496c08f658d8cf43bb6514076f73a2098fdf5dad4ed7cf07bb67199",
+   "na": null,
+   "project": "rqz",
+   "rel_cutoff": 70,
+   "seed": "q9",
+   "setting": "q9-c1600",
+   "shifts_A": [
+    0.0,
+    0.0049658203125,
+    0.009931640625,
+    0.014897460937499999,
+    0.01986328125,
+    0.0248291015625,
+    0.029794921874999998,
+    0.0347607421875
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "04:00:00"
+  },
+  "cubo_puro-q9-c2000": {
+   "cell_A": 10.17,
+   "cutoff": 2000,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/BASIS_MOLOPT"
+    },
+    "COORD.inc": {
+     "sha256": "fda9ce0b71355fddb6ce19f56102dd40f80ec95cce00f225f0b533d8d97afa2c",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/COORD.inc"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/POTENTIAL"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/dftd3.dat"
+    },
+    "seed.wfn": {
+     "sha256": "525acb510deaab4c2a044e8d9d96ab4e255794fcda09ba2cbb6b15ebdf8783d0",
+     "source": "/home/eudes/pb-mace-store/runs/na-translation-test/cubo_puro-q9-c1600/rqz-RESTART.wfn"
+    }
+   },
+   "forces_file": "rqz-frc-1.xyz",
+   "frame": "cubo_puro",
+   "grid_n_used": 288,
+   "h_A_used": 0.0353125,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/rotulagem/b01",
+   "legacy_fe_spins": {
+    "1": 0.249644,
+    "2": 0.321607,
+    "3": 0.267257,
+    "4": 0.286895,
+    "5": 4.527993,
+    "6": 4.545289,
+    "7": 4.536083,
+    "8": 4.548898
+   },
+   "legacy_inp_sha256": "44785c3e3496c08f658d8cf43bb6514076f73a2098fdf5dad4ed7cf07bb67199",
+   "na": null,
+   "project": "rqz",
+   "rel_cutoff": 70,
+   "seed": "q9",
+   "setting": "q9-c2000",
+   "shifts_A": [
+    0.0,
+    0.0044140625,
+    0.008828125,
+    0.013242187499999999,
+    0.01765625,
+    0.022070312499999998,
+    0.026484374999999998,
+    0.030898437499999997
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "05:00:00"
+  },
+  "cubo_puro-q9-c2400": {
+   "cell_A": 10.17,
+   "cutoff": 2400,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/BASIS_MOLOPT"
+    },
+    "COORD.inc": {
+     "sha256": "fda9ce0b71355fddb6ce19f56102dd40f80ec95cce00f225f0b533d8d97afa2c",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/COORD.inc"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/POTENTIAL"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/dftd3.dat"
+    },
+    "seed.wfn": {
+     "sha256": "525acb510deaab4c2a044e8d9d96ab4e255794fcda09ba2cbb6b15ebdf8783d0",
+     "source": "/home/eudes/pb-mace-store/runs/na-translation-test/cubo_puro-q9-c1600/rqz-RESTART.wfn"
+    }
+   },
+   "forces_file": "rqz-frc-1.xyz",
+   "frame": "cubo_puro",
+   "grid_n_used": 300,
+   "h_A_used": 0.0339,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/rotulagem/b01",
+   "legacy_fe_spins": {
+    "1": 0.249644,
+    "2": 0.321607,
+    "3": 0.267257,
+    "4": 0.286895,
+    "5": 4.527993,
+    "6": 4.545289,
+    "7": 4.536083,
+    "8": 4.548898
+   },
+   "legacy_inp_sha256": "44785c3e3496c08f658d8cf43bb6514076f73a2098fdf5dad4ed7cf07bb67199",
+   "na": null,
+   "project": "rqz",
+   "rel_cutoff": 70,
+   "seed": "q9",
+   "setting": "q9-c2400",
+   "shifts_A": [
+    0.0,
+    0.0042375,
+    0.008475,
+    0.0127125,
+    0.01695,
+    0.021187499999999998,
+    0.025425,
+    0.0296625
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "07:00:00"
+  },
+  "cubo_puro-q9-c700": {
+   "cell_A": 10.17,
+   "cutoff": 700,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/BASIS_MOLOPT"
+    },
+    "COORD.inc": {
+     "sha256": "fda9ce0b71355fddb6ce19f56102dd40f80ec95cce00f225f0b533d8d97afa2c",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/COORD.inc"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/POTENTIAL"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/dftd3.dat"
+    },
+    "seed.wfn": {
+     "sha256": "525acb510deaab4c2a044e8d9d96ab4e255794fcda09ba2cbb6b15ebdf8783d0",
+     "source": "/home/eudes/pb-mace-store/runs/na-translation-test/cubo_puro-q9-c1600/rqz-RESTART.wfn"
+    }
+   },
+   "forces_file": "rqz-frc-1.xyz",
+   "frame": "cubo_puro",
+   "grid_n_used": 162,
+   "h_A_used": 0.06277777777777778,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/cubo-puro-new/rotulagem/b01",
+   "legacy_fe_spins": {
+    "1": 0.249644,
+    "2": 0.321607,
+    "3": 0.267257,
+    "4": 0.286895,
+    "5": 4.527993,
+    "6": 4.545289,
+    "7": 4.536083,
+    "8": 4.548898
+   },
+   "legacy_inp_sha256": "44785c3e3496c08f658d8cf43bb6514076f73a2098fdf5dad4ed7cf07bb67199",
+   "na": null,
+   "project": "rqz",
+   "rel_cutoff": 70,
+   "seed": "q9",
+   "setting": "q9-c700",
+   "shifts_A": [
+    0.0,
+    0.007847222222222222,
+    0.015694444444444445,
+    0.02354166666666667,
+    0.03138888888888889,
+    0.03923611111111111,
+    0.04708333333333334,
+    0.05493055555555556
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "01:30:00"
+  },
+  "vacancia-q9-c700": {
+   "cell_A": 9.91,
+   "cutoff": 700,
+   "files": {
+    "BASIS_MOLOPT": {
+     "sha256": "686dd72e7601ee41d4a173e4c7c3946f1e750f03095090f44d3821c180a81a61",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/vacancia-14wat/BASIS_MOLOPT"
+    },
+    "COORD.xyz": {
+     "sha256": "3465d35076efccce93448108bbfcc614ad7aaa14212bb0f2e0999fbccf3c5cae",
+     "source": "/home/eudes/prussian-blue/cubo/dataset/vacancia-14wat/COORD.xyz"
+    },
+    "POTENTIAL": {
+     "sha256": "eaf556516ad20e5eb144524604135ec003ea0f02f88154deb56f44267beb6ff9",
+     "source": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data/POTENTIAL"
+    },
+    "dftd3.dat": {
+     "sha256": "1f5041914fb3a7fa6c97602d82da6cb9129c1c1dba675db23522de9c2837dafd",
+     "source": "/opt/spack/opt/spack/linux-oracle8-x86_64_v2/gcc-12.2.0/cp2k-2024.1-iy4ur5kdc4trr2a4f7j64nlb5stjjdo6/share/cp2k/data/dftd3.dat"
+    },
+    "seed.wfn": {
+     "sha256": "e5908ad28b85a713682420894fef7684c8f0136d9be8b78e9e4650eed4a3917a",
+     "source": "/home/eudes/pb-mace-store/runs/na-translation-test/vacancia-q9-c700/rqz01-RESTART.wfn"
+    }
+   },
+   "forces_file": "REFTRAJ-frc-1.xyz",
+   "frame": "vacancia",
+   "grid_n_used": 160,
+   "h_A_used": 0.0619375,
+   "legacy_dir": "/home/eudes/prussian-blue/cubo/dataset/vacancia-14wat/relabel_qz/c01",
+   "legacy_fe_spins": {
+    "1": 4.483474,
+    "2": 4.514786,
+    "3": 4.507015,
+    "4": 4.539686,
+    "59": 0.337852,
+    "60": 0.320214,
+    "61": 0.397224
+   },
+   "legacy_inp_sha256": "5960c09fe541aad53a7f6e55c275a5d7b946fe51c2332532d6501b9c04b64824",
+   "na": null,
+   "project": "rqz01",
+   "rel_cutoff": 70,
+   "seed": "q9",
+   "setting": "q9-c700",
+   "shifts_A": [
+    0.0,
+    0.0077421875,
+    0.015484375,
+    0.0232265625,
+    0.03096875,
+    0.0387109375,
+    0.046453125,
+    0.0541953125
+   ],
+   "snapshot": 1,
+   "split": "train",
+   "wall_time": "02:00:00"
+  }
+ }
+}
