@@ -13,8 +13,9 @@ a run dir under `runs/`.
 - Everything else stays at qz: 700/70, UKS, CHARGE, MULTIPLICITY, U 6 eV on Fe3, D3(BJ),
   EPS_SCF.
 - State: the labels hold the ferromagnetic state of their legacy run. A relabel counts only
-  if every Fe Mulliken spin is within 0.01 of the frame's legacy label (as in translation
-  test v2).
+  if it passes the state test of the q1 check, rule v2 (below).
+  - Amended 2026-11-27. It was: every Fe Mulliken spin within 0.01 of the frame's legacy
+    label (as in translation test v2).
 
 ## Cost (agent's estimate, 2026-11-25)
 - Legacy per-frame wall times, read from the legacy `relabel.out` files on 2026-11-25
@@ -88,7 +89,7 @@ as the converged semicore reference, Na q9 at 2000/70?
   ratios (×3.8 for 2000 Ry, ×1.2 for q1), the check costs ~1.5–4.3k core-h. Dropping
   q1-c2000 would cut it to ~0.9–2.5k.
 
-### Reading rule (fixed 2026-11-25, before any input is prepared)
+### Reading rule v1 (fixed 2026-11-25, before any input is prepared)
 - **Valid frame.** In each of q9-c2000, q1-c700 and q1-c2000, the SCF converged and every
   Fe Mulliken spin is within 0.01 of the frame's legacy label.
   - Fewer than 9 valid frames make the test inconclusive.
@@ -110,13 +111,59 @@ as the converged semicore reference, Na q9 at 2000/70?
   - |ΣF| per frame and setting.
   - Fe spin differences, SCF steps and wall time per frame.
 
+### Result v1 (2026-11-27): inconclusive, a check failed
+- Seed jobs.
+  - 4405: TIMEOUT at the 2 h limit (agent's error: the legacy `rotulagem/b01` labels, with
+    the same protocol, needed 230–281 SCF steps per snapshot).
+  - 4415: COMPLETED in 28:49; SCF converged in 238 steps.
+- q1 seed check: failed, max |Δspin| 0.0223 > 0.01 against the f01 legacy label.
+  - Total spin 40.000, = MULTIPLICITY − 1.
+  - The 8 Fe with legacy |spin| ≥ 1 (Fe(III), high spin): all within 0.002.
+  - The 8 Fe with legacy |spin| < 1 (Fe(II), low spin, legacy 0.13–0.51): Fe 61 +0.022,
+    Fe 62 −0.021, Fe 63 +0.011; the other five within 0.0061.
+- By rule v1 the test is inconclusive whatever the settings give. No setting ran under v1.
+- Diagnostic: job 4416, `runs/na-q1-check/q9-seed-diag` (agent's proposal; owner "monta o
+  diagnostico").
+  - Question: is the shift a pseudopotential effect or an SCF-path effect? Its reading was
+    fixed in its `run_info.json` before it ran.
+  - Setup: the same SCF on f01 with Na q9. Its input equals the legacy
+    `rotulagem/b01/relabel.inp` except the geometry.
+  - Outcome: not converged (10 × 100 steps). After the U ramp started, CP2K warned "DFT+U
+    energy contribution is negative" many times. The energy fell from −3949.8 Ha to as low
+    as −3985.8 Ha, ending at −3968.1 Ha. The Mulliken analysis was non-physical: net charge
+    10.3, total spin 58.7.
+  - Its reading cannot be applied, so the origin of the 0.022 is not known.
+
+### Reading rule v2 (fixed 2026-11-27, after the v1 seed check failed and before any setting ran)
+- Owner: "ok vamos de v2".
+- Only the state test changes. It was chosen after the 0.022 above was seen; no setting
+  energy existed yet.
+- **State test** of a point (each of q9-c2000, q1-c700 and q1-c2000, and the q1 seed):
+  - the SCF converged;
+  - the Mulliken total spin is within 0.01 of MULTIPLICITY − 1 of its input;
+  - every Fe whose legacy label spin is ≥ 1 in magnitude (Fe(III), high spin) is within
+    0.01 of it;
+  - every other Fe (Fe(II), low spin) is within 0.05 of it.
+- **Why** (agent):
+  - The state is which Fe are high spin and which low spin, at a fixed total spin.
+  - The induced moments on low-spin Fe(II) are soft (up to 0.022 in the q1 seed). A change
+    of state moves a moment by about 1 or more, 20× the 0.05 tolerance.
+  - The total-spin test catches a collapse like that of job 4416.
+- **Valid frame**: the state test passes in each of q9-c2000, q1-c700 and q1-c2000.
+- **Checks**: the q1 seed passes the state test against the f01 legacy label; the q9-c700
+  reproduction check is as in v1.
+- Everything else is as in v1: the 9 valid frames, the metric, kT, the verdicts and the
+  reported items.
+- Also reported: per frame and setting, the total spin and the max |Δspin| over the
+  high-spin and over the low-spin Fe.
+
 ### How to run
 - Prep: `scripts/prep_na_q1_check.py configs/na_relabel/q1_check.json --name na-q1-check`
   (draw, inputs, seeds, jobs; tests in `tests/test_prep_na_q1_check.py`). It needs a clean
   tree, and the run records its commit.
-- Analysis: `python3 src/na_q1_check.py runs/na-q1-check` (this rule; tests in
+- Analysis: `python3 src/na_q1_check.py runs/na-q1-check` (rule v2; tests in
   `tests/test_na_q1_check.py`).
 - Jobs: ask first. The q1 seed job runs before the others.
 
 ### Results
-- Pending.
+- v1: inconclusive (Result v1). v2: pending.

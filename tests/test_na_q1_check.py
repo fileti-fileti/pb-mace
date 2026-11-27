@@ -15,24 +15,29 @@ spec.loader.exec_module(q)
 HA = 27211.386245988          # meV per Ha
 IDS = ["f{:02d}".format(k) for k in range(1, 13)]
 STRATA = ["EQ"] * 3 + ["N3"] * 3 + ["W4"] * 3 + ["TS"] * 3
-LEGACY_SPIN = 4.5
+LEGACY_SPIN = 4.5             # Fe 1: high spin
+LEGACY_LS = 0.3               # Fe 3: low spin
 
 
-def out_text(e_ha, spin, converged=True, ended=True):
+def out_text(e_ha, spin, converged=True, ended=True, ls=LEGACY_LS, total=1.0):
     s = """                     Mulliken Population Analysis
 
  #  Atom  Element  Kind  Atomic population (alpha,beta) Net charge  Spin moment
       1     Fe       1         9.9     5.4     0.6     {spin:.6f}
       2     Na       2         4.5     4.5     1.0     0.000000
- # Total charge and spin      1.0   1.0    0.0   1.0
+      3     Fe       1         7.9     7.6     0.5     {ls:.6f}
+ # Total charge and spin      1.0   1.0    0.0   {total:.6f}
      1 OT DIIS     0.50E-01    1.5     0.00000060     -1364.6928087289 -1.36E+03
      2 OT DIIS     0.50E-01    1.5     0.00000060     -1364.6928087289 -1.36E+03
   {status}
  ENERGY| Total FORCE_EVAL ( QS ) energy [a.u.]:            {e:.12f}
  CP2K                                 1  1.0    0.012    0.031  364.297  364.298
-""".format(spin=spin, e=e_ha, status="outer SCF loop converged in   2 iterations" if converged
+""".format(spin=spin, ls=ls, total=total, e=e_ha, status="outer SCF loop converged in   2 iterations" if converged
            else "SCF run NOT converged")
     return s + (" **** PROGRAM ENDED ****\n" if ended else "")
+
+
+INP = "&FORCE_EVAL\n  &DFT\n    UKS\n    MULTIPLICITY 2\n  &END DFT\n&END FORCE_EVAL\n"
 
 
 def frc(fx):
@@ -48,8 +53,12 @@ class Run(object):
         self.delta = {s: {i: 0.0 for i in IDS} for s in ("q9-c2000", "q1-c700", "q1-c2000")}
         self.offset = {"q9-c2000": 0.0, "q1-c700": 1.0, "q1-c2000": 1.5}   # Ha, constant
         self.spin = {}                                                       # (s, id) -> spin
+        self.ls = {}                                                         # (s, id) -> Fe 3 spin
+        self.total = {}                                                      # (s, id) -> total spin
         self.unconv = set()
         self.seed_spin = LEGACY_SPIN
+        self.seed_ls = LEGACY_LS
+        self.seed_total = 1.0
         self.repro_fx = 0.01
 
     def write(self):
@@ -57,7 +66,7 @@ class Run(object):
         settings.update({s: {"frames": list(IDS)} for s in self.delta})
         info = {"commit": "abc", "forces_file": "rqz-frc-1.xyz", "seed_frame": "f01",
                 "frames": [{"id": i, "stratum": st, "i": k, "config_type": "t",
-                            "legacy_fe_spins": {"1": LEGACY_SPIN}}
+                            "legacy_fe_spins": {"1": LEGACY_SPIN, "3": LEGACY_LS}}
                            for k, (i, st) in enumerate(zip(IDS, STRATA))],
                 "settings": settings}
         self.root.mkdir(parents=True, exist_ok=True)
@@ -66,6 +75,7 @@ class Run(object):
             for i in si["frames"]:
                 d = self.root / s / i
                 d.mkdir(parents=True, exist_ok=True)
+                (d / "relabel.inp").write_text(INP)
                 (d / "ref_frc.xyz").write_text(frc(0.01))
                 if s == "q9-c700":
                     e, fx = self.base[i], self.repro_fx
@@ -73,11 +83,14 @@ class Run(object):
                     e = self.base[i] + self.offset[s] + self.delta[s][i] / HA
                     fx = 0.01 + (0.001 if s.startswith("q1") else 0.0)
                 (d / "relabel.out").write_text(out_text(
-                    e, self.spin.get((s, i), LEGACY_SPIN), converged=(s, i) not in self.unconv))
+                    e, self.spin.get((s, i), LEGACY_SPIN), converged=(s, i) not in self.unconv,
+                    ls=self.ls.get((s, i), LEGACY_LS), total=self.total.get((s, i), 1.0)))
                 (d / "rqz-frc-1.xyz").write_text(frc(fx))
         sd = self.root / "q1-seed" / "seed_gen"
         sd.mkdir(parents=True, exist_ok=True)
-        (sd / "relabel.out").write_text(out_text(-1.0, self.seed_spin))
+        (sd / "relabel.inp").write_text(INP)
+        (sd / "relabel.out").write_text(out_text(-1.0, self.seed_spin, ls=self.seed_ls,
+                                                 total=self.seed_total))
         (sd / "rqz-frc-1.xyz").write_text(frc(0.0))
         return self.root
 
@@ -142,6 +155,37 @@ class ReadingTest(unittest.TestCase):
         self.r.spin[("q1-c700", "f03")] = LEGACY_SPIN + 0.0099
         self.assertEqual(self.r.verdict()["n_valid"], 12)
 
+    def test_low_spin_fe_has_the_wider_tolerance(self):        # rule v2
+        self.r.ls[("q1-c700", "f03")] = LEGACY_LS + 0.049             # valid
+        self.r.ls[("q1-c2000", "f04")] = LEGACY_LS - 0.022            # valid (q1 seed value)
+        self.r.ls[("q9-c2000", "f05")] = LEGACY_LS + 0.051            # invalid
+        v = self.r.verdict()
+        self.assertEqual(v["n_valid"], 11)
+        self.assertNotIn("f05", v["valid"])
+        self.assertAlmostEqual(v["max_dspin"]["q1-c700|f03"], 0.049, places=6)
+
+    def test_total_spin_must_match_the_multiplicity(self):      # rule v2
+        self.r.total[("q1-c700", "f06")] = 1.02
+        v = self.r.verdict()
+        self.assertEqual(v["n_valid"], 11)
+        self.assertNotIn("f06", v["valid"])
+        root = self.r.write()
+        (root / "q9-c2000" / "f07" / "relabel.inp").write_text("&DFT\n&END DFT\n")  # no MULTIPLICITY
+        v = q.reading(*q.load(root))
+        self.assertNotIn("f07", v["valid"])
+
+    def test_seed_state_test(self):                              # rule v2
+        self.r.seed_ls = LEGACY_LS + 0.0223                           # q1 seed of 2026-11-27: passes
+        v = self.r.verdict()
+        self.assertTrue(v["checks"]["q1_seed"]["ok"])
+        self.assertAlmostEqual(v["checks"]["q1_seed"]["dspin_ls"], 0.0223, places=6)
+        self.assertEqual(v["checks"]["q1_seed"]["dspin_hs"], 0.0)
+        self.assertEqual(v["verdict"], "yes")
+        self.r.seed_total = 58.698103                                 # a collapse like job 4416
+        v = self.r.verdict()
+        self.assertFalse(v["checks"]["q1_seed"]["ok"])
+        self.assertEqual(v["verdict"], "inconclusive")
+
     def test_failed_checks_make_it_inconclusive(self):
         self.r.seed_spin = LEGACY_SPIN + 0.1
         v = self.r.verdict()
@@ -170,8 +214,9 @@ class ReadingTest(unittest.TestCase):
         self.assertEqual(len(rows), 1 + 2 + 3 * 12)
         f1 = [r.split("\t") for r in rows if r.startswith("f01\tEQ\t0\tt\tq1-c700")][0]
         self.assertEqual((f1[5], f1[6], f1[8], f1[12], f1[13]), ("True", "True", "True", "2", "364.3"))
+        self.assertEqual((f1[14], f1[15], f1[16]), ("1.000", "0.0000", "0.0000"))
         v = json.loads((root / "analysis" / "verdict.json").read_text())
-        self.assertEqual(v["reading"]["verdict"], "yes")
+        self.assertEqual((v["reading"]["verdict"], v["reading"]["rule"]), ("yes", "v2"))
         self.assertIn("q1-c700_vs_q9-c2000\tNa\t", (root / "analysis" / "forces.tsv").read_text())
 
 
