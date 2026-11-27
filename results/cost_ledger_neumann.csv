@@ -12,3 +12,4 @@ neumann,4394,natr2-cubo_puro-q9-c1600,EPYC_9734,COMPLETED,0:0,2026-11-20T16:02:0
 neumann,4395,natr2-vacancia-q9-c700,EPYC_9734,COMPLETED,0:0,2026-11-20T16:02:07,2026-11-20T17:09:16,4029,56,n12,/home/eudes/pb-mace-store/runs/na-translation-test-v2/vacancia-q9-c700,62.6733,core-hours,2026-11-25T17:49:01+00:00
 neumann,4396,natr2-cubo_puro-q9-c700,EPYC_9734,COMPLETED,0:0,2026-11-20T16:02:07,2026-11-20T16:51:21,2954,56,n12,/home/eudes/pb-mace-store/runs/na-translation-test-v2/cubo_puro-q9-c700,45.9511,core-hours,2026-11-25T17:49:01+00:00
 neumann,4397,natr2-cubo_puro-q1-c700,EPYC_9734,COMPLETED,0:0,2026-11-20T16:51:21,2026-11-20T17:50:20,3539,56,n12,/home/eudes/pb-mace-store/runs/na-translation-test-v2/cubo_puro-q1-c700,55.0511,core-hours,2026-11-25T17:49:01+00:00
+neumann,4405,naq1-seed,EPYC_9734,TIMEOUT,0:0,2026-11-25T16:45:00,2026-11-25T18:45:24,7224,96,n12,/home/eudes/pb-mace-store/runs/na-q1-check/q1-seed,192.6400,core-hours,2026-11-25T21:46:16+00:00
