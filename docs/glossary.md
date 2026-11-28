@@ -42,6 +42,7 @@ One line per term.
 - **Split group**: the unit of the train/valid/test split of `consolidado/` (`grupo` in `frames.tsv`): a block of consecutive frames of an AIMD pool or one rare-event window.
 - **Slab**: the interface-1 cell, a periodic PB(100) slab of 4 Fe planes with water on both faces (two interfaces per cell); its lateral supercells (`replicate` in `scripts/prep_mlmd.py`) are the main MLMD object (ADR-0015).
 - **Smoke run**: a short toy job that checks a run's setup end to end (data, env, GPU memory, time per epoch) before the real job; exempt from the reading rule.
+- **State test**: in the q1 check (rule v2) and the Na relabelling, the test that a label is in its legacy run's electronic state: converged SCF, Mulliken total spin = MULTIPLICITY − 1, high-spin Fe(III) within 0.01 and low-spin Fe(II) within 0.05 of the legacy label's spins (`docs/na-relabel.md`).
 - **Stitching**: joining the pieces of a restarted CP2K trajectory; the last branch through a step wins (`src/rdf.py`).
 - **Status block**: the part of `CLAUDE.md` between the STATUS markers; current state only.
 - **Teach-back**: the owner explains a research decision in their own words before it is adopted; not used in this project (ADR-0013).

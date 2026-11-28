@@ -137,17 +137,18 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
 
 ## Status
 <!-- BEGIN STATUS -->
-- Updated: 2026-11-25 — neumann
+- Updated: 2026-11-27 — neumann
 - State: on neumann, SDumont (`/scratch`, ADR-0014) and GitHub; `pb_mace_v2` is the MLMD model
   (validation-loss rule; LAMMPS file); main MLMD object: the PB(100)/water slab, 3×3 test
   config ready (ADR-0015; nanocube dropped); Na grid error confirmed by translation test v2
   (`results/na-translation-test-v2/`); Na protocol q1 at 700/70 (ADR-0016), on the condition
-  of the q1 check (`docs/na-relabel.md`; `runs/na-q1-check` at `46ca661`, seed job 4405
-  running); ID-3 MLMD on SDumont since 2026-11-21 (11754110–12); ID-1, ID-2, ID-3 pending;
-  V7 in `pb-mace-store/manuscript/`. No final claims.
+  of the q1 check (`docs/na-relabel.md`: v1 inconclusive, rule v2 fixed; `runs/na-q1-check`
+  at `46ca661`, jobs 4418–4420 running since 2026-11-27 18:40, 4417 done); ID-3 MLMD on
+  SDumont since 2026-11-21 (11754110–12); ID-1, ID-2, ID-3 pending; V7 in
+  `pb-mace-store/manuscript/`. No final claims.
 - Now (neumann):
-  - q1 check: when 4405 ends, `cost_ledger.py add`, seed check (SCF converged, Fe spins ≤ 0.01 from f01's label), then ask to submit q9-c700, q9-c2000, q1-c700, q1-c2000 (`runs/na-q1-check/*/job.sh`).
-  - q1 check, after those end: `python3 src/na_q1_check.py runs/na-q1-check`, register (ask which files), apply the rule to ADR-0016.
+  - q1 check: when 4418 (q9-c2000), 4419 (q1-c700) and 4420 (q1-c2000) end, `cost_ledger.py add`, then `python3 src/na_q1_check.py runs/na-q1-check` (rule v2).
+  - q1 check: register (ask which files, with `q9-seed-diag`), apply the verdict to ADR-0016; if q1 SCF failures (f03, f06 so far) leave < 9 valid frames, propose the next step on q1 SCF robustness.
 - Now (SDumont):
   - ID-3 MLMD: jobs 11754110 (cubo-puro), 11754111 (cubo222), 11754112 (interface-1) in `runs/mlmd-v2-*-r2`; DONE/UNSTABLE/FAIL per replica; resubmit node or wall-time failures only.
   - MLMD RDFs (`configs/rdf/mlmd_pb_mace_v2.json`), `src/rdf_compare.py`, register, apply the ID-3 rule.
@@ -158,6 +159,7 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
   - ID-1, ID-2: test metrics in `runs/pb_mace_v{1,2}-test/` (written 2026-11-20, unlogged), register both, apply their rules; V7 `[PENDING]`s.
   - Next model: early stopping (40) < scheduler patience (50) kept the LR at 2e-4 for 400 epochs; LR decay only if the RDFs fail.
   - Na doc "Not known" items from journal 2026-11-20 (diff first); prep `grid_points()` gives 250, CP2K 256 at 1600 Ry: fix before reuse.
+  - `configs/na_relabel/q1_check.json`: `seed_job_time` 02:00:00 is too short (4405 TIMEOUT; 4415 took 28:49 alone on n12): fix before reuse (diff first).
   - Into `src/` with tests: the Fe-motif coverage check (scratchpad script not kept).
   - `prep_mlmd.py --check` parses only IN_CHECK: also run the production input briefly (2026-11-21 failure).
   - `sdumont.yaml`: GROMACS modules exist; login node has 2 V100 (diff first).
@@ -169,6 +171,6 @@ A finished task leaves the block and goes to the journal entry (Done or Problems
   - Git author name on SDumont (`fileti-fileti`) vs neumann (`Eudes Fileti`): keep or align.
   - Manuscript V7 `[CONFIRM]`s: b/TS/TSr variants, interface_aimd/longa, gate, AIMD block length, per-system std.
   - Independent test set (no test frames of cubo222 or the interface-1 AIMD): dataset generation is out of scope now.
-- Last sync — neumann: 2026-11-25, end-of-session commit on top of `46ca661`
+- Last sync — neumann: 2026-11-27, end-of-session commit on top of `10f3511`
 - Last sync — sdumont: 2026-11-21, end-of-session commit on top of `7fc9fb5`
 <!-- END STATUS -->

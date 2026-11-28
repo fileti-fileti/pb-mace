@@ -132,6 +132,9 @@ as the converged semicore reference, Na q9 at 2000/70?
     energy contribution is negative" many times. The energy fell from −3949.8 Ha to as low
     as −3985.8 Ha, ending at −3968.1 Ha. The Mulliken analysis was non-physical: net charge
     10.3, total spin 58.7.
+    - Note (later on 2026-11-27): the same warning is printed at every SCF step of the
+      converged q9-c700 and q9-c2000 points too, so it does not mark the collapse. The
+      markers are the unconverged SCF and the total spin.
   - Its reading cannot be applied, so the origin of the 0.022 is not known.
 
 ### Reading rule v2 (fixed 2026-11-27, after the v1 seed check failed and before any setting ran)

@@ -14,6 +14,66 @@ Title: `## YYYY-MM-DD — <machine> — <short title>`.
 ```
 
 <!-- NEW ENTRIES BELOW -->
+## 2026-11-27 — neumann — q1 check: seed done, rule v2, the four settings running
+- Goal: finish the q1 seed and run the q1 check of the Na relabelling (ADR-0016).
+- Done:
+  - `/start-session`: in sync with `origin`; the ledger row of 4405 (added 2026-11-25) was
+    uncommitted: `aea65a4`, pushed (owner "faça o push").
+  - Seed resubmitted from scratch with `sbatch --time=06:00:00 job.sh` (owner "resubmete a
+    semente"): job 4415 COMPLETED in 28:49 (46.1 core-h); ledger `ee7afa2`.
+  - Diagnostic `runs/na-q1-check/q9-seed-diag` (owner "monta o diagnostico", "submete!"):
+    hand-made at `ee7afa2` from the q1 seed dir, Na KIND of the q9 settings; its input
+    equals the legacy `rotulagem/b01/relabel.inp` except the geometry; reading fixed in its
+    `run_info.json`. Job 4416 COMPLETED in 1:16:45 (122.8 core-h).
+  - `10f3511`: q1 check Result v1 and rule v2 in `docs/na-relabel.md`, the relabel's state
+    criterion amended to match, `src/na_q1_check.py` state test v2 + 3 tests, ledger 4416
+    (owner "ok vamos de v2", "aplica"). Suite: 168 tests OK.
+  - Jobs 4417 (q9-c700), 4418 (q9-c2000), 4419 (q1-c700), 4420 (q1-c2000) submitted at
+    18:40 on n12, clean tree at `10f3511` (owner "submete"). 4417 COMPLETED in 11:00
+    (17.6 core-h); ledger +1 row at session end.
+- Results:
+  - q1 check v1: inconclusive, the seed check failed (`docs/na-relabel.md`, Result v1).
+    - q1 seed: max |Δspin| 0.0223 > 0.01 against the f01 legacy label; total spin 40.000.
+    - The 8 high-spin Fe(III) are within 0.002. The deviations are on low-spin Fe(II):
+      Fe 61 +0.022, Fe 62 −0.021, Fe 63 +0.011.
+  - Diagnostic 4416: SCF not converged (10 × 100 steps); non-physical Mulliken (net charge
+    10.3, total spin 58.7). The origin of the 0.022 is not known.
+  - Seed speed: 4415 ran ~7 s per SCF step alone on n12, 4405 ~50 s while it shared n12
+    with job 4403 (outside the project). Contention suspected, not verified.
+  - Interim, read at 22:25 (not a verdict; rule v2 is applied when all four end):
+    - q9-c700 reproduction check passes: max |ΔF| f01 0.02, f10 0.00 meV/Å (≤ 10).
+    - q9-c2000: the 7 ended frames converged.
+    - q1-c700: 6 of 8 ended frames converged. f03 and f06 did not (Mulliken total spin
+      21.9 and 49.8).
+    - q1-c2000: f01 and f02 converged; f03 still unconverged after 900 steps.
+  - The "DFT+U energy contribution is negative" warning is printed at every SCF step of
+    every point, converged ones included: it is not a collapse marker.
+- Decisions:
+  - Owner: "resubmete a semente"; "monta o diagnostico" (after the agent advised the
+    diagnostic first: ~46 core-h against the check's ~1.5–4.3k); "ok vamos de v2"
+    (state test by Fe spin class and total spin, fixed before any setting ran); "aplica";
+    "submete".
+  - Agent, in the diff the owner applied: the relabel's Protocol state criterion follows
+    rule v2.
+- Problems:
+  - 4405: TIMEOUT at 2:00:24. Root cause: the agent's 2 h `seed_job_time` in
+    `configs/na_relabel/q1_check.json`. The legacy protocol needs 230–281 SCF steps per
+    snapshot (`rotulagem/b01`).
+  - 4416: "SCF run NOT converged" after the U ramp started. Na q9 with the atomic-guess
+    protocol is not robust on f01, while q1 converged on the same frame (238 steps).
+  - The first diagnostic input was wrong: the agent's `sed` also changed the H potential
+    (GTH-PBE-q1 → q9). The diff caught it before submission; the input was rebuilt by
+    replacing only the `&KIND Na` block.
+  - q1-c700 f03 and f06: "SCF run NOT converged". Every q1 frame restarts from the q1 seed
+    (f01's state) with the full U; the q9 frames restart from `chute.wfn`. Root cause not
+    known.
+- Next:
+  - neumann, when 4418–4420 end: `cost_ledger.py add`; `python3 src/na_q1_check.py
+    runs/na-q1-check` (rule v2); register (ask which files, with `q9-seed-diag`); apply the
+    verdict to ADR-0016.
+  - If the q1 SCF failures leave fewer than 9 valid frames, the verdict is inconclusive by
+    the rule. q1 SCF robustness is then a new question for the relabel (owner).
+
 ## 2026-11-25 — neumann — Na grid error confirmed (v2); focus on the PB(100) slab; q1 check started
 - Goal: read translation test v2 and choose the Na label fix. After the owner moved the focus
   from the nanocube to a PB(100)/water slab: prepare the slab test and the Na relabelling.
